@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pismo{% endblock %}
+
+{% block body %}
+    <h1>Pismo</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ pismo.id }}</td>
+            </tr>
+            <tr>
+                <th>NazwaPliku</th>
+                <td>{{ pismo.nazwaPliku }}</td>
+            </tr>
+            <tr>
+                <th>Oznaczenie</th>
+                <td>{{ pismo.oznaczenie }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('pismo_index') }}">back to list</a>
+
+    <a href="{{ path('pismo_edit', {'id': pismo.id}) }}">edit</a>
+
+    {{ include('pismo/_delete_form.html.twig') }}
+{% endblock %}

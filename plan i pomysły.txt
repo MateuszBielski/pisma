@@ -1,0 +1,20 @@
+Proces asynchronicznie.
+Plik konfiguracyjny ze ścieżkami do plików i folderów
+Zacząć od widoku i stylów
+Pole nowe pisma:
+    lista plików przysłanych, które nie zostały dodane do bazy. Odczytywane automatycznie z folderu oraz z pola załaduj.
+
+
+Pole pisma zarejestrowane:
+    na górze wyszukiwanie po: symbolu, sprawie (lista zamknięta), 
+    lista pism: opis krótki
+
+strona pismo:
+    widok oddzielony od edycji
+    po prawej stronie podgląd
+    po lewej pola wyboru i wypełnienia:
+        data
+        symbol
+Strona Odbiorca/Nadwca (korespondenci)
+
+Strona sprawa
