@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Niezarejestrowane{% endblock %}
+
+{% block b_div_pod_belka %}
+    <h3>Skany niezarejestrowane</h3>
+{% endblock %}
+{% block b_div_centr %}
+{% for skan in skany %}
+    {{ skan }}<br>
+{% endfor %}
+
+{% endblock %}

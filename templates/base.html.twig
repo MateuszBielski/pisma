@@ -14,16 +14,19 @@
     </head>
     <body>
         <div id="caly_div">
-            <div id="belka_gora">
-                <nav>
-                    <ul>
-                        <li>nowe pisma</li>{# <a href="{{ path('pismo_nowe_index') }}" >nowe pisma</a> #}
-                        <li>pisma zarejestrowane</li>{# <a href="{{ path('pismo_index') }}">pisma zarejestrowane</a> #}
-                        <li>nadawca / odbiorca</li>{# <a href="{{ path('nadawca_odbiorca_index') }}">nadawca / odbiorca</a> #}
-                        <li>sprawa</li>{# <a href="{{ path('sprawa_index') }}">sprawa</a> #}
-                    </ul>
-                </nav>
-                {#<div class="pole_belka_gora">nowe pisma
+            <div class="tlo_cala_szerokosc">
+
+                <div class="pion_zwezony" id="belka_gora">
+                    <nav>
+                        <ul>
+                            <li><a href="{{ path('pismo_nowe_index') }}" >nowe pisma</a></li>{#  #}
+                            <li>pisma zarejestrowane</li>{# <a href="{{ path('pismo_index') }}">pisma zarejestrowane</a> #}
+                            <li>nadawca / odbiorca</li>{# <a href="{{ path('nadawca_odbiorca_index') }}">nadawca / odbiorca</a> #}
+                            <li>sprawa</li>{# <a href="{{ path('sprawa_index') }}">sprawa</a> #}
+                        </ul>
+                    </nav>
+                </div>
+                    {#<div class="pole_belka_gora">nowe pisma
                     
                 </div>
                 <div class="pole_belka_gora">pisma zarejestrowane
@@ -49,30 +52,30 @@
                 </div>
                 {% endif %} #}
             </div>
-            <div id="div_pod_belka">
+            <div class="pion_zwezony" id="div_pod_belka">
                 {% block b_div_pod_belka %}{% endblock %}
             </div>
-            
-            <div id="div_kolumny">{#  #}
+            {% block b_domyslnie_kolumny %}
+            <div class="pion_zwezony" id="div_kolumny">{#  #}
                 <div id="div_lewy">
                     {% block b_div_lewy %}
-
+                    <br>
                     {% endblock %}
                 </div>
                 <div id="div_centr">
                     {% block b_div_centr %}
-
+                    <br>
                     {% endblock %}
                 </div>
                 <div id="div_prawy">
                     {% block b_div_prawy %}
-
+                    <br>
                     {% endblock %}
                 </div>
             </div>
+            {% endblock %}
             
-            
-            <div id="belka_dol">
+            <div class="pion_zwezony" id="belka_dol">
                 {% block belka_dol %}
                 belka dół
                 {% endblock %}

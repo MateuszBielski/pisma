@@ -1,7 +1,7 @@
 body {
     /* background: rgb(42, 71, 75) */
-    background: rgb(57, 97, 103);
-    
+    /* background: rgb(57, 97, 103); */
+    background: linear-gradient(90deg, rgb(42, 71, 75) 5%, rgb(57, 97, 103) 30%, rgb(57, 97, 103) 70%, rgb(42, 71, 75) 95%);
     
     /* Calibri, "Helvetica Neue", Helvetica, Arial, sans-serif; */
     /* font-size: 20px; */
@@ -10,7 +10,7 @@ div{
     color: rgb(229,178,128);
     /* border-collapse: collapse; */
     
-    border: 1px solid rgb(160, 160, 160);
+    /* border: 1px solid rgb(160, 160, 160); */
 }
 a{
     text-decoration: none;
@@ -32,10 +32,18 @@ li{
     /* margin: 4px; */
     float: left;
 }
-#caly_div{
+.tlo_cala_szerokosc{
+    background: rgb(42, 71, 75);
+    padding: 15px;
+    overflow: auto;
+}
+.pion_zwezony{
     margin-left: auto;
     margin-right: auto;
     width: 80%;
+}
+#belka_gora{
+    background: rgb(42, 71, 75);
 }
 #div_pod_belka{
     text-align: center;

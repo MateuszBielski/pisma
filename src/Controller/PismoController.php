@@ -46,6 +46,17 @@ class PismoController extends AbstractController
             'pismos' => $pismoRepository->findAll(),
         ]);;
     }
+    /**
+     *@Route("/noweIndex", name="pismo_nowe_index", methods={"GET"}) 
+     */
+    public function NoweIndex(): Response
+    {
+        $skany = [];
+        for($i = 7 ; $i < 12 ; $i++)$skany[] = 'skan'.$i.'.pdf';
+        return $this->render('pismo/noweIndex.html.twig', [
+            'skany' => $skany,
+            ]);;
+    }
 
     /**
      * @Route("/new", name="pismo_new", methods={"GET","POST"})
