@@ -22,5 +22,5 @@ $imagick = new Imagick();
 // phpinfo();
 ?> 
 początek
-
+<img src="/var/www/html/pisma/public/obraz.jpg" alt="nie mogę wyświetlić " width="60%">
 koniec

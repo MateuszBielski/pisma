@@ -1,0 +1,145 @@
+
+#caly_div
+{
+    margin-left: auto;
+    margin-right: auto;
+    width: 1024px;
+    /* font-family: Verdana, sans-serif; */
+    /* font-family: Courier New, monospace; */
+    font-family:
+    Calibri, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 20px;
+}
+
+
+#belka_gora
+{
+background-color: rgb(142, 239, 252);
+height: 45px;
+display: block;
+
+}
+#body_div
+{
+min-height: 400px;
+}
+#belka_dol
+{
+background-color: rgb(142, 239, 252);
+height: 60px;
+}
+.pole_belka_gora,.pole_belka_dol
+{
+margin-top: 10px;
+
+text-align: center;
+width: 12%;
+height: 80%;
+margin: 4px;
+float: left;
+/* transform: translate(0, -50%); */
+}
+.pole_belka_gora:hover,.pole_belka_dol:hover
+{
+/* margin-top: -10px; */
+border-style: none none solid none;
+border-width: 4px;
+border-color: rgb(100, 100, 100);
+font: rgb(31, 85, 31)
+
+/* background-color: ; */
+}
+.pole_belka_gora_doprawej
+{
+margin-top: 10px;
+font-size: 15px;
+font: rgb(31, 85, 31);
+text-align: center;
+width: 16%;
+height: 80%;
+margin: 4px;
+float: right;
+/* transform: translate(0, -50%); */
+}
+.hidden
+{
+visibility: hidden;
+}
+.submit_label
+{
+cursor: pointer;
+text-align: center;
+
+}
+
+#div_wyszukaj
+{
+width: 40%;
+height: 60px;
+}
+table, #div_wyszukaj
+{
+margin-left: auto;
+margin-right: auto;
+}
+
+table,th,td
+{
+border-collapse: collapse;
+border: 1px solid rgb(160, 160, 160);
+table-layout: fixed;
+width: 90%;
+/* border: 3px solid black; */
+/* border: 3px;
+border-color: dimgray; */
+}
+thead
+{
+font-size: 16px;
+}
+tr
+{
+height: 35px;
+}
+.td_mniejsze
+{
+font-size: 16px;
+}
+.historia_zmiana_col
+{
+width: 30%;
+}
+a
+{
+color: black;
+font-family: Verdana, sans-serif;
+text-decoration: none;
+}
+td > a:hover, td > .submit_label:hover
+{
+/* text-shadow:0 0px 5px rgb(4, 100, 156); */
+padding: 2px 8px;
+border-radius: 5px;
+box-shadow: 0 0 10px rgb(10, 42, 85);
+}
+h3,h4,table
+{
+text-align: center;
+}
+.plus_sign
+{
+color: green;
+}
+.minus_sign
+{
+color: red;
+}
+#podsumowanie_div
+{
+width: 35%;
+}
+#current_account_div
+{
+/* border: none; */
+text-align: right;
+}

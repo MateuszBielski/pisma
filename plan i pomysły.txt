@@ -17,4 +17,7 @@ strona pismo:
         symbol
 Strona Odbiorca/Nadwca (korespondenci)
 
-Strona sprawa
+Strona sprawa:
+    
+
+W tytule karty wpisywane oznaczenie pisma

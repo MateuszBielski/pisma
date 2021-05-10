@@ -2,29 +2,28 @@
 
 {% block title %}Pismo{% endblock %}
 
-{% block body %}
-    <h1>Pismo</h1>
+{% block b_div_pod_belka %}
+    <h3>Pismo</h3>
+{% endblock %}
+{% block b_div_lewy %}
+Lewy
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ pismo.id }}</td>
-            </tr>
-            <tr>
-                <th>NazwaPliku</th>
-                <td>{{ pismo.nazwaPliku }}</td>
-            </tr>
-            <tr>
-                <th>Oznaczenie</th>
-                <td>{{ pismo.oznaczenie }}</td>
-            </tr>
-        </tbody>
-    </table>
+dir
+linia<br>
+linia<br>
+linia<br>
+linia<br>
+linia<br>
+linia<br>
+linia<br>
+{% endblock %}
+{% block b_div_centr %}
+centrum {{ sciezka_do_img }}
+{% endblock %}
+{% block b_div_prawy %}
+{# <img src="{{ sciezka_do_img }}" alt="nie mogę wyświetlić " width="60%"> #}
 
-    <a href="{{ path('pismo_index') }}">back to list</a>
+{# <img src="{{ asset('zychRozp.png') }}" alt="nie mogę wyświetlić " width="100%"> #}
 
-    <a href="{{ path('pismo_edit', {'id': pismo.id}) }}">edit</a>
-
-    {{ include('pismo/_delete_form.html.twig') }}
+<img src="/png/zychRozp.png" alt="nie mogę wyświetlić " width="100%">
 {% endblock %}

@@ -2,11 +2,10 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {# Run `composer require symfony/webpack-encore-bundle`
-           and uncomment the following Encore helpers to start using Symfony UX #}
+        <title>{% block title %}Pisma{% endblock %}</title>
+        
         {% block stylesheets %}
-            {#{{ encore_entry_link_tags('app') }}#}
+            <link href="/css/styl.css" rel="stylesheet"/>
         {% endblock %}
 
         {% block javascripts %}
@@ -14,6 +13,71 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <div id="caly_div">
+            <div id="belka_gora">
+                <nav>
+                    <ul>
+                        <li>nowe pisma</li>{# <a href="{{ path('pismo_nowe_index') }}" >nowe pisma</a> #}
+                        <li>pisma zarejestrowane</li>{# <a href="{{ path('pismo_index') }}">pisma zarejestrowane</a> #}
+                        <li>nadawca / odbiorca</li>{# <a href="{{ path('nadawca_odbiorca_index') }}">nadawca / odbiorca</a> #}
+                        <li>sprawa</li>{# <a href="{{ path('sprawa_index') }}">sprawa</a> #}
+                    </ul>
+                </nav>
+                {#<div class="pole_belka_gora">nowe pisma
+                    
+                </div>
+                <div class="pole_belka_gora">pisma zarejestrowane
+                    
+                </div>
+                <div class="pole_belka_gora">nadawca / odbiorca
+                    
+                </div>
+                <div class="pole_belka_gora">
+                    
+                </div>
+                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <div class="pole_belka_gora">
+                    <a class="link" href="{{ path('member_user_indexUjemni') }}" >wezwania</a>
+                </div>
+                <div class="pole_belka_gora">
+                    <a class="link" href="{{ path('app_logout') }}" >wyloguj</a>
+                </div>
+                <div class="pole_belka_gora_doprawej">zalogowany jako: {{ app.user.username }}</div>
+                {% else %}
+                <div class="pole_belka_gora">
+                    <a class="link" href="{{ path('app_login') }}" >zaloguj się</a>
+                </div>
+                {% endif %} #}
+            </div>
+            <div id="div_pod_belka">
+                {% block b_div_pod_belka %}{% endblock %}
+            </div>
+            
+            <div id="div_kolumny">{#  #}
+                <div id="div_lewy">
+                    {% block b_div_lewy %}
+
+                    {% endblock %}
+                </div>
+                <div id="div_centr">
+                    {% block b_div_centr %}
+
+                    {% endblock %}
+                </div>
+                <div id="div_prawy">
+                    {% block b_div_prawy %}
+
+                    {% endblock %}
+                </div>
+            </div>
+            
+            
+            <div id="belka_dol">
+                {% block belka_dol %}
+                belka dół
+                {% endblock %}
+            </div>
+        </div>
+        
     </body>
 </html>

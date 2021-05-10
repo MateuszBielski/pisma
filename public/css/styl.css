@@ -1,0 +1,60 @@
+body {
+    /* background: rgb(42, 71, 75) */
+    background: rgb(57, 97, 103);
+    
+    
+    /* Calibri, "Helvetica Neue", Helvetica, Arial, sans-serif; */
+    /* font-size: 20px; */
+}
+div{
+    color: rgb(229,178,128);
+    /* border-collapse: collapse; */
+    
+    border: 1px solid rgb(160, 160, 160);
+}
+a{
+    text-decoration: none;
+    color: rgb(229,178,128);
+}
+ul,li{
+    /* nie ma kropek */
+    list-style: none; 
+    /* w jednej linii */
+    display: inline;
+    /* margin: 4px,4px,4px,4px; */
+}
+li{
+    /* margin-top: 10px; */
+
+    text-align: center;
+    width: 12%;
+    height: 80%;
+    /* margin: 4px; */
+    float: left;
+}
+#caly_div{
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+#div_pod_belka{
+    text-align: center;
+}
+#div_kolumny{
+    /* height: 200px; */
+    /* display: block; */
+    /* dopasowuje wysokość do zawartości */
+    overflow: auto;
+}
+#div_lewy{
+    float: left;
+    width: 20%;
+}
+#div_centr{
+    float: left;
+    width: 30%;
+}
+#div_prawy{
+    float: left;
+    width: 49%;
+}

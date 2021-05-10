@@ -32,8 +32,10 @@ class PismoController extends AbstractController
         // print_r($imagick->identifyImage(true));
         $imagick->writeImages('/var/www/html/skany/obraz.jpg',false);
         */
-        $process = new Process(['pdftopng',  '/var/www/html/skany/zych.pdf', '/var/www/html/skany/zychRozp']);//'-gray',
-        $process->run();
+        $folder = $this->getParameter('sciezka_do_skanow');
+        // echo $folder;
+        $process = new Process(['pdftopng',  $folder.'zych.pdf', $folder.'zychRozp']);//'-gray',
+        // $process->run();
         // echo $process->getOutput();
         
 
@@ -71,10 +73,13 @@ class PismoController extends AbstractController
     /**
      * @Route("/{id}", name="pismo_show", methods={"GET"})
      */
-    public function show(Pismo $pismo): Response
+    public function show(): Response//Pismo $pismo
     {
+        $pismo = new Pismo();
+        
         return $this->render('pismo/show.html.twig', [
             'pismo' => $pismo,
+            'sciezka_do_img' => $this->getParameter('sciezka_do_skanow').'zychRozp-000001.png'
         ]);
     }
 
