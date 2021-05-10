@@ -2,7 +2,6 @@ body {
     /* background: rgb(42, 71, 75) */
     /* background: rgb(57, 97, 103); */
     background: linear-gradient(90deg, rgb(42, 71, 75) 5%, rgb(57, 97, 103) 30%, rgb(57, 97, 103) 70%, rgb(42, 71, 75) 95%);
-    
     /* Calibri, "Helvetica Neue", Helvetica, Arial, sans-serif; */
     /* font-size: 20px; */
 }

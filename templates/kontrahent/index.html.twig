@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nadawca{% endblock %}
+
+{% block b_div_pod_belka %}
+    <h3>Nadawca / odbiorca</h3>
+{% endblock %}
+{% block b_div_centr %}
+<table>
+    {% for kontr in kontrahents %}
+        <tr>
+            <td>
+                {{ kontr.nazwa }}
+    
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

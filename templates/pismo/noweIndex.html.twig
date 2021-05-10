@@ -6,8 +6,15 @@
     <h3>Skany niezarejestrowane</h3>
 {% endblock %}
 {% block b_div_centr %}
-{% for skan in skany %}
-    {{ skan }}<br>
-{% endfor %}
+    <table>
+        {% for skan in skany %}
+            <tr>
+                <td>
+                    {{ skan }}
+        
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
 
 {% endblock %}
