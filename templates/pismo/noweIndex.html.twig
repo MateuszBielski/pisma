@@ -10,11 +10,12 @@
         {% for skan in skany %}
             <tr>
                 <td>
-                    {{ skan }}
-        
+                    
+                    <a href="{{ path('pismo_nowe_ze_skanu', {'adr': skan}) }}" >{{ skan }}</a>
                 </td>
             </tr>
         {% endfor %}
     </table>
 
 {% endblock %}
+{% block belka_dol %}{% endblock %}

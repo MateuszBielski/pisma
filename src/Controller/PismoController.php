@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Pismo;
 use App\Form\PismoType;
 use App\Repository\PismoRepository;
+use App\Service\PracaNaPlikach;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,17 +52,44 @@ class PismoController extends AbstractController
      */
     public function NoweIndex(): Response
     {
+        /*
         $skany = [];
         for($i = 7 ; $i < 12 ; $i++)$skany[] = 'skan'.$i.'.pdf';
+        */
+        $pnp = new PracaNaPlikach;
+        $pnp->PobierzWszystkieNazwyPlikowZfolderu($this->getParameter('sciezka_do_skanow'));
+        
         return $this->render('pismo/noweIndex.html.twig', [
-            'skany' => $skany,
-            ]);;
+            'skany' => $pnp->NazwyBezSciezkiZrozszerzeniem('pdf'),
+            ]);
     }
 
     /**
      * @Route("/new", name="pismo_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
+    {
+        $pismo = new Pismo();
+        $form = $this->createForm(PismoType::class, $pismo);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($pismo);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('pismo_index');
+        }
+
+        return $this->render('pismo/new.html.twig', [
+            'pismo' => $pismo,
+            'form' => $form->createView(),
+        ]);
+    }
+    /**
+     * @Route("/noweZeSkanu/{adr}", name="pismo_nowe_ze_skanu", methods={"GET","POST"})
+     */
+    public function noweZeSkanu(Request $request): Response
     {
         $pismo = new Pismo();
         $form = $this->createForm(PismoType::class, $pismo);
