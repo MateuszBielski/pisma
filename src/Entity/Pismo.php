@@ -27,6 +27,14 @@ class Pismo
      */
     private $oznaczenie;
 
+    private $adresZrodlaPrzedZarejestrowaniem;
+    // private $nazwaZrodlaPrzedZarejestrowaniem;
+
+    public function __construct(string $adresZrodlaPrzedZarejestrowaniem = "")
+    {
+        $this->adresZrodlaPrzedZarejestrowaniem = $adresZrodlaPrzedZarejestrowaniem;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -54,5 +62,16 @@ class Pismo
         $this->oznaczenie = $oznaczenie;
 
         return $this;
+    }
+    public function getNazwaZrodlaPrzedZarejestrowaniem(): string
+    {
+        $arr = explode('/',$this->adresZrodlaPrzedZarejestrowaniem);
+        return end($arr);
+    }
+    public function PolozeniePierwszejStronyDuzegoPodgladu(): string
+    {
+        $nazwa = $this->getNazwaZrodlaPrzedZarejestrowaniem();
+        
+        return "/png/".$nazwa."/".$nazwa;
     }
 }

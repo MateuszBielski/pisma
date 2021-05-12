@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Niezarejestrowane{% endblock %}
+{% block title %}{{ pismo.nazwaZrodlaPrzedZarejestrowaniem }}{% endblock %}
 
 {% block b_div_pod_belka %}
-    <h3>Skany niezarejestrowane</h3>
+    <h3>Niezarejestrowane: {{ pismo.nazwaZrodlaPrzedZarejestrowaniem }}</h3>
 {% endblock %}
-{% block b_div_centr %}
+{% block b_div_lewy %}
     <table>
         {% for nazwa in skany %}
             <tr>
@@ -16,6 +16,12 @@
             </tr>
         {% endfor %}
     </table>
+{% endblock %}
+{% block b_div_centr %}
+miejsce na wprowadzenie danych dotyczących dokumentu
+{% endblock %}
+{% block b_div_prawy %}
 
+<img src="{{ sciezka_png }}" alt="nie mogę wyświetlić " width="100%">
 {% endblock %}
 {% block belka_dol %}{% endblock %}

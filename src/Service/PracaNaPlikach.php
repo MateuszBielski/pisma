@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Entity\Pismo;
+
 class PracaNaPlikach
 {
     private $odczytaneWszystkieNazwy;
@@ -52,5 +54,10 @@ class PracaNaPlikach
         $nazwy = $this->ObetnijSciezke($this->WydzielPlikiZrozszerzeniem($this->odczytaneWszystkieNazwy,$rozsz));
         if(!count($nazwy))$nazwy[] = "folder $this->folderOdczytu nie zawiera plików .".$rozsz;
         return $nazwy;
+    }
+    public function UtworzPismoNaPodstawie($folder,$nazwaZrodla): Pismo
+    {
+        if(substr($folder,-1) != '/')$folder .= '/';
+        return new Pismo($folder.$nazwaZrodla);
     }
 }

@@ -47,7 +47,15 @@ class PismoPracaNaPlikachTest extends TestCase
         $nazwyPlikowOps = $pnp->NazwyZrozszerzeniem('ops');
         $this->assertEquals('folder tests/skanyDoTestow nie zawiera plików .ops',$nazwyPlikowOps[0]);
     }
-    public function testRejestrowanePrzenosiRozpoznanyPlik(Type $var = null)
+   
+    public function testUtworzPismoNaPodstawie_NazwaZrodlaPrzedZarejestrowaniem()
+    {
+        $nazwaZrodla = "dok2.pdf";
+        $pnp = new PracaNaPlikach;
+        $pismo = $pnp->UtworzPismoNaPodstawie($this->pathSkanyFolder,$nazwaZrodla);
+        $this->assertEquals($nazwaZrodla,$pismo->getNazwaZrodlaPrzedZarejestrowaniem());
+    }
+    public function _testRejestrowanePrzenosiRozpoznanyPlik(Type $var = null)
     {
         $pnp = new PracaNaPlikach();
         // $pnp->
@@ -55,5 +63,7 @@ class PismoPracaNaPlikachTest extends TestCase
 
     //wczytaj podgląd
     //czy wczytany podgląd
+    //utworzenie folderu png jeśli nie ma
+    //usuwanie(przenoszenie) folderu z podglądem po zarejestrowaniu
     //generowane podglądy powinny być w folderze obok surowych skanów, a potem przenoszone
 }

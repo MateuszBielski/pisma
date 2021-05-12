@@ -3,7 +3,7 @@ Plik konfiguracyjny ze ścieżkami do plików i folderów
 Zacząć od widoku i stylów
 Pole nowe pisma:
     lista plików przysłanych, które nie zostały dodane do bazy. Odczytywane automatycznie z folderu oraz z pola załaduj.
-
+    odczytać datę modyfikacji pliku: (przykład z dokumentacji) echo "$filename was last modified: " . date ("F d Y H:i:s.", filemtime($filename));
 
 Pole pisma zarejestrowane:
     na górze wyszukiwanie po: symbolu, sprawie (lista zamknięta), 

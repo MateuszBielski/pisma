@@ -87,11 +87,13 @@ class PismoController extends AbstractController
         ]);
     }
     /**
-     * @Route("/noweZeSkanu/{adr}", name="pismo_nowe_ze_skanu", methods={"GET","POST"})
+     * @Route("/noweZeSkanu/{nazwa}", name="pismo_nowe_ze_skanu", methods={"GET","POST"})
      */
-    public function noweZeSkanu(Request $request): Response
+    public function noweZeSkanu(Request $request, string $nazwa): Response
     {
-        $pismo = new Pismo();
+        $pnp = new PracaNaPlikach;
+        $pnp->PobierzWszystkieNazwyPlikowZfolderu($this->getParameter('sciezka_do_skanow'));
+        $pismo = $pnp->UtworzPismoNaPodstawie($this->getParameter('sciezka_do_skanow'),$nazwa);
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
 
@@ -103,9 +105,11 @@ class PismoController extends AbstractController
             return $this->redirectToRoute('pismo_index');
         }
 
-        return $this->render('pismo/new.html.twig', [
+        return $this->render('pismo/noweZeSkanu.html.twig', [
+            'skany' => $pnp->NazwyBezSciezkiZrozszerzeniem('pdf'),
             'pismo' => $pismo,
             'form' => $form->createView(),
+            'sciezka_png' => '/png/zychRozp.png',
         ]);
     }
 
