@@ -6,6 +6,7 @@
     <h3>Niezarejestrowane: {{ pismo.nazwaZrodlaPrzedZarejestrowaniem }}</h3>
 {% endblock %}
 {% block b_div_lewy %}
+    <h4>Lista dokumentów do wprowadzenia:</h4>
     <table>
         {% for nazwa in skany %}
             <tr>
@@ -21,7 +22,7 @@
 miejsce na wprowadzenie danych dotyczących dokumentu
 {% endblock %}
 {% block b_div_prawy %}
-
+pokaż kolejną stronę
 <img src="{{ sciezka_png }}" alt="nie mogę wyświetlić " width="100%">
 {% endblock %}
 {% block belka_dol %}{% endblock %}

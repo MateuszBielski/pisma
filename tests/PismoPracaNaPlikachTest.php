@@ -2,12 +2,14 @@
 
 namespace App\Tests;
 
+use App\Entity\Pismo;
 use App\Service\PracaNaPlikach;
 use PHPUnit\Framework\TestCase;
 
 class PismoPracaNaPlikachTest extends TestCase
 {
     private $pathSkanyFolder = "tests/skanyDoTestow";
+    private $pathDodawanieUsuwanie = "tests/dodawanieUsuwanie/"; //w aplikacji podawana jest ścieżka bezwzględna
     public function testIlePlikowWfolderze(): void
     {
         $pnp = new PracaNaPlikach();
@@ -54,6 +56,25 @@ class PismoPracaNaPlikachTest extends TestCase
         $pnp = new PracaNaPlikach;
         $pismo = $pnp->UtworzPismoNaPodstawie($this->pathSkanyFolder,$nazwaZrodla);
         $this->assertEquals($nazwaZrodla,$pismo->getNazwaZrodlaPrzedZarejestrowaniem());
+    }
+    public function testGenerujPodgladJesliNieMaDlaPisma_tworzyOdpowiedniFolder()
+    {
+        $this->assertFalse(file_exists($this->pathDodawanieUsuwanie."dok2"));
+        $pnp = new PracaNaPlikach;
+        $pnp->GenerujPodgladJesliNieMaDlaPisma($this->pathDodawanieUsuwanie,new Pismo("jakisFolder/dok2.pdf"));
+        $this->assertTrue(file_exists($this->pathDodawanieUsuwanie."dok2"));
+        rmdir($this->pathDodawanieUsuwanie."dok2");//bez tego nie przejdzie pierwsza asercja z testu
+
+    }
+    public function testGenerujPodgladJesliNieMaDlaPisma_nieTworzyFolderuJesliJuzJest()
+    {
+        $path = $this->pathDodawanieUsuwanie."dok3";
+        if(!file_exists($path))
+        mkdir($path);
+        $pnp = new PracaNaPlikach;
+        $pnp->GenerujPodgladJesliNieMaDlaPisma($this->pathDodawanieUsuwanie,new Pismo("jakisFolder/dok3.pdf"));
+        $this->assertTrue(file_exists($path));
+        rmdir($path);
     }
     public function _testRejestrowanePrzenosiRozpoznanyPlik(Type $var = null)
     {

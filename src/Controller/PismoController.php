@@ -94,6 +94,8 @@ class PismoController extends AbstractController
         $pnp = new PracaNaPlikach;
         $pnp->PobierzWszystkieNazwyPlikowZfolderu($this->getParameter('sciezka_do_skanow'));
         $pismo = $pnp->UtworzPismoNaPodstawie($this->getParameter('sciezka_do_skanow'),$nazwa);
+        // echo __DIR__;
+        $pnp->GenerujPodgladJesliNieMaDlaPisma($this->getParameter('sciezka_do_png'),$pismo);
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
 

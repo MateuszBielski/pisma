@@ -70,8 +70,13 @@ class Pismo
     }
     public function SciezkaDoPlikuPierwszejStronyDuzegoPodgladuPrzedZarejestrowaniem(): string
     {
-        $nazwa = $this->getNazwaZrodlaPrzedZarejestrowaniem();
-        $nazwaBezRozszerzenia = substr($nazwa,0,strrpos($nazwa,'.'));
+        $nazwaBezRozszerzenia = $this->NazwaZrodlaBezRozszerzenia();
         return "/png/".$nazwaBezRozszerzenia."/".$nazwaBezRozszerzenia."-000001.png";
     }
+    public function NazwaZrodlaBezRozszerzenia(): string
+    {
+        $nazwa = $this->getNazwaZrodlaPrzedZarejestrowaniem();
+        return substr($nazwa,0,strrpos($nazwa,'.'));
+    }
+
 }

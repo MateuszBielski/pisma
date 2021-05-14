@@ -60,4 +60,13 @@ class PracaNaPlikach
         if(substr($folder,-1) != '/')$folder .= '/';
         return new Pismo($folder.$nazwaZrodla);
     }
+    public function GenerujPodgladJesliNieMaDlaPisma(string $folderPng, Pismo $pismo)
+    {
+       $path =  $folderPng.$pismo->NazwaZrodlaBezRozszerzenia();
+    //    echo __DIR__;
+       //echo "\nXXXXXXXXXXXX".$path;
+        // mkdir("tests/dodawanieUsuwanie/dok2");
+        if(!file_exists($path))
+        mkdir($path);
+    }
 }
