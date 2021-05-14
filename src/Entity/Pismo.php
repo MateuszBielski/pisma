@@ -68,10 +68,10 @@ class Pismo
         $arr = explode('/',$this->adresZrodlaPrzedZarejestrowaniem);
         return end($arr);
     }
-    public function PolozeniePierwszejStronyDuzegoPodgladu(): string
+    public function SciezkaDoPlikuPierwszejStronyDuzegoPodgladuPrzedZarejestrowaniem(): string
     {
         $nazwa = $this->getNazwaZrodlaPrzedZarejestrowaniem();
-        
-        return "/png/".$nazwa."/".$nazwa;
+        $nazwaBezRozszerzenia = substr($nazwa,0,strrpos($nazwa,'.'));
+        return "/png/".$nazwaBezRozszerzenia."/".$nazwaBezRozszerzenia."-000001.png";
     }
 }

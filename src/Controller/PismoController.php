@@ -109,7 +109,8 @@ class PismoController extends AbstractController
             'skany' => $pnp->NazwyBezSciezkiZrozszerzeniem('pdf'),
             'pismo' => $pismo,
             'form' => $form->createView(),
-            'sciezka_png' => '/png/zychRozp.png',
+            // 'sciezka_png' => '/png/zychRozp.png',
+            'sciezka_png' => $pismo->SciezkaDoPlikuPierwszejStronyDuzegoPodgladuPrzedZarejestrowaniem(),
         ]);
     }
 
