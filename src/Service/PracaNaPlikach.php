@@ -64,10 +64,12 @@ class PracaNaPlikach
     }
     public function GenerujPodgladJesliNieMaDlaPisma(string $folderPng, Pismo $pismo)
     {
+        // echo "GenerujPodgladJesliNieMaDlaPisma";
         $pathFolder =  $folderPng.$pismo->NazwaZrodlaBezRozszerzenia();
         
         if(!file_exists($pathFolder))
         {
+            // echo $pathFolder;
             mkdir($pathFolder);
             $zrodlo = $pismo->getAdresZrodlaPrzedZarejestrowaniem();
             $cel = $pismo->FolderZpodlgademPngWzglednie().$pismo->NazwaZrodlaBezRozszerzenia();

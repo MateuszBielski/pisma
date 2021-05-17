@@ -6,6 +6,7 @@ use App\Entity\Pismo;
 use App\Form\PismoType;
 use App\Repository\PismoRepository;
 use App\Service\PracaNaPlikach;
+use App\Service\UruchomienieProcesu;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,7 +36,7 @@ class PismoController extends AbstractController
         */
         $folder = $this->getParameter('sciezka_do_skanow');
         // echo $folder;
-        $process = new Process(['pdftopng',  $folder.'zych.pdf', $folder.'zychRozp']);//'-gray',
+        // $process = new Process(['pdftopng',  $folder.'zych.pdf', $folder.'zychRozp']);//'-gray',
         // $process->run();
         // echo $process->getOutput();
         
@@ -94,8 +95,9 @@ class PismoController extends AbstractController
         $pnp = new PracaNaPlikach;
         $pnp->PobierzWszystkieNazwyPlikowZfolderu($this->getParameter('sciezka_do_skanow'));
         $pismo = $pnp->UtworzPismoNaPodstawie($this->getParameter('sciezka_do_skanow'),$nazwa);
-        // echo __DIR__;
+        $pnp->setUruchomienieProcesu(new UruchomienieProcesu);
         $pnp->GenerujPodgladJesliNieMaDlaPisma($this->getParameter('sciezka_do_png'),$pismo);
+        
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
 
