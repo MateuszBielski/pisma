@@ -28,11 +28,13 @@ class Pismo
     private $oznaczenie;
 
     private $adresZrodlaPrzedZarejestrowaniem;
+    private $dataModyfikacji;
     // private $nazwaZrodlaPrzedZarejestrowaniem;
 
     public function __construct(string $adresZrodlaPrzedZarejestrowaniem = "")
     {
         $this->adresZrodlaPrzedZarejestrowaniem = $adresZrodlaPrzedZarejestrowaniem;
+        $this->dataModyfikacji = @date("Y-m-d H:i", @filemtime($adresZrodlaPrzedZarejestrowaniem));
     }
 
     public function getId(): ?int
@@ -85,6 +87,10 @@ class Pismo
     {
         $nazwa = $this->getNazwaZrodlaPrzedZarejestrowaniem();
         return substr($nazwa,0,strrpos($nazwa,'.'));
+    }
+    public function getDataModyfikacji()
+    {
+        return $this->dataModyfikacji;
     }
 
 }

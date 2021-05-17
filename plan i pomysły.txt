@@ -22,4 +22,6 @@ Strona sprawa:
 
 W tytule karty wpisywane oznaczenie pisma
 
-Rodzaj pisma: umowa, faktura, pismo
+Rodzaj pisma: umowa, faktura, pismo z mozliwością dopisania
+
+Usuwanie pisma z listy niezarejestrowanych - jeżeli skan się nie podoba
