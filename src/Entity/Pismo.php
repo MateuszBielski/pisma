@@ -68,10 +68,18 @@ class Pismo
         $arr = explode('/',$this->adresZrodlaPrzedZarejestrowaniem);
         return end($arr);
     }
+    public function getAdresZrodlaPrzedZarejestrowaniem()
+    {
+        return $this->adresZrodlaPrzedZarejestrowaniem;
+    }
     public function SciezkaDoPlikuPierwszejStronyDuzegoPodgladuPrzedZarejestrowaniem(): string
     {
         $nazwaBezRozszerzenia = $this->NazwaZrodlaBezRozszerzenia();
         return "/png/".$nazwaBezRozszerzenia."/".$nazwaBezRozszerzenia."-000001.png";
+    }
+    public function FolderZpodlgademPngWzglednie()
+    {
+        return "png/".$this->NazwaZrodlaBezRozszerzenia()."/";
     }
     public function NazwaZrodlaBezRozszerzenia(): string
     {

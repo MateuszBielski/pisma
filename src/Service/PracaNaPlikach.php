@@ -8,6 +8,8 @@ class PracaNaPlikach
 {
     private $odczytaneWszystkieNazwy;
     private $folderOdczytu;
+    protected $uruchomienie;
+
     public function PobierzWszystkieNazwyPlikowZfolderu(string $path): array
     {
         
@@ -62,11 +64,22 @@ class PracaNaPlikach
     }
     public function GenerujPodgladJesliNieMaDlaPisma(string $folderPng, Pismo $pismo)
     {
-       $path =  $folderPng.$pismo->NazwaZrodlaBezRozszerzenia();
-    //    echo __DIR__;
-       //echo "\nXXXXXXXXXXXX".$path;
-        // mkdir("tests/dodawanieUsuwanie/dok2");
-        if(!file_exists($path))
-        mkdir($path);
+        $pathFolder =  $folderPng.$pismo->NazwaZrodlaBezRozszerzenia();
+        
+        if(!file_exists($pathFolder))
+        {
+            mkdir($pathFolder);
+            $zrodlo = $pismo->getAdresZrodlaPrzedZarejestrowaniem();
+            $cel = $pismo->FolderZpodlgademPngWzglednie().$pismo->NazwaZrodlaBezRozszerzenia();
+            if($this->uruchomienie)
+            $this->uruchomienie->UruchomPolecenie(['pdftopng',$zrodlo,$cel]);
+        }
+        
+
+    }
+
+    public function setUruchomienieProcesu(UruchomienieProcesu $uruchomienie)
+    {
+        $this->uruchomienie = $uruchomienie;
     }
 }

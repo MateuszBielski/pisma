@@ -4,7 +4,9 @@ namespace App\Tests;
 
 use App\Entity\Pismo;
 use App\Service\PracaNaPlikach;
+use App\Service\UruchomienieProcesuMock;
 use PHPUnit\Framework\TestCase;
+
 
 class PismoPracaNaPlikachTest extends TestCase
 {
@@ -59,6 +61,7 @@ class PismoPracaNaPlikachTest extends TestCase
     }
     public function testGenerujPodgladJesliNieMaDlaPisma_tworzyOdpowiedniFolder()
     {
+        @rmdir($this->pathDodawanieUsuwanie."dok2");
         $this->assertFalse(file_exists($this->pathDodawanieUsuwanie."dok2"));
         $pnp = new PracaNaPlikach;
         $pnp->GenerujPodgladJesliNieMaDlaPisma($this->pathDodawanieUsuwanie,new Pismo("jakisFolder/dok2.pdf"));
@@ -76,12 +79,44 @@ class PismoPracaNaPlikachTest extends TestCase
         $this->assertTrue(file_exists($path));
         rmdir($path);
     }
+    public function testGenerujPodgladJesliNieMaDlaPisma_wywolanieProcesu()
+    {
+        $path = $this->pathDodawanieUsuwanie."dok3";
+        $pnp = new PracaNaPlikach;
+        $uruchomienie = new UruchomienieProcesuMock;
+        $pnp->setUruchomienieProcesu($uruchomienie);
+        $pnp->GenerujPodgladJesliNieMaDlaPisma($this->pathDodawanieUsuwanie,new Pismo("jakisFolder/dok3.pdf"));
+        $this->assertTrue($uruchomienie->wywolanoProces);
+        rmdir($path);
+    }
+    public function testGenerujPodgladJesliNieMaDlaPisma_argumentyPolecenia()
+    {
+        $path = $this->pathDodawanieUsuwanie."dok3";
+        $pnp = new PracaNaPlikach;
+        $uruchomienie = new UruchomienieProcesuMock;
+        $pnp->setUruchomienieProcesu($uruchomienie);
+        $pnp->GenerujPodgladJesliNieMaDlaPisma($this->pathDodawanieUsuwanie,new Pismo("jakis/Folder/dok3.pdf"));
+        $this->assertEquals('pdftopng',$uruchomienie->argumentyPolecenia[0]);
+        $this->assertEquals('jakis/Folder/dok3.pdf',$uruchomienie->argumentyPolecenia[1]);
+        $this->assertEquals('png/dok3/dok3',$uruchomienie->argumentyPolecenia[2]);//obie ścieżki do sprawdzenia
+        rmdir($path);
+    }
     public function _testRejestrowanePrzenosiRozpoznanyPlik(Type $var = null)
     {
         $pnp = new PracaNaPlikach();
         // $pnp->
     }
-
+    public function testGenerujPodgladJesliNieMaDlaPisma_NieWywolujeJesliJestFolderPodgladu()
+    {
+        $path = $this->pathDodawanieUsuwanie."dok4";
+        @mkdir($path);
+        $pnp = new PracaNaPlikach;
+        $uruchomienie = new UruchomienieProcesuMock;
+        $pnp->setUruchomienieProcesu($uruchomienie);
+        $pnp->GenerujPodgladJesliNieMaDlaPisma($this->pathDodawanieUsuwanie,new Pismo("jakisFolder/dok4.pdf"));
+        $this->assertFalse($uruchomienie->wywolanoProces);
+        rmdir($path);
+    }
     //wczytaj podgląd
     //czy wczytany podgląd
     //utworzenie folderu png jeśli nie ma

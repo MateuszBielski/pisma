@@ -21,3 +21,5 @@ Strona sprawa:
     
 
 W tytule karty wpisywane oznaczenie pisma
+
+Rodzaj pisma: umowa, faktura, pismo
