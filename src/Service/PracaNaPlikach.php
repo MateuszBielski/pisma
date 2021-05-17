@@ -65,12 +65,12 @@ class PracaNaPlikach
     public function GenerujPodgladJesliNieMaDlaPisma(string $folderPng, Pismo $pismo)
     {
         // echo "GenerujPodgladJesliNieMaDlaPisma";
-        $pathFolder =  $folderPng.$pismo->NazwaZrodlaBezRozszerzenia();
+        $pathFolderDlaJednegoDokumentu =  $folderPng.$pismo->NazwaZrodlaBezRozszerzenia();
         
-        if(!file_exists($pathFolder))
+        if(!file_exists($pathFolderDlaJednegoDokumentu))
         {
-            // echo $pathFolder;
-            mkdir($pathFolder);
+            // echo $pathFolderDlaJednegoDokumentu;
+            mkdir($pathFolderDlaJednegoDokumentu,0777,true);
             $zrodlo = $pismo->getAdresZrodlaPrzedZarejestrowaniem();
             $cel = $pismo->FolderZpodlgademPngWzglednie().$pismo->NazwaZrodlaBezRozszerzenia();
             if($this->uruchomienie)

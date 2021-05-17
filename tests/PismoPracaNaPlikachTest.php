@@ -117,6 +117,16 @@ class PismoPracaNaPlikachTest extends TestCase
         $this->assertFalse($uruchomienie->wywolanoProces);
         rmdir($path);
     }
+    public function testGenerujPodgladJesliNieMaDlaPisma_utworzFolderRekurencyjnie()
+    {
+        $path1 = $this->pathDodawanieUsuwanie."posr/";
+        $path2 = $path1."dok5";
+        $pnp = new PracaNaPlikach;
+        $pnp->GenerujPodgladJesliNieMaDlaPisma($path1,new Pismo("jakisFolder/dok5.pdf"));
+        $this->assertTrue(file_exists($this->pathDodawanieUsuwanie."posr/dok5"));
+        rmdir($path2);
+        rmdir($path1);
+    }
     //wczytaj podgląd
     //czy wczytany podgląd
     //utworzenie folderu png jeśli nie ma
