@@ -62,6 +62,15 @@ class PracaNaPlikach
         if(substr($folder,-1) != '/')$folder .= '/';
         return new Pismo($folder.$nazwaZrodla);
     }
+    public function UtworzPismaZfolderu(string $folder, $rozsz = ""): array
+    {
+        $pisma = [];
+        $this->PobierzWszystkieNazwyPlikowZfolderu($folder);
+        $nazwy = strlen($rozsz)? $this->NazwyBezSciezkiZrozszerzeniem($rozsz): $this->odczytaneWszystkieNazwy;
+        foreach($nazwy as $n)
+            $pisma[] = $this->UtworzPismoNaPodstawie($this->folderOdczytu,$n);
+        return $pisma;
+    }
     public function GenerujPodgladJesliNieMaDlaPisma(string $folderPng, Pismo $pismo)
     {
         // echo "GenerujPodgladJesliNieMaDlaPisma";

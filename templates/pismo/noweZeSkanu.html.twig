@@ -7,16 +7,7 @@
 {% endblock %}
 {% block b_div_lewy %}
     <h4>Lista dokumentów do wprowadzenia:</h4>
-    <table>
-        {% for nazwa in skany %}
-            <tr>
-                <td>
-                    
-                    <a href="{{ path('pismo_nowe_ze_skanu', {'nazwa': nazwa}) }}" >{{ nazwa }}</a>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
+    {{ include('pismo/listaNier.html.twig') }}
 {% endblock %}
 {% block b_div_centr %}
 miejsce na wprowadzenie danych dotyczących dokumentu<br>

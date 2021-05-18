@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PismoRepository;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * @ORM\Entity(repositoryClass=PismoRepository::class)
@@ -29,6 +30,7 @@ class Pismo
 
     private $adresZrodlaPrzedZarejestrowaniem;
     private $dataModyfikacji;
+    private $folderPodgladu = 'png/';
     // private $nazwaZrodlaPrzedZarejestrowaniem;
 
     public function __construct(string $adresZrodlaPrzedZarejestrowaniem = "")
@@ -77,11 +79,11 @@ class Pismo
     public function SciezkaDoPlikuPierwszejStronyDuzegoPodgladuPrzedZarejestrowaniem(): string
     {
         $nazwaBezRozszerzenia = $this->NazwaZrodlaBezRozszerzenia();
-        return "/png/".$nazwaBezRozszerzenia."/".$nazwaBezRozszerzenia."-000001.png";
+        return "/".$this->folderPodgladu.$nazwaBezRozszerzenia."/".$nazwaBezRozszerzenia."-000001.png";
     }
     public function FolderZpodlgademPngWzglednie()
     {
-        return "png/".$this->NazwaZrodlaBezRozszerzenia()."/";
+        return $this->folderPodgladu.$this->NazwaZrodlaBezRozszerzenia()."/";
     }
     public function NazwaZrodlaBezRozszerzenia(): string
     {
@@ -92,5 +94,13 @@ class Pismo
     {
         return $this->dataModyfikacji;
     }
-
+    public function JestPodglad(): bool
+    {
+        return file_exists($this->FolderZpodlgademPngWzglednie());
+        // return false;
+    }
+    public function setFolderPodgladu(string $path)
+    {
+        $this->folderPodgladu = $path;
+    }
 }

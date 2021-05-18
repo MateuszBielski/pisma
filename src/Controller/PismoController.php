@@ -93,7 +93,7 @@ class PismoController extends AbstractController
     public function noweZeSkanu(Request $request, string $nazwa): Response
     {
         $pnp = new PracaNaPlikach;
-        $pnp->PobierzWszystkieNazwyPlikowZfolderu($this->getParameter('sciezka_do_skanow'));
+        // $pnp->PobierzWszystkieNazwyPlikowZfolderu($this->getParameter('sciezka_do_skanow'));
         $pismo = $pnp->UtworzPismoNaPodstawie($this->getParameter('sciezka_do_skanow'),$nazwa);
         $pnp->setUruchomienieProcesu(new UruchomienieProcesu);
         $pnp->GenerujPodgladJesliNieMaDlaPisma($this->getParameter('sciezka_do_png'),$pismo);
@@ -110,7 +110,8 @@ class PismoController extends AbstractController
         }
 
         return $this->render('pismo/noweZeSkanu.html.twig', [
-            'skany' => $pnp->NazwyBezSciezkiZrozszerzeniem('pdf'),
+            // 'skany' => $pnp->NazwyBezSciezkiZrozszerzeniem('pdf'),
+            'pisma' => $pnp->UtworzPismaZfolderu($this->getParameter('sciezka_do_skanow'),'pdf'),
             'pismo' => $pismo,
             'form' => $form->createView(),
             // 'sciezka_png' => '/png/zychRozp.png',

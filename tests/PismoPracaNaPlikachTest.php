@@ -37,6 +37,20 @@ class PismoPracaNaPlikachTest extends TestCase
         $this->assertEquals(3,count($nazwyPlikowPdf));
         $this->assertEquals('dok2.pdf',$nazwyPlikowPdf[1]);
     }
+    public function testUtworzPismaZfolderu()
+    {
+        $pnp = new PracaNaPlikach();
+        $pisma = $pnp->UtworzPismaZfolderu($this->pathSkanyFolder);
+        $this->assertEquals(5,count($pisma));
+        $this->assertEquals('dok3.pdf',$pisma[2]->getNazwaZrodlaPrzedZarejestrowaniem());
+    }
+    public function testUtworzPismaZfolderu_tylkoPdf()
+    {
+        $pnp = new PracaNaPlikach();
+        $pisma = $pnp->UtworzPismaZfolderu($this->pathSkanyFolder,'pdf');
+        $this->assertEquals(3,count($pisma));
+        $this->assertEquals('dok3.pdf',$pisma[2]->getNazwaZrodlaPrzedZarejestrowaniem());
+    }
     public function testKomunikatJezeliPustyFolder()
     {
         $pathPustyFolder = "tests/pustyFolder";
@@ -127,6 +141,7 @@ class PismoPracaNaPlikachTest extends TestCase
         rmdir($path2);
         rmdir($path1);
     }
+    
     //wczytaj podgląd
     //czy wczytany podgląd
     //utworzenie folderu png jeśli nie ma

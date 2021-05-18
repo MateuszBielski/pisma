@@ -6,16 +6,6 @@
     <h3>Skany niezarejestrowane</h3>
 {% endblock %}
 {% block b_div_centr %}
-    <table>
-        {% for nazwa in skany %}
-            <tr>
-                <td>
-                    
-                    <a href="{{ path('pismo_nowe_ze_skanu', {'nazwa': nazwa}) }}" >{{ nazwa }}</a>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-
+    {{ include('pismo/listaNier.html.twig') }}
 {% endblock %}
 {% block belka_dol %}{% endblock %}
