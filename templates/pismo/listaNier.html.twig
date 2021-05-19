@@ -3,7 +3,7 @@
         <tr>
             <td>
                 {% set nazwa = pismo.NazwaZrodlaPrzedZarejestrowaniem %}
-                <a href="{{ path('pismo_nowe_ze_skanu', {'nazwa': nazwa, 'numerStrony': 1}) }}" >{{ nazwa }}</a>
+                <a href="{{ path('pismo_nowe_ze_skanu', {'nazwa': nazwa, 'numerStrony': 1}) }}" >{{ pismo.NazwaSkroconaZrodla(20) }}</a>
             </td>
             <td>
                 {% if pismo.JestPodglad() %}+{% endif %}

@@ -52,4 +52,12 @@ class PismoTest extends TestCase
         $sciezkiDoPodgladu = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem();
         $this->assertEquals(3,count($sciezkiDoPodgladu));
     }
+    public function testNazwaSkroconaZrodla()
+    {
+        $pismo2 = new Pismo("/skany/skan.pdf");
+        $this->assertEquals('skan.pdf',$pismo2->NazwaSkroconaZrodla(2));
+        $pismo = new Pismo("/var/www/html/skany/BRN3C2AF41C02A8_006357.pdf");
+        $this->assertEquals('BRN3C...pdf',$pismo->NazwaSkroconaZrodla(5));
+        $this->assertEquals('BRN3C2A...pdf',$pismo->NazwaSkroconaZrodla(7));
+    }
 }

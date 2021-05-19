@@ -72,6 +72,19 @@ class Pismo
         $arr = explode('/',$this->adresZrodlaPrzedZarejestrowaniem);
         return end($arr);
     }
+    public function NazwaSkroconaZrodla(int $dlugosc): string
+    {
+        $skrot = $this->getNazwaZrodlaPrzedZarejestrowaniem();
+        $przod = substr($skrot,0,-4);
+        // print("\n".strlen($przod)."   ".$dlugosc+1);
+        // echo "\nprzod:  ".$przod." strlen: ".strlen($przod);
+        if(strlen($przod) < $dlugosc+3)return $skrot;
+        
+        $przod = substr($przod,0,$dlugosc);
+        $tyl = substr($skrot,-4);
+
+        return $przod."..".$tyl;
+    }
     public function getAdresZrodlaPrzedZarejestrowaniem()
     {
         return $this->adresZrodlaPrzedZarejestrowaniem;
