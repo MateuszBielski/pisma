@@ -41,8 +41,15 @@ class PismoTest extends TestCase
     }
     public function testPismoCzyPosiadaPodglad()
     {
-        $pismo = new Pismo("/var/www/html/skany/maPodglad.pdf");
+        $pismo = new Pismo("/var/jakas/sciezka/skany/maPodglad.pdf");
         $pismo->setFolderPodgladu("tests/png/");
         $this->assertTrue($pismo->JestPodglad());
+    }
+    public function testPismoIleStronPodgladu_tylkoPng()
+    {
+        $pismo = new Pismo("/var/jakas/sciezka/skany/maPodglad.pdf");
+        $pismo->setFolderPodgladu("tests/png/");
+        $sciezkiDoPodgladu = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem();
+        $this->assertEquals(3,count($sciezkiDoPodgladu));
     }
 }

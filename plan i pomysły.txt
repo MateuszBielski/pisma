@@ -25,3 +25,5 @@ W tytule karty wpisywane oznaczenie pisma
 Rodzaj pisma: umowa, faktura, pismo z mozliwością dopisania
 
 Usuwanie pisma z listy niezarejestrowanych - jeżeli skan się nie podoba
+
+utworzenie pliku png z konsoli: convert -size 50x50 xc: maPodglad-000001.png

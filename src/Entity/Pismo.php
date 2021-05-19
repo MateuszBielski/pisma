@@ -81,6 +81,30 @@ class Pismo
         $nazwaBezRozszerzenia = $this->NazwaZrodlaBezRozszerzenia();
         return "/".$this->folderPodgladu.$nazwaBezRozszerzenia."/".$nazwaBezRozszerzenia."-000001.png";
     }
+    public function SciezkiDoPlikuPodgladowPrzedZarejestrowaniem(): array
+    {
+        $sciezki = [];
+        $nazwaBezRozszerzenia = $this->NazwaZrodlaBezRozszerzenia();
+        $path = $this->folderPodgladu.$nazwaBezRozszerzenia;
+        $nazwy = array_diff(scandir($path), array('..', '.'));
+        if(!count($nazwy)){
+            $sciezki[] = "folder $path jest pusty";
+            return $sciezki;
+        }
+        foreach($nazwy as $n)
+        {
+            $arr = explode('.',$n);
+            $extension = end($arr);
+
+            if('png' == $extension)
+            {
+                $s = "/".$path."/".$n;
+                $sciezki[] = $s;
+                // echo "\n".$s;
+            }
+        }
+        return $sciezki;
+    }
     public function FolderZpodlgademPngWzglednie()
     {
         return $this->folderPodgladu.$this->NazwaZrodlaBezRozszerzenia()."/";

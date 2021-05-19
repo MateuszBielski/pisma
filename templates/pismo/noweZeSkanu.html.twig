@@ -14,7 +14,19 @@ miejsce na wprowadzenie danych dotyczących dokumentu<br>
 data modyfikacji dokumentu: {{ pismo.dataModyfikacji }}
 {% endblock %}
 {% block b_div_prawy %}
-pokaż kolejną stronę
+strony: 
+{% set indeks = 1 %}
+{% set nazwa = pismo.NazwaZrodlaPrzedZarejestrowaniem %}
+{% for sciezka_png in sciezki_png %}
+    <a href="{{ path('pismo_nowe_ze_skanu', {'nazwa': nazwa, 'numerStrony': indeks}) }}" >
+        {% if numerStrony == indeks %}
+        <{{ indeks }}> </b>
+        {% else %}
+            {{ indeks }}  
+        {% endif %}
+    </a>
+    {% set indeks = indeks + 1 %}
+{% endfor %}
 <img src="{{ sciezka_png }}" alt="nie mogę wyświetlić " width="100%">
 {% endblock %}
 {% block belka_dol %}{% endblock %}

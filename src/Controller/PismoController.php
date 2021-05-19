@@ -58,10 +58,11 @@ class PismoController extends AbstractController
         for($i = 7 ; $i < 12 ; $i++)$skany[] = 'skan'.$i.'.pdf';
         */
         $pnp = new PracaNaPlikach;
-        $pnp->PobierzWszystkieNazwyPlikowZfolderu($this->getParameter('sciezka_do_skanow'));
+        // $pnp->PobierzWszystkieNazwyPlikowZfolderu($this->getParameter('sciezka_do_skanow'));
         
         return $this->render('pismo/noweIndex.html.twig', [
-            'skany' => $pnp->NazwyBezSciezkiZrozszerzeniem('pdf'),
+            // 'skany' => $pnp->NazwyBezSciezkiZrozszerzeniem('pdf'),
+            'pisma' => $pnp->UtworzPismaZfolderu($this->getParameter('sciezka_do_skanow'),'pdf'),
             ]);
     }
 
@@ -88,9 +89,9 @@ class PismoController extends AbstractController
         ]);
     }
     /**
-     * @Route("/noweZeSkanu/{nazwa}", name="pismo_nowe_ze_skanu", methods={"GET","POST"})
+     * @Route("/noweZeSkanu/{nazwa}/{numerStrony}", name="pismo_nowe_ze_skanu", methods={"GET","POST"})
      */
-    public function noweZeSkanu(Request $request, string $nazwa): Response
+    public function noweZeSkanu(Request $request, string $nazwa, $numerStrony = 1): Response
     {
         $pnp = new PracaNaPlikach;
         // $pnp->PobierzWszystkieNazwyPlikowZfolderu($this->getParameter('sciezka_do_skanow'));
@@ -108,14 +109,15 @@ class PismoController extends AbstractController
 
             return $this->redirectToRoute('pismo_index');
         }
-
+        $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem();
         return $this->render('pismo/noweZeSkanu.html.twig', [
             // 'skany' => $pnp->NazwyBezSciezkiZrozszerzeniem('pdf'),
             'pisma' => $pnp->UtworzPismaZfolderu($this->getParameter('sciezka_do_skanow'),'pdf'),
             'pismo' => $pismo,
             'form' => $form->createView(),
-            // 'sciezka_png' => '/png/zychRozp.png',
-            'sciezka_png' => $pismo->SciezkaDoPlikuPierwszejStronyDuzegoPodgladuPrzedZarejestrowaniem(),
+            'sciezki_png' => $sciezkiDoPodgladow,
+            'sciezka_png' => $sciezkiDoPodgladow[$numerStrony - 1],
+            'numerStrony' => $numerStrony,
         ]);
     }
 
