@@ -37,6 +37,7 @@ class Pismo
     {
         $this->adresZrodlaPrzedZarejestrowaniem = $adresZrodlaPrzedZarejestrowaniem;
         $this->dataModyfikacji = @date("Y-m-d H:i", @filemtime($adresZrodlaPrzedZarejestrowaniem));
+        $this->nazwaPliku = $this->getNazwaZrodlaPrzedZarejestrowaniem();
     }
 
     public function getId(): ?int
