@@ -153,7 +153,7 @@ class PismoPracaNaPlikachTest extends TestCase
         unlink($sciezkaDoZarejestrowanych."dok4.pdf");
 
     }
-    public function testRejestrujPismo_zmianaNazwy()
+    public function testRejestrujPismo_zmianaNazwy_zwracaTrue()
     {
         $pnp = new PracaNaPlikach;
         fclose(fopen($this->pathSkanyFolder."/dok4.pdf",'w'));
@@ -161,15 +161,46 @@ class PismoPracaNaPlikachTest extends TestCase
         $pismo->setNazwaPliku("nowaNazwa.pdf");
 
         $sciezkaDoZarejestrowanych = "tests/dodawanieUsuwanie/";
-        $pnp->RejestrujPismo($sciezkaDoZarejestrowanych,$pismo);
+        $this->assertTrue($pnp->RejestrujPismo($sciezkaDoZarejestrowanych,$pismo));
         $this->assertTrue(file_exists($sciezkaDoZarejestrowanych."nowaNazwa.pdf"));
         unlink($sciezkaDoZarejestrowanych."nowaNazwa.pdf");
 
     }
+    public function testRejestrujPismo_zwracaFalseJesliNieMaPlikuZrodlowego()
+    {
+        //karta  może być otwarta długo, plik może zostać usunięty w miedzyczasie
+        $pnp = new PracaNaPlikach;
+        //tworzy na podstawie nieistniejącego pliku
+        $pismo = $pnp->UtworzPismoNaPodstawie($this->pathSkanyFolder,"dok5.pdf");
+        $sciezkaDoZarejestrowanych = "tests/dodawanieUsuwanie/";
+        $this->assertFalse($pnp->RejestrujPismo($sciezkaDoZarejestrowanych,$pismo));
+
+    }
+    public function testRejestrujPismo_zmianaFolderuPodgladu()
+    {
+        $pnp = new PracaNaPlikach;
+        $pathPng = "tests/png/";
+        mkdir($pathPng."maPodglad2");
+        for($i = 1; $i < 4 ; $i++)
+        {
+            fclose(fopen($pathPng."maPodglad2/maPodglad2-00000".$i.".png",'w'));
+        }
+        fclose(fopen($this->pathSkanyFolder."/maPodglad2.pdf",'w'));
+        $pismo = $pnp->UtworzPismoNaPodstawie($this->pathSkanyFolder,"maPodglad2.pdf");
+        $pismo->setFolderPodgladu($pathPng);
+        $pismo->setNazwaPliku("nowaNazwa.pdf");
+
+        $sciezkaDoZarejestrowanych = "tests/dodawanieUsuwanie/";
+        
+        $pnp->RejestrujPismo($sciezkaDoZarejestrowanych,$pismo);
+        
+        $this->assertTrue(file_exists($pathPng."nowaNazwa"));
+        $this->assertEquals(3,count($pismo->SciezkiDoPlikuPodgladowZarejestrowanych()));
+        for($i = 1; $i < 4 ; $i++)unlink($pathPng."nowaNazwa/nowaNazwa-00000".$i.".png");
+        rmdir($pathPng."nowaNazwa");
+        unlink($sciezkaDoZarejestrowanych."nowaNazwa.pdf");
+    }
     
-    //wczytaj podgląd
-    //czy wczytany podgląd
     //utworzenie folderu png jeśli nie ma
-    //usuwanie(przenoszenie) folderu z podglądem po zarejestrowaniu
-    //generowane podglądy powinny być w folderze obok surowych skanów, a potem przenoszone
+    
 }

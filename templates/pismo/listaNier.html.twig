@@ -6,7 +6,7 @@
                 <a href="{{ path('pismo_nowe_ze_skanu', {'nazwa': nazwa, 'numerStrony': 1}) }}" >{{ pismo.NazwaSkroconaZrodla(20) }}</a>
             </td>
             <td>
-                {% if pismo.JestPodglad() %}+{% endif %}
+                {% if pismo.JestPodgladDlaZrodla() %}+{% endif %}
                 
             </td>
             {% if pokazDate is defined %}

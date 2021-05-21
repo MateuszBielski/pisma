@@ -13,10 +13,10 @@ class PismoTest extends TestCase
         $pismo = new Pismo("/var/www/html/skany/BRN3C2AF41C02A8_006357.pdf");
         $this->assertEquals('/png/BRN3C2AF41C02A8_006357/BRN3C2AF41C02A8_006357-000001.png',$pismo->SciezkaDoPlikuPierwszejStronyDuzegoPodgladuPrzedZarejestrowaniem());
     }
-    public function testFolderZpodlgademPngWzglednie()
+    public function testFolderZpodlgademPngWzglednieZgodnieZeZrodlem()
     {
         $pismo = new Pismo("/var/www/html/skany/BRN3C2AF41C02A8_006357.pdf");
-        $this->assertEquals('png/BRN3C2AF41C02A8_006357/',$pismo->FolderZpodlgademPngWzglednie());//do ustalenia ukośniki
+        $this->assertEquals('png/BRN3C2AF41C02A8_006357/',$pismo->FolderZpodlgademPngWzglednieZgodnieZeZrodlem());//do ustalenia ukośniki
     }
     public function testUtworzonePokazujePolozeniePodgladu1strony_zmianaDomyslnegoFold()
     {
@@ -26,24 +26,31 @@ class PismoTest extends TestCase
         $pismo->setFolderPodgladu("rcp/");
         $this->assertEquals('/rcp/BRN3C2AF41C02A8_006357/BRN3C2AF41C02A8_006357-000001.png',$pismo->SciezkaDoPlikuPierwszejStronyDuzegoPodgladuPrzedZarejestrowaniem());
     }
-    public function testFolderZpodlgademPngWzglednie_zmianaDomyslnegoFold()
+    public function testFolderZpodlgademPngWzglednieZgodnieZeZrodlem_zmianaDomyslnegoFold()
     {
         $pismo = new Pismo("/var/www/html/skany/BRN3C2AF41C02A8_006357.pdf");
         $pismo->setFolderPodgladu("rcp/");
-        $this->assertEquals('rcp/BRN3C2AF41C02A8_006357/',$pismo->FolderZpodlgademPngWzglednie());//do ustalenia ukośniki
+        $this->assertEquals('rcp/BRN3C2AF41C02A8_006357/',$pismo->FolderZpodlgademPngWzglednieZgodnieZeZrodlem());//do ustalenia ukośniki
+    }
+    public function testFolderZpodlgademPngWzglednieZgodnieZnazwaPliku()
+    {
+        $pismo = new Pismo("/var/www/html/skany/BRN3C2AF41C02A8_006357.pdf");
+        $pismo->setNazwaPliku("BRN3C2AF41C02A8_006358.pdf");
+        $pismo->setFolderPodgladu("rcp/");
+        $this->assertEquals('rcp/BRN3C2AF41C02A8_006358/',$pismo->FolderZpodlgademPngWzglednieZgodnieZnazwaPliku());
     }
 
 
     public function testPismoCzyNiePosiadaPodgladu()
     {
         $pismo = new Pismo("/var/www/html/skany/BRN3C2AF41C02A8_006357.pdf");
-        $this->assertFalse($pismo->JestPodglad());
+        $this->assertFalse($pismo->JestPodgladDlaZrodla());
     }
     public function testPismoCzyPosiadaPodglad()
     {
         $pismo = new Pismo("/var/jakas/sciezka/skany/maPodglad.pdf");
         $pismo->setFolderPodgladu("tests/png/");
-        $this->assertTrue($pismo->JestPodglad());
+        $this->assertTrue($pismo->JestPodgladDlaZrodla());
     }
     public function testPismoIleStronPodgladu_tylkoPng()
     {
@@ -52,6 +59,42 @@ class PismoTest extends TestCase
         $sciezkiDoPodgladu = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem();
         $this->assertEquals(3,count($sciezkiDoPodgladu));
     }
+    public function testSciezkiDoPlikuPodgladowPrzedZarejestrowaniem_bezSlashaWiodacgo()
+    {
+        $pismo = new Pismo("/var/jakas/sciezka/skany/maPodglad.pdf");
+        $pismo->setFolderPodgladu("tests/png/");
+        $sciezkiDoPodgladu = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem(false);
+        $this->assertEquals('tests/png/maPodglad/maPodglad-000002.png',$sciezkiDoPodgladu[1]);
+    }
+
+    public function testGenerujNazwyZeSciezkamiDlaDocelowychPodgladow()
+    {
+        $pismo = new Pismo("/var/jakas/sciezka/skany/maPodglad.pdf");
+        $pismo->setFolderPodgladu("tests/png/");
+        $pismo->setNazwaPliku("nowaNazwa3.pdf");
+        $sciezkiWygenerowane = $pismo->GenerujNazwyZeSciezkamiDlaDocelowychPodgladow();
+        $this->assertEquals('tests/png/nowaNazwa3/nowaNazwa3-000002.png',$sciezkiWygenerowane[1]);
+
+    }
+    public function testGenerujNazwyDocelowychPodgladowZeSciezkamiWfolderzeZrodlowym()
+    {
+        //na potrzeby zmiany nazwy podglądów
+        $pismo = new Pismo("/var/jakas/sciezka/skany/maPodglad.pdf");
+        $pismo->setFolderPodgladu("tests/png/");
+        $pismo->setNazwaPliku("nowaNazwa3.pdf");
+        $sciezkiWygenerowane = $pismo->GenerujNazwyDocelowychPodgladowZeSciezkamiWfolderzeZrodlowym();
+        $this->assertEquals('tests/png/maPodglad/nowaNazwa3-000002.png',$sciezkiWygenerowane[1]);
+    }
+    public function testSciezkiDoPodgladowZarejestrowanych()
+    {
+        $pismo = new Pismo("/var/jakas/sciezka/skany/zrodlo.pdf");
+        $pismo->setNazwaPliku("maPodglad.pdf");//nie ma znaczenia że folder ten sam jak dla testów podglądu dla źródła
+        $pismo->setFolderPodgladu("tests/png/");
+        $sciezkiDoPodgladu = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
+        
+        $this->assertEquals('/tests/png/maPodglad/maPodglad-000002.png',$sciezkiDoPodgladu[1]);
+    }
+
     public function testNazwaSkroconaZrodla()
     {
         $pismo2 = new Pismo("/skany/skan.pdf");

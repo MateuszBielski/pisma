@@ -28,3 +28,7 @@ Usuwanie pisma z listy niezarejestrowanych - jeżeli skan się nie podoba
 
 utworzenie pliku png z konsoli: convert -size 50x50 xc: maPodglad-000001.png
 Sortowanie dokumentów po dacie
+
+rejestrowanie pliku, jeżeli nie powiedzie się zmiana nazwy folderu, zrobić jeszcze raz podgląd, albo zapisać starą nazwę źródła
+funkcja nazwaPlikuBezRozszerzenia powinna uwzględniać wpisanie nazwy bez rozszerzenia
+Wfolderze ze skanami zarejestrowanymi znajdują się inne pliki

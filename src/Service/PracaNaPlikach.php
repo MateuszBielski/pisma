@@ -73,27 +73,43 @@ class PracaNaPlikach
     }
     public function GenerujPodgladJesliNieMaDlaPisma(string $folderPng, Pismo $pismo)
     {
-        // echo "GenerujPodgladJesliNieMaDlaPisma";
         $pathFolderDlaJednegoDokumentu =  $folderPng.$pismo->NazwaZrodlaBezRozszerzenia();
         
         if(!file_exists($pathFolderDlaJednegoDokumentu))
         {
-            // echo $pathFolderDlaJednegoDokumentu;
             mkdir($pathFolderDlaJednegoDokumentu,0777,true);
             $zrodlo = $pismo->getAdresZrodlaPrzedZarejestrowaniem();
-            $cel = $pismo->FolderZpodlgademPngWzglednie().$pismo->NazwaZrodlaBezRozszerzenia();
+            $cel = $pismo->FolderZpodlgademPngWzglednieZgodnieZeZrodlem().$pismo->NazwaZrodlaBezRozszerzenia();
             if($this->uruchomienie)
             $this->uruchomienie->UruchomPolecenie(['pdftopng',$zrodlo,$cel]);
         }
         
 
     }
-    public function RejestrujPismo(string $sciezkaDoZarejestrowanych,Pismo $pismo)
+    public function RejestrujPismo(string $sciezkaDoZarejestrowanych,Pismo $pismo): bool
     {
         $adresZrodla = $pismo->getAdresZrodlaPrzedZarejestrowaniem();
         $nazwaPliku = $pismo->getNazwaPliku();
+        $jestPodglad = $pismo->JestPodgladDlaZrodla();
         $adresPlikuPoZarejestrowaniu = $sciezkaDoZarejestrowanych.$nazwaPliku;
-        rename($adresZrodla,$adresPlikuPoZarejestrowaniu);
+        if(!file_exists($adresZrodla))return false;
+        $przeniesioneZrodlo = rename($adresZrodla,$adresPlikuPoZarejestrowaniu);
+        if($jestPodglad && $przeniesioneZrodlo)
+        {
+            $sciezkiZrodla = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem(false);
+            $sciezkiPoRejestracji = $pismo->GenerujNazwyDocelowychPodgladowZeSciezkamiWfolderzeZrodlowym();
+            $i = 0;
+            foreach($sciezkiZrodla as $sz)
+            {
+                rename($sz,$sciezkiPoRejestracji[$i++]);
+            }
+            $folderPodgladuPrzedRejestracja = $pismo->FolderZpodlgademPngWzglednieZgodnieZeZrodlem();
+            $folderPodgladuPoZarejestrowaniu = $pismo->FolderZpodlgademPngWzglednieZgodnieZnazwaPliku();
+            $zmienionyFolder = rename($folderPodgladuPrzedRejestracja,$folderPodgladuPoZarejestrowaniu);
+
+            return true;
+        }
+        return $przeniesioneZrodlo;
     }
     public function setUruchomienieProcesu(UruchomienieProcesu $uruchomienie)
     {
