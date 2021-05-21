@@ -9,6 +9,12 @@
                 {% if pismo.JestPodglad() %}+{% endif %}
                 
             </td>
+            {% if pokazDate is defined %}
+            
+            <td>
+                {{ pismo.dataModyfikacji }}
+            </td>
+            {% endif %}
         </tr>
     {% endfor %}
 </table>

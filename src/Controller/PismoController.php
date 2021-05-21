@@ -102,7 +102,8 @@ class PismoController extends AbstractController
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && $pnp->RejestrujPismo($this->getParameter('sciezka_do_zarejestrowanych'),$pismo)) {
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($pismo);
             $entityManager->flush();

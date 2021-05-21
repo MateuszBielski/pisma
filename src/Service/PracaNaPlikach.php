@@ -88,7 +88,13 @@ class PracaNaPlikach
         
 
     }
-
+    public function RejestrujPismo(string $sciezkaDoZarejestrowanych,Pismo $pismo)
+    {
+        $adresZrodla = $pismo->getAdresZrodlaPrzedZarejestrowaniem();
+        $nazwaPliku = $pismo->getNazwaPliku();
+        $adresPlikuPoZarejestrowaniu = $sciezkaDoZarejestrowanych.$nazwaPliku;
+        rename($adresZrodla,$adresPlikuPoZarejestrowaniu);
+    }
     public function setUruchomienieProcesu(UruchomienieProcesu $uruchomienie)
     {
         $this->uruchomienie = $uruchomienie;

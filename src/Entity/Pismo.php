@@ -4,10 +4,14 @@ namespace App\Entity;
 
 use App\Repository\PismoRepository;
 use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\Types\Boolean;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=PismoRepository::class)
+ * @ORM\Table(name="pismo",uniqueConstraints={@ORM\UniqueConstraint(name="nazwa_pliku_unikalna", columns={"nazwa_pliku"})})
+ * @UniqueEntity("nazwaPliku",
+ *     message="Proszę użyć innej nazwy pliku, ta jest już używana")
+ * 
  */
 class Pismo
 {
@@ -20,6 +24,8 @@ class Pismo
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     
+     * 
      */
     private $nazwaPliku;
 

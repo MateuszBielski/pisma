@@ -141,6 +141,31 @@ class PismoPracaNaPlikachTest extends TestCase
         rmdir($path2);
         rmdir($path1);
     }
+    public function testRejestrujPismo_czyPrzenosiPlik()
+    {
+        $pnp = new PracaNaPlikach;
+        fclose(fopen($this->pathSkanyFolder."/dok4.pdf",'w'));
+        // $this->assertTrue(file_exists($this->pathSkanyFolder."/dok4.pdf"));
+        $pismo = $pnp->UtworzPismoNaPodstawie($this->pathSkanyFolder,"dok4.pdf");
+        $sciezkaDoZarejestrowanych = "tests/dodawanieUsuwanie/";
+        $pnp->RejestrujPismo($sciezkaDoZarejestrowanych,$pismo);
+        $this->assertTrue(file_exists($sciezkaDoZarejestrowanych."dok4.pdf"));
+        unlink($sciezkaDoZarejestrowanych."dok4.pdf");
+
+    }
+    public function testRejestrujPismo_zmianaNazwy()
+    {
+        $pnp = new PracaNaPlikach;
+        fclose(fopen($this->pathSkanyFolder."/dok4.pdf",'w'));
+        $pismo = $pnp->UtworzPismoNaPodstawie($this->pathSkanyFolder,"dok4.pdf");
+        $pismo->setNazwaPliku("nowaNazwa.pdf");
+
+        $sciezkaDoZarejestrowanych = "tests/dodawanieUsuwanie/";
+        $pnp->RejestrujPismo($sciezkaDoZarejestrowanych,$pismo);
+        $this->assertTrue(file_exists($sciezkaDoZarejestrowanych."nowaNazwa.pdf"));
+        unlink($sciezkaDoZarejestrowanych."nowaNazwa.pdf");
+
+    }
     
     //wczytaj podgląd
     //czy wczytany podgląd
