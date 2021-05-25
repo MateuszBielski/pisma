@@ -93,7 +93,13 @@ class PracaNaPlikach
         $jestPodglad = $pismo->JestPodgladDlaZrodla();
         $adresPlikuPoZarejestrowaniu = $sciezkaDoZarejestrowanych.$nazwaPliku;
         if(!file_exists($adresZrodla))return false;
-        $przeniesioneZrodlo = rename($adresZrodla,$adresPlikuPoZarejestrowaniu);
+        //$przeniesioneZrodlo = rename($adresZrodla,$adresPlikuPoZarejestrowaniu);//nie chce działać na dysku zamontowanym z Windowsa
+        $przeniesioneZrodlo = false;
+        if(copy($adresZrodla,$adresPlikuPoZarejestrowaniu))
+        {
+            unlink($adresZrodla);
+            $przeniesioneZrodlo = true;
+        }
         if($jestPodglad && $przeniesioneZrodlo)
         {
             $sciezkiZrodla = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem(false);

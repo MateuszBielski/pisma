@@ -103,4 +103,11 @@ class PismoTest extends TestCase
         $this->assertEquals('BRN3C...pdf',$pismo->NazwaSkroconaZrodla(5));
         $this->assertEquals('BRN3C2A...pdf',$pismo->NazwaSkroconaZrodla(7));
     }
+    public function testSciezkiDoPlikuPodgladowZarejestrowanych_jesliNieMaPodgladu()
+    {
+        $pismo = new Pismo("/skany/skan.pdf");
+        $sciezki = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
+        
+    }
+    //Jeśli nie ma podglądu
 }

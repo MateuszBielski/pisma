@@ -1,44 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Pismo index{% endblock %}
+{% block title %}Zarejestrowane{% endblock %}
 
-{% block body %}
-    <h3>pisma do zarejestrowania</h3>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>NazwaPliku</th>
-                <th>Oznaczenie</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for pismo in pismos %}
-            <tr>
-                <td>{{ pismo.id }}</td>
-                <td>{{ pismo.nazwaPliku }}</td>
-                <td>{{ pismo.oznaczenie }}</td>
-                <td>
-                    <a href="{{ path('pismo_show', {'id': pismo.id}) }}">show</a>
-                    <a href="{{ path('pismo_edit', {'id': pismo.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('pismo_new') }}">Create new</a>
-    {#//https://stackoverflow.com/questions/38741264/how-to-display-a-pdf-in-a-twig-division-using-ajax-and-symfony
-     <embed src="{{ path('invitation_invitationPDF')}}" width="500" height="400" type='application/pdf'> 
-    <embed src="/home/mateusz/Dokumenty/Inwestycje/koszty i powierzchnie/współczynnikiLabWarsztatyArchiwumZPO.pdf" type='application/pdf'>
-    <div>
-        <iframe src="/home/mateusz/Dokumenty/Inwestycje/koszty i powierzchnie/współczynnikiLabWarsztatyArchiwumZPO.pdf" style="width:100%;height:700px;"></iframe>
-    </div>   
-    koniec pdf #}   
+{% block b_div_pod_belka %}
+    <h3>Pisma zarejestrowane</h3>
 {% endblock %}
+{% block b_div_centr %}
+    {% set pokazDate = "tak" %}
+    {{ include('pismo/listaRej.html.twig') }}
+{% endblock %}
+{% block belka_dol %}{% endblock %}

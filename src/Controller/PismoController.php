@@ -45,7 +45,7 @@ class PismoController extends AbstractController
 
 
         return $this->render('pismo/index.html.twig', [
-            'pismos' => $pismoRepository->findAll(),
+            'pisma' => $pismoRepository->findAll(),
         ]);;
     }
     /**
@@ -116,22 +116,28 @@ class PismoController extends AbstractController
             'pisma' => $pnp->UtworzPismaZfolderu($this->getParameter('sciezka_do_skanow'),'pdf'),
             'pismo' => $pismo,
             'form' => $form->createView(),
-            'sciezki_png' => $sciezkiDoPodgladow,
+            'sciezki_png_dla_stron' => $sciezkiDoPodgladow,
             'sciezka_png' => $sciezkiDoPodgladow[$numerStrony - 1],
             'numerStrony' => $numerStrony,
         ]);
     }
 
     /**
-     * @Route("/{id}", name="pismo_show", methods={"GET"})
+     * @Route("/{id}/{numerStrony}", name="pismo_show", methods={"GET"})
      */
-    public function show(): Response//Pismo $pismo
+    public function show(int $id,int $numerStrony, PismoRepository $pismoRepository): Response//Pismo $pismo
     {
-        $pismo = new Pismo();
-        
+        // $pnp = new PracaNaPlikach;
+        $pismo = $pismoRepository->find($id);
+        $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
+
+       
         return $this->render('pismo/show.html.twig', [
             'pismo' => $pismo,
-            'sciezka_do_img' => $this->getParameter('sciezka_do_skanow').'zychRozp-000001.png'
+            'pisma' => $pismoRepository->findAll(),
+            'sciezki_png_dla_stron' => $sciezkiDoPodgladow,
+            'sciezka_png' => $sciezkiDoPodgladow[$numerStrony - 1],
+            'numerStrony' => $numerStrony,
         ]);
     }
 

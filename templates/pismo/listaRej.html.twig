@@ -1,0 +1,20 @@
+<table>
+    {% for pismo in pisma %}
+        <tr>
+            <td>
+                {# {% set nazwa = pismo.NazwaZrodlaPrzedZarejestrowaniem %} #}
+                <a href="{{ path('pismo_show', {'id': pismo.id, 'numerStrony': 1}) }}" >{{ pismo.nazwaPliku }}</a>
+            </td>
+            {# <td>
+                {% if pismo.JestPodgladDlaZrodla() %}+{% endif %}
+                
+            </td> #}
+            {% if pokazDate is defined %}
+            
+            <td>
+                {{ pismo.dataModyfikacji }}
+            </td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+</table>

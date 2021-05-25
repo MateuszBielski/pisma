@@ -152,7 +152,8 @@ class Pismo
         $nazwaZrodlaPrzedZarejestrowaniem = $this->NazwaZrodlaBezRozszerzenia();
         for($i = 1 ; $i <= $ileStronPodgladu ; $i++)
         {   
-            $nazwy[] = $this->folderPodgladu.$nazwaZrodlaPrzedZarejestrowaniem."/".$nazwaPlikuBezRozszerzenia."-00000".$i.".png";
+            // $nazwy[] = $this->folderPodgladu.$nazwaZrodlaPrzedZarejestrowaniem."/".$nazwaPlikuBezRozszerzenia."-00000".$i.".png";
+            $nazwy[] = $this->folderPodgladu.$nazwaZrodlaPrzedZarejestrowaniem."/".$nazwaPlikuBezRozszerzenia."-".sprintf('%06s', $i).".png";
         }
         return $nazwy;
     }

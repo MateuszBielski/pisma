@@ -6,6 +6,7 @@
 parameters:
     #sciezka_do_skanow: '/var/www/html/skany/'
     sciezka_do_skanow: /home/skanyLinux/
+    #sciezka_do_skanow: /home/mateusz/winmnt/
     sciezka_do_png: '/var/www/html/pisma/public/png/'
     sciezka_do_zarejestrowanych: '/var/www/html/skanyZarejestrowane/'
 
