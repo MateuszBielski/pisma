@@ -10,13 +10,32 @@
 
 {% endblock %}
 {% block b_div_centr %}
-centrum
+<table>
+    <tr>
+        <td>nazwa:</td>
+        <td>{{pismo.nazwaPliku}}</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>oznaczenie:</td>
+        <td>{{pismo.oznaczenie}}</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>rodzaj dokumentu:</td>
+        <td>{{pismo.rodzaj.nazwa}}</td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+<a href="{{path('pismo_edit', {'id' : pismo.id, 'numerStrony': numerStrony })}}">edytuj dane dokumentu</a>
 {% endblock %}
 {% block b_div_prawy %}
 strony: 
 {% set indeks = 1 %}
 {% for sciezka_png in sciezki_png_dla_stron %}
-    {# <a href="{{ path('pismo_nowe_ze_skanu', {'nazwa': nazwa, 'numerStrony': indeks}) }}" > #}
         <a href="{{ path('pismo_show', {'id' : pismo.id , 'numerStrony': indeks}) }}"> 
         {% if numerStrony == indeks %}
         <{{ indeks }}> </b>

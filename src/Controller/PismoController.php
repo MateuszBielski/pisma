@@ -142,9 +142,9 @@ class PismoController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="pismo_edit", methods={"GET","POST"})
+     * @Route("/edit/{id}/{numerStrony}", name="pismo_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Pismo $pismo): Response
+    public function edit($numerStrony, Request $request, Pismo $pismo): Response
     {
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
@@ -154,10 +154,15 @@ class PismoController extends AbstractController
 
             return $this->redirectToRoute('pismo_index');
         }
-
+        // $numerStrony = 1;
+        $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
         return $this->render('pismo/edit.html.twig', [
             'pismo' => $pismo,
             'form' => $form->createView(),
+            // 'pisma' => $pismoRepository->findAll(),
+            'sciezki_png_dla_stron' => $sciezkiDoPodgladow,
+            'sciezka_png' => $sciezkiDoPodgladow[$numerStrony - 1],
+            'numerStrony' => $numerStrony,
         ]);
     }
 

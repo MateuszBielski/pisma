@@ -1,13 +1,25 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Pismo{% endblock %}
-
-{% block body %}
-    <h1>Edit Pismo</h1>
-
-    {{ include('pismo/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('pismo_index') }}">back to list</a>
-
-    {{ include('pismo/_delete_form.html.twig') }}
+{% block title %}{{pismo.nazwaPliku}}{% endblock %}
+{% block b_div_pod_belka %}
+    <h3>Edycja danych dokumentu</h3>
+{% endblock %}
+{% block b_div_centr %}
+data modyfikacji dokumentu: {{ pismo.dataModyfikacji }}
+{% include "pismo/_form.html.twig" %}
+{% endblock %}
+{% block b_div_prawy %}
+strony: 
+{% set indeks = 1 %}
+{% for sciezka_png in sciezki_png_dla_stron %}
+        <a href="{{ path('pismo_edit', {'id' : pismo.id , 'numerStrony': indeks}) }}"> 
+        {% if numerStrony == indeks %}
+        <{{ indeks }}> </b>
+        {% else %}
+            {{ indeks }}  
+        {% endif %}
+    </a>
+    {% set indeks = indeks + 1 %}
+{% endfor %}
+<img src="{{ sciezka_png }}" alt="nie mogę wyświetlić " width="100%">
 {% endblock %}
