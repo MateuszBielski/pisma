@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PismoRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -37,6 +39,26 @@ class Pismo
     private $adresZrodlaPrzedZarejestrowaniem;
     private $dataModyfikacji;
     private $folderPodgladu = 'png/';
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Sprawa::class, mappedBy="dokumenty")
+     */
+    private $sprawy;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Kontrahent::class, inversedBy="odeMnie")
+     */
+    private $nadawca;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Kontrahent::class, inversedBy="doMnie")
+     */
+    private $odbiorca;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=RodzajDokumentu::class, inversedBy="dokumenty")
+     */
+    private $rodzaj;
     // private $nazwaZrodlaPrzedZarejestrowaniem;
 
     public function __construct(string $adresZrodlaPrzedZarejestrowaniem = "")
@@ -44,6 +66,7 @@ class Pismo
         $this->adresZrodlaPrzedZarejestrowaniem = $adresZrodlaPrzedZarejestrowaniem;
         $this->dataModyfikacji = @date("Y-m-d H:i", @filemtime($adresZrodlaPrzedZarejestrowaniem));
         $this->nazwaPliku = $this->getNazwaZrodlaPrzedZarejestrowaniem();
+        $this->sprawy = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -191,5 +214,68 @@ class Pismo
     public function setFolderPodgladu(string $path)
     {
         $this->folderPodgladu = $path;
+    }
+
+    /**
+     * @return Collection|Sprawa[]
+     */
+    public function getSprawy(): Collection
+    {
+        return $this->sprawy;
+    }
+
+    public function addSprawy(Sprawa $sprawy): self
+    {
+        if (!$this->sprawy->contains($sprawy)) {
+            $this->sprawy[] = $sprawy;
+            $sprawy->addDokumenty($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSprawy(Sprawa $sprawy): self
+    {
+        if ($this->sprawy->removeElement($sprawy)) {
+            $sprawy->removeDokumenty($this);
+        }
+
+        return $this;
+    }
+
+    public function getNadawca(): ?Kontrahent
+    {
+        return $this->nadawca;
+    }
+
+    public function setNadawca(?Kontrahent $nadawca): self
+    {
+        $this->nadawca = $nadawca;
+
+        return $this;
+    }
+
+    public function getOdbiorca(): ?Kontrahent
+    {
+        return $this->odbiorca;
+    }
+
+    public function setOdbiorca(?Kontrahent $odbiorca): self
+    {
+        $this->odbiorca = $odbiorca;
+
+        return $this;
+    }
+
+    public function getRodzaj(): ?RodzajDokumentu
+    {
+        return $this->rodzaj;
+    }
+
+    public function setRodzaj(?RodzajDokumentu $rodzaj): self
+    {
+        $this->rodzaj = $rodzaj;
+
+        return $this;
     }
 }

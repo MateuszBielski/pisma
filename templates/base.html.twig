@@ -22,8 +22,8 @@
                             <li><a href="{{ path('pismo_nowe_index') }}" >nowe pisma</a></li>{#  #}
                             <li><a href="{{ path('pismo_index') }}">pisma zarejestrowane</a></li>{#  #}
                             <li><a href="{{ path('kontrahent_index') }}">nadawca / odbiorca</a></li>{# <a href="{{ path('kontrahent_index') }}">nadawca / odbiorca</a> #}
-                            <li>sprawa</li>{# <a href="{{ path('sprawa_index') }}">sprawa</a> #}
-                            <li>rodzaje dokumentów</li>
+                            <li><a href="{{ path('sprawa_index') }}">sprawa</a></li>{# sprawa #}
+                            <li><a href="{{ path('rodzaj_dokumentu_index') }}">rodzaje dokumentów</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -78,7 +78,7 @@
             
             <div class="pion_zwezony" id="belka_dol">
                 {% block belka_dol %}
-                belka dół
+                b dół
                 {% endblock %}
             </div>
         </div>

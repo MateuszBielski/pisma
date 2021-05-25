@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit RodzajDokumentu{% endblock %}
+
+{% block body %}
+    <h1>Edit RodzajDokumentu</h1>
+
+    {{ include('rodzaj_dokumentu/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('rodzaj_dokumentu_index') }}">back to list</a>
+
+    {{ include('rodzaj_dokumentu/_delete_form.html.twig') }}
+{% endblock %}

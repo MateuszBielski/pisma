@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New RodzajDokumentu{% endblock %}
+{% block b_div_centr %}
+    <h3>Nowy rodzaj dokumentu</h3>
+
+    {{ include('rodzaj_dokumentu/_form.html.twig') }}
+
+    <a href="{{ path('rodzaj_dokumentu_index') }}">powrót do listy dokumentów</a>
+{% endblock %}
+{% block body %}
+    
+{% endblock %}

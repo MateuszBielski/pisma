@@ -2,32 +2,24 @@
 
 namespace App\Form;
 
-use App\Entity\Pismo;
 use App\Entity\RodzajDokumentu;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
-class PismoType extends AbstractType
+class RodzajDokumentuType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nazwaPliku')
-            ->add('oznaczenie')
-            ->add('rodzaj',EntityType::class,[
-                'class'=>RodzajDokumentu::class,
-                'choice_label' => 'nazwa'
-                ])
-            
+            ->add('nazwa')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Pismo::class,
+            'data_class' => RodzajDokumentu::class,
         ]);
     }
 }

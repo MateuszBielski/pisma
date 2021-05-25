@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RodzajDokumentu{% endblock %}
+
+{% block body %}
+    <h1>RodzajDokumentu</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ rodzaj_dokumentu.id }}</td>
+            </tr>
+            <tr>
+                <th>Nazwa</th>
+                <td>{{ rodzaj_dokumentu.nazwa }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('rodzaj_dokumentu_index') }}">back to list</a>
+
+    <a href="{{ path('rodzaj_dokumentu_edit', {'id': rodzaj_dokumentu.id}) }}">edit</a>
+
+    {{ include('rodzaj_dokumentu/_delete_form.html.twig') }}
+{% endblock %}
