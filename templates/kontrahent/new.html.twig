@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}New Kontrahent{% endblock %}
-
-{% block body %}
-    <h1>Create new Kontrahent</h1>
+{% block b_div_pod_belka %}
+    <h3>Nowy kontrahent</h3>
+{% endblock %}
+{% block b_div_centr%}
 
     {{ include('kontrahent/_form.html.twig') }}
 
-    <a href="{{ path('kontrahent_index') }}">back to list</a>
+    <a href="{{ path('kontrahent_index') }}">powrót do listy</a>
 {% endblock %}

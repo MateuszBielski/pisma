@@ -109,5 +109,6 @@ class PismoTest extends TestCase
         $sciezki = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
         
     }
+    //jeśli zmiana nazwy pliku zarejestrowanego - zmiana w nazwach podglądu 
     //Jeśli nie ma podglądu
 }

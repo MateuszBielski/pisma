@@ -14,7 +14,17 @@
     
             </td>
         </tr>
+    {% else %}
+        <tr>
+            <td>
+                brak wyników
+            </td>
+        </tr>
     {% endfor %}
+        
 </table>
-
 {% endblock %}
+{% block b_div_prawy %}
+<a href="{{ path('kontrahent_new') }}">Utwórz nowy</a>
+{% endblock %}
+

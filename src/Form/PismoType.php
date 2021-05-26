@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Kontrahent;
 use App\Entity\Pismo;
 use App\Entity\RodzajDokumentu;
 use Symfony\Component\Form\AbstractType;
@@ -20,7 +21,14 @@ class PismoType extends AbstractType
                 'class'=>RodzajDokumentu::class,
                 'choice_label' => 'nazwa'
                 ])
-            
+            ->add('nadawca',EntityType::class,[
+                'class'=>Kontrahent::class,
+                'choice_label' => 'nazwa'
+                ])
+            ->add('odbiorca',EntityType::class,[
+                'class'=>Kontrahent::class,
+                'choice_label' => 'nazwa'
+                ])
         ;
     }
 

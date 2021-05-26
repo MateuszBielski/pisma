@@ -200,7 +200,7 @@ class PismoPracaNaPlikachTest extends TestCase
         rmdir($pathPng."nowaNazwa");
         unlink($sciezkaDoZarejestrowanych."nowaNazwa.pdf");
     }
-    
+    //jeśli pusty folder surowychPDF
     //utworzenie folderu png jeśli nie ma
     
 }

@@ -28,7 +28,7 @@ class KontrahentController extends AbstractController
             $kontrahenci[] = $k;
         }
         return $this->render('kontrahent/index.html.twig', [
-            'kontrahents' => $kontrahenci//,$kontrahentRepository->findAll()
+            'kontrahents' => $kontrahentRepository->findAll()//$kontrahenci//,
         ]);
     }
 
