@@ -8,6 +8,8 @@
 /var/
 /vendor/
 /config/services.yaml
+/migrations
+.env
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
