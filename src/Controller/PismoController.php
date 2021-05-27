@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Pismo;
+use App\Form\PismoLadowaniePdfType;
 use App\Form\PismoType;
 use App\Repository\PismoRepository;
 use App\Service\PracaNaPlikach;
@@ -13,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 // use Imagick;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @Route("/pismo")
@@ -49,21 +50,49 @@ class PismoController extends AbstractController
         ]);;
     }
     /**
-     *@Route("/noweIndex", name="pismo_nowe_index", methods={"GET"}) 
+     *@Route("/noweIndex", name="pismo_nowe_index", methods={"GET","POST"}) 
      */
-    public function NoweIndex(): Response
+    public function NoweIndex(Request $request, SluggerInterface $slugger): Response
     {
         /*
         $skany = [];
         for($i = 7 ; $i < 12 ; $i++)$skany[] = 'skan'.$i.'.pdf';
         */
-        $pnp = new PracaNaPlikach;
         // $pnp->PobierzWszystkieNazwyPlikowZfolderu($this->getParameter('sciezka_do_skanow'));
+        $pismo = new Pismo;
+        $form = $this->createForm(PismoLadowaniePdfType::class, $pismo);//
+        $form->handleRequest($request);
         
+        $pnp = new PracaNaPlikach;
+        if ($form->isSubmitted() && $form->isValid()) {
+            $plikPdf= $form->get('plik')->getData();
+            if ($plikPdf) {
+                $originalFilename = pathinfo($plikPdf->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                
+                // $newFilename = $safeFilename.'-'.uniqid().'.'.$plikPdf->guessExtension();
+                $newFilename = $safeFilename.'.'.$plikPdf->guessExtension();//bez unikalnego numeru
+                // echo $newFilename;
+                // Move the file to the directory where brochures are stored
+                try {
+                    $plikPdf->move(
+                        $this->getParameter('sciezka_do_skanow'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+            }
+            // return $this->redirectToRoute('pismo_nowe_ze_skanu',['nazwa' => $newFilename, 'numerStrony'=> 1]);
+            // return 
+        }
         return $this->render('pismo/noweIndex.html.twig', [
             // 'skany' => $pnp->NazwyBezSciezkiZrozszerzeniem('pdf'),
             'pisma' => $pnp->UtworzPismaZfolderu($this->getParameter('sciezka_do_skanow'),'pdf'),
+            'form' => $form->createView(),
             ]);
+
     }
 
     /**
