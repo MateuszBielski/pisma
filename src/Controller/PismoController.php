@@ -65,25 +65,29 @@ class PismoController extends AbstractController
         
         $pnp = new PracaNaPlikach;
         if ($form->isSubmitted() && $form->isValid()) {
-            $plikPdf= $form->get('plik')->getData();
-            if ($plikPdf) {
-                $originalFilename = pathinfo($plikPdf->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = $slugger->slug($originalFilename);
-                
-                // $newFilename = $safeFilename.'-'.uniqid().'.'.$plikPdf->guessExtension();
-                $newFilename = $safeFilename.'.'.$plikPdf->guessExtension();//bez unikalnego numeru
-                // echo $newFilename;
-                // Move the file to the directory where brochures are stored
-                try {
-                    $plikPdf->move(
-                        $this->getParameter('sciezka_do_skanow'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+            $plikiPdf= $form->get('plik')->getData();
+            foreach($plikiPdf as $plikPdf)
+            {
+                if ($plikPdf) {
+                    $originalFilename = pathinfo($plikPdf->getClientOriginalName(), PATHINFO_FILENAME);
+                    // this is needed to safely include the file name as part of the URL
+                    $safeFilename = $slugger->slug($originalFilename);
+                    
+                    // $newFilename = $safeFilename.'-'.uniqid().'.'.$plikPdf->guessExtension();
+                    $newFilename = $safeFilename.'.'.$plikPdf->guessExtension();//bez unikalnego numeru
+                    // echo $newFilename;
+                    // Move the file to the directory where brochures are stored
+                    try {
+                        $plikPdf->move(
+                            $this->getParameter('sciezka_do_skanow'),
+                            $newFilename
+                        );
+                    } catch (FileException $e) {
+                        // ... handle exception if something happens during file upload
+                    }
                 }
             }
+
             // return $this->redirectToRoute('pismo_nowe_ze_skanu',['nazwa' => $newFilename, 'numerStrony'=> 1]);
             // return 
         }
