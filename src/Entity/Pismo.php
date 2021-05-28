@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PismoRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -60,12 +61,26 @@ class Pismo
      * @ORM\ManyToOne(targetEntity=RodzajDokumentu::class, inversedBy="dokumenty")
      */
     private $rodzaj;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $dataDokumentu;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $opis;
     // private $nazwaZrodlaPrzedZarejestrowaniem;
 
     public function __construct(string $adresZrodlaPrzedZarejestrowaniem = "")
     {
         $this->adresZrodlaPrzedZarejestrowaniem = $adresZrodlaPrzedZarejestrowaniem;
-        $this->dataModyfikacji = @date("Y-m-d H:i", @filemtime($adresZrodlaPrzedZarejestrowaniem));
+        // $this->dataModyfikacji = @date("Y-m-d H:i", @filemtime($adresZrodlaPrzedZarejestrowaniem));
+        $timestamp = @filemtime($adresZrodlaPrzedZarejestrowaniem);
+        $this->dataDokumentu = new DateTime();
+        $this->dataDokumentu->setTimestamp($timestamp);
+        $this->dataModyfikacji = @date("Y-m-d H:i",$timestamp);
         $this->nazwaPliku = $this->getNazwaZrodlaPrzedZarejestrowaniem();
         $this->sprawy = new ArrayCollection();
     }
@@ -309,5 +324,29 @@ class Pismo
     public function getNazwaPlikuPrzedZmiana()
     {
         return $this->nazwaPlikuPrzedZmiana;
+    }
+
+    public function getDataDokumentu(): ?\DateTimeInterface
+    {
+        return $this->dataDokumentu;
+    }
+
+    public function setDataDokumentu(\DateTimeInterface $dataDokumentu): self
+    {
+        $this->dataDokumentu = $dataDokumentu;
+
+        return $this;
+    }
+
+    public function getOpis(): ?string
+    {
+        return $this->opis;
+    }
+
+    public function setOpis(?string $opis): self
+    {
+        $this->opis = $opis;
+
+        return $this;
     }
 }

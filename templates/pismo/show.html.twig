@@ -25,7 +25,11 @@
     </tr>
     <tr>
         <td>rodzaj dokumentu:</td>
-        <td>{{pismo.rodzaj.nazwa}}</td>
+        <td>
+            {% if pismo.rodzaj != null %}
+                {{pismo.rodzaj.nazwa}}
+            {% endif %}
+        </td>
         <td></td>
         <td></td>
     </tr>
