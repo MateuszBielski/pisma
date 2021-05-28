@@ -135,13 +135,13 @@ class PismoController extends AbstractController
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() && $pnp->RejestrujPismo($this->getParameter('sciezka_do_zarejestrowanych'),$pismo)) {
+        if ($form->isSubmitted() && $form->isValid() && $pnp->PrzeniesPlikiPdfiPodgladu($this->getParameter('sciezka_do_zarejestrowanych'),$pismo)) {
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($pismo);
             $entityManager->flush();
 
-            return $this->redirectToRoute('pismo_index');
+            return $this->redirectToRoute('pismo_nowe_index');
         }
         $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem();
         return $this->render('pismo/noweZeSkanu.html.twig', [
@@ -160,7 +160,7 @@ class PismoController extends AbstractController
      */
     public function show(int $id,int $numerStrony, PismoRepository $pismoRepository): Response//Pismo $pismo
     {
-        // $pnp = new PracaNaPlikach;
+        // ;
         $pismo = $pismoRepository->find($id);
         $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
 
@@ -182,10 +182,11 @@ class PismoController extends AbstractController
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() ) {
             $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('pismo_index');
+            $pnp = new PracaNaPlikach;
+            $pnp->UaktualnijNazwyPlikowPodgladu($pismo);
+            return $this->redirectToRoute('pismo_show',['id'=>$pismo->getId(), 'numerStrony' => $numerStrony]);
         }
         // $numerStrony = 1;
         $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();

@@ -39,6 +39,7 @@ class Pismo
     private $adresZrodlaPrzedZarejestrowaniem;
     private $dataModyfikacji;
     private $folderPodgladu = 'png/';
+    private $nazwaPlikuPrzedZmiana = '';
 
     /**
      * @ORM\ManyToMany(targetEntity=Sprawa::class, mappedBy="dokumenty")
@@ -81,6 +82,7 @@ class Pismo
 
     public function setNazwaPliku(?string $nazwaPliku): self
     {
+        $this->nazwaPlikuPrzedZmiana = $this->nazwaPliku;
         $this->nazwaPliku = $nazwaPliku;
 
         return $this;
@@ -129,8 +131,8 @@ class Pismo
         $sciezki = [];
         // $nazwaBezRozszerzenia = $this->NazwaZrodlaBezRozszerzenia();
         $path = $this->folderPodgladu.$nazwa;
-        $nazwy = array_diff(scandir($path), array('..', '.'));
-        if(!count($nazwy)){
+        $nazwy = @array_diff(@scandir($path), array('..', '.'));
+        if(!$nazwy || !count($nazwy)){
             $sciezki[] = "folder $path jest pusty";
             return $sciezki;
         }
@@ -156,6 +158,12 @@ class Pismo
     {
        return $this->SciezkiPodgladowDlaNazwy($this->NazwaZrodlaBezRozszerzenia(),$slashWiodacy); 
     }
+    public function SciezkiDoPlikuPodgladowDlaNazwyPrzedZmiana($slashWiodacy = true): array
+    {
+        $nazwaPlikuBezRozszerzenia = substr($this->nazwaPlikuPrzedZmiana,0,strrpos($this->nazwaPlikuPrzedZmiana,'.'));
+        // echo "\nXXXx  ".$this->nazwaPliku." yyy ".$nazwaPlikuBezRozszerzenia;
+        return $this->SciezkiPodgladowDlaNazwy($nazwaPlikuBezRozszerzenia,$slashWiodacy);
+    }
     public function GenerujNazwyZeSciezkamiDlaDocelowychPodgladow(): array
     {
         $ileStronPodgladu = count($this->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem());
@@ -180,12 +188,27 @@ class Pismo
         }
         return $nazwy;
     }
+    public function GenerujNazwyDocelowychPodgladowZeSciezkamiWfolderzePrzedZmiana()
+    {
+        $ileStronPodgladu = count($this->SciezkiDoPlikuPodgladowDlaNazwyPrzedZmiana());
+        $nazwy = [];
+        $nazwaBezRozszerzeniaPrzedZmiana = substr($this->nazwaPlikuPrzedZmiana,0,strrpos($this->nazwaPlikuPrzedZmiana,'.'));
+        $nazwaBezRozszerzeniaPoZmianie = substr($this->nazwaPliku,0,strrpos($this->nazwaPliku,'.'));
+        for($i = 1 ; $i <= $ileStronPodgladu ; $i++)
+        {   
+            // $nazwy[] = $this->folderPodgladu.$nazwaZrodlaPrzedZarejestrowaniem."/".$nazwaPlikuBezRozszerzenia."-00000".$i.".png";
+            $nazwy[] = $this->folderPodgladu.$nazwaBezRozszerzeniaPrzedZmiana."/".$nazwaBezRozszerzeniaPoZmianie."-".sprintf('%06s', $i).".png";
+        }
+        return $nazwy;
+
+    }
     public function SciezkiDoPlikuPodgladowZarejestrowanych(): array
     {
         $nazwaPlikuBezRozszerzenia = substr($this->nazwaPliku,0,strrpos($this->nazwaPliku,'.'));
         // echo "\nXXXx  ".$this->nazwaPliku." yyy ".$nazwaPlikuBezRozszerzenia;
         return $this->SciezkiPodgladowDlaNazwy($nazwaPlikuBezRozszerzenia);
     }
+    
     public function FolderZpodlgademPngWzglednieZgodnieZeZrodlem()
     {
         return $this->folderPodgladu.$this->NazwaZrodlaBezRozszerzenia()."/";
@@ -195,6 +218,11 @@ class Pismo
         // $arr = explode('.',$this->nazwaPliku);
 
         $nazwaBezRozszerzenia =  substr($this->nazwaPliku,0,strrpos($this->nazwaPliku,'.'));
+        return $this->folderPodgladu.$nazwaBezRozszerzenia."/";
+    }
+    public function FolderZpodlgademPngWzglednieZgodnieZnazwaPrzedZmiana()
+    {
+        $nazwaBezRozszerzenia =  substr($this->nazwaPlikuPrzedZmiana,0,strrpos($this->nazwaPlikuPrzedZmiana,'.'));
         return $this->folderPodgladu.$nazwaBezRozszerzenia."/";
     }
     public function NazwaZrodlaBezRozszerzenia(): string
@@ -277,5 +305,9 @@ class Pismo
         $this->rodzaj = $rodzaj;
 
         return $this;
+    }
+    public function getNazwaPlikuPrzedZmiana()
+    {
+        return $this->nazwaPlikuPrzedZmiana;
     }
 }

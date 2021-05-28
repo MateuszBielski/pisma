@@ -107,8 +107,19 @@ class PismoTest extends TestCase
     {
         $pismo = new Pismo("/skany/skan.pdf");
         $sciezki = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
-        
+        $this->assertEquals(1,count($sciezki));
     }
+    public function testSetNazwaPliku_jestDostepDoNazwyPlikuPrzedZmiana()
+    {
+        $pismo = new Pismo("/jakis/folder/staraNazwa.pdf");
+        $pismo->setNazwaPliku("nowaNazwa.pdf");
+        $this->assertEquals('staraNazwa.pdf',$pismo->getNazwaPlikuPrzedZmiana());
+    }
+    /*
+    public function testBrakPodgladuZarejestrowanego_GenerujePodglad()
+    {
+        $pismo = new Pismo("/var/jakas/sciezka/skany/maPodglad2.pdf");
+    }*/
     //jeśli zmiana nazwy pliku zarejestrowanego - zmiana w nazwach podglądu 
-    //Jeśli nie ma podglądu
+    //Jeśli nie ma podglądu zrobić podgląd 
 }

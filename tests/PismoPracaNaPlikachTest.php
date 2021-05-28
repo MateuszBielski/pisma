@@ -141,19 +141,19 @@ class PismoPracaNaPlikachTest extends TestCase
         rmdir($path2);
         rmdir($path1);
     }
-    public function testRejestrujPismo_czyPrzenosiPlik()
+    public function testPrzeniesPlikiPdfiPodgladu_czyPrzenosiPlik()
     {
         $pnp = new PracaNaPlikach;
         fclose(fopen($this->pathSkanyFolder."/dok4.pdf",'w'));
         // $this->assertTrue(file_exists($this->pathSkanyFolder."/dok4.pdf"));
         $pismo = $pnp->UtworzPismoNaPodstawie($this->pathSkanyFolder,"dok4.pdf");
         $sciezkaDoZarejestrowanych = "tests/dodawanieUsuwanie/";
-        $pnp->RejestrujPismo($sciezkaDoZarejestrowanych,$pismo);
+        $pnp->PrzeniesPlikiPdfiPodgladu($sciezkaDoZarejestrowanych,$pismo);
         $this->assertTrue(file_exists($sciezkaDoZarejestrowanych."dok4.pdf"));
         unlink($sciezkaDoZarejestrowanych."dok4.pdf");
 
     }
-    public function testRejestrujPismo_zmianaNazwy_zwracaTrue()
+    public function testPrzeniesPlikiPdfiPodgladu_zmianaNazwy_zwracaTrue()
     {
         $pnp = new PracaNaPlikach;
         fclose(fopen($this->pathSkanyFolder."/dok4.pdf",'w'));
@@ -161,26 +161,26 @@ class PismoPracaNaPlikachTest extends TestCase
         $pismo->setNazwaPliku("nowaNazwa.pdf");
 
         $sciezkaDoZarejestrowanych = "tests/dodawanieUsuwanie/";
-        $this->assertTrue($pnp->RejestrujPismo($sciezkaDoZarejestrowanych,$pismo));
+        $this->assertTrue($pnp->PrzeniesPlikiPdfiPodgladu($sciezkaDoZarejestrowanych,$pismo));
         $this->assertTrue(file_exists($sciezkaDoZarejestrowanych."nowaNazwa.pdf"));
         unlink($sciezkaDoZarejestrowanych."nowaNazwa.pdf");
 
     }
-    public function testRejestrujPismo_zwracaFalseJesliNieMaPlikuZrodlowego()
+    public function testPrzeniesPlikiPdfiPodgladu_zwracaFalseJesliNieMaPlikuZrodlowego()
     {
         //karta  może być otwarta długo, plik może zostać usunięty w miedzyczasie
         $pnp = new PracaNaPlikach;
         //tworzy na podstawie nieistniejącego pliku
         $pismo = $pnp->UtworzPismoNaPodstawie($this->pathSkanyFolder,"dok5.pdf");
         $sciezkaDoZarejestrowanych = "tests/dodawanieUsuwanie/";
-        $this->assertFalse($pnp->RejestrujPismo($sciezkaDoZarejestrowanych,$pismo));
+        $this->assertFalse($pnp->PrzeniesPlikiPdfiPodgladu($sciezkaDoZarejestrowanych,$pismo));
 
     }
-    public function testRejestrujPismo_zmianaFolderuPodgladu()
+    public function testPrzeniesPlikiPdfiPodgladu_zmianaFolderuPodgladu()
     {
         $pnp = new PracaNaPlikach;
         $pathPng = "tests/png/";
-        mkdir($pathPng."maPodglad2");
+        @mkdir($pathPng."maPodglad2");
         for($i = 1; $i < 4 ; $i++)
         {
             fclose(fopen($pathPng."maPodglad2/maPodglad2-00000".$i.".png",'w'));
@@ -192,13 +192,39 @@ class PismoPracaNaPlikachTest extends TestCase
 
         $sciezkaDoZarejestrowanych = "tests/dodawanieUsuwanie/";
         
-        $pnp->RejestrujPismo($sciezkaDoZarejestrowanych,$pismo);
+        $pnp->PrzeniesPlikiPdfiPodgladu($sciezkaDoZarejestrowanych,$pismo);
         
         $this->assertTrue(file_exists($pathPng."nowaNazwa"));
         $this->assertEquals(3,count($pismo->SciezkiDoPlikuPodgladowZarejestrowanych()));
         for($i = 1; $i < 4 ; $i++)unlink($pathPng."nowaNazwa/nowaNazwa-00000".$i.".png");
         rmdir($pathPng."nowaNazwa");
         unlink($sciezkaDoZarejestrowanych."nowaNazwa.pdf");
+    }
+    public function testUaktualnijNazwyPlikowPodgladu()
+    {
+        $pnp = new PracaNaPlikach;
+        $pathPng = "tests/png/";
+        @mkdir($pathPng."maPodglad2");
+        for($i = 1; $i < 4 ; $i++)
+        {
+            fclose(fopen($pathPng."maPodglad2/maPodglad2-00000".$i.".png",'w'));
+        }
+        $sciezkaDoZarejestrowanych = "tests/dodawanieUsuwanie/";
+        fclose(fopen($sciezkaDoZarejestrowanych."/maPodglad2.pdf",'w'));
+        $pismo = $pnp->UtworzPismoNaPodstawie($sciezkaDoZarejestrowanych,"maPodglad2.pdf");
+        $pismo->setFolderPodgladu($pathPng);
+        $pismo->setNazwaPliku("nowaNazwa3.pdf");
+        $this->assertEquals("maPodglad2.pdf",$pismo->getNazwaPlikuPrzedZmiana());
+        $pnp->UaktualnijNazwyPlikowPodgladu($pismo);
+        $path = $pathPng."nowaNazwa3";
+        $this->assertEquals(3,count(array_diff(scandir($path), array('..', '.'))));
+        
+        for($i = 1; $i < 4 ; $i++)unlink($pathPng."nowaNazwa3/nowaNazwa3-00000".$i.".png");
+        rmdir($pathPng."nowaNazwa3");
+        unlink($sciezkaDoZarejestrowanych."maPodglad2.pdf");
+        // $sciezkaDoZarejestrowanych = "tests/dodawanieUsuwanie/";
+
+
     }
     //jeśli pusty folder surowychPDF
     //utworzenie folderu png jeśli nie ma
