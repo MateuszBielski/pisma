@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Pismo;
+use App\Form\PismoLadowaniePdfType;
 use App\Form\PismoType;
 use App\Repository\PismoRepository;
 use App\Service\PracaNaPlikach;
@@ -13,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 // use Imagick;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @Route("/pismo")
@@ -45,25 +46,57 @@ class PismoController extends AbstractController
 
 
         return $this->render('pismo/index.html.twig', [
-            'pismos' => $pismoRepository->findAll(),
+            'pisma' => $pismoRepository->findAll(),
         ]);;
     }
     /**
-     *@Route("/noweIndex", name="pismo_nowe_index", methods={"GET"}) 
+     *@Route("/noweIndex", name="pismo_nowe_index", methods={"GET","POST"}) 
      */
-    public function NoweIndex(): Response
+    public function NoweIndex(Request $request, SluggerInterface $slugger): Response
     {
         /*
         $skany = [];
         for($i = 7 ; $i < 12 ; $i++)$skany[] = 'skan'.$i.'.pdf';
         */
-        $pnp = new PracaNaPlikach;
         // $pnp->PobierzWszystkieNazwyPlikowZfolderu($this->getParameter('sciezka_do_skanow'));
+        $pismo = new Pismo;
+        $form = $this->createForm(PismoLadowaniePdfType::class, $pismo);//
+        $form->handleRequest($request);
         
+        $pnp = new PracaNaPlikach;
+        if ($form->isSubmitted() && $form->isValid()) {
+            $plikiPdf= $form->get('plik')->getData();
+            foreach($plikiPdf as $plikPdf)
+            {
+                if ($plikPdf) {
+                    $originalFilename = pathinfo($plikPdf->getClientOriginalName(), PATHINFO_FILENAME);
+                    // this is needed to safely include the file name as part of the URL
+                    $safeFilename = $slugger->slug($originalFilename);
+                    
+                    // $newFilename = $safeFilename.'-'.uniqid().'.'.$plikPdf->guessExtension();
+                    $newFilename = $safeFilename.'.'.$plikPdf->guessExtension();//bez unikalnego numeru
+                    // echo $newFilename;
+                    // Move the file to the directory where brochures are stored
+                    try {
+                        $plikPdf->move(
+                            $this->getParameter('sciezka_do_skanow'),
+                            $newFilename
+                        );
+                    } catch (FileException $e) {
+                        // ... handle exception if something happens during file upload
+                    }
+                }
+            }
+
+            // return $this->redirectToRoute('pismo_nowe_ze_skanu',['nazwa' => $newFilename, 'numerStrony'=> 1]);
+            // return 
+        }
         return $this->render('pismo/noweIndex.html.twig', [
             // 'skany' => $pnp->NazwyBezSciezkiZrozszerzeniem('pdf'),
             'pisma' => $pnp->UtworzPismaZfolderu($this->getParameter('sciezka_do_skanow'),'pdf'),
+            'form' => $form->createView(),
             ]);
+
     }
 
     /**
@@ -102,13 +135,13 @@ class PismoController extends AbstractController
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() && $pnp->RejestrujPismo($this->getParameter('sciezka_do_zarejestrowanych'),$pismo)) {
+        if ($form->isSubmitted() && $form->isValid() && $pnp->PrzeniesPlikiPdfiPodgladu($this->getParameter('sciezka_do_zarejestrowanych'),$pismo)) {
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($pismo);
             $entityManager->flush();
 
-            return $this->redirectToRoute('pismo_index');
+            return $this->redirectToRoute('pismo_nowe_index');
         }
         $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem();
         return $this->render('pismo/noweZeSkanu.html.twig', [
@@ -116,42 +149,54 @@ class PismoController extends AbstractController
             'pisma' => $pnp->UtworzPismaZfolderu($this->getParameter('sciezka_do_skanow'),'pdf'),
             'pismo' => $pismo,
             'form' => $form->createView(),
-            'sciezki_png' => $sciezkiDoPodgladow,
+            'sciezki_png_dla_stron' => $sciezkiDoPodgladow,
             'sciezka_png' => $sciezkiDoPodgladow[$numerStrony - 1],
             'numerStrony' => $numerStrony,
         ]);
     }
 
     /**
-     * @Route("/{id}", name="pismo_show", methods={"GET"})
+     * @Route("/{id}/{numerStrony}", name="pismo_show", methods={"GET"})
      */
-    public function show(): Response//Pismo $pismo
+    public function show(int $id,int $numerStrony, PismoRepository $pismoRepository): Response//Pismo $pismo
     {
-        $pismo = new Pismo();
-        
+        // ;
+        $pismo = $pismoRepository->find($id);
+        $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
+
+       
         return $this->render('pismo/show.html.twig', [
             'pismo' => $pismo,
-            'sciezka_do_img' => $this->getParameter('sciezka_do_skanow').'zychRozp-000001.png'
+            'pisma' => $pismoRepository->findAll(),
+            'sciezki_png_dla_stron' => $sciezkiDoPodgladow,
+            'sciezka_png' => $sciezkiDoPodgladow[$numerStrony - 1],
+            'numerStrony' => $numerStrony,
         ]);
     }
 
     /**
-     * @Route("/{id}/edit", name="pismo_edit", methods={"GET","POST"})
+     * @Route("/edit/{id}/{numerStrony}", name="pismo_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Pismo $pismo): Response
+    public function edit($numerStrony, Request $request, Pismo $pismo): Response
     {
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() ) {
             $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('pismo_index');
+            $pnp = new PracaNaPlikach;
+            $pnp->UaktualnijNazwyPlikowPodgladu($pismo);
+            return $this->redirectToRoute('pismo_show',['id'=>$pismo->getId(), 'numerStrony' => $numerStrony]);
         }
-
+        // $numerStrony = 1;
+        $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
         return $this->render('pismo/edit.html.twig', [
             'pismo' => $pismo,
             'form' => $form->createView(),
+            // 'pisma' => $pismoRepository->findAll(),
+            'sciezki_png_dla_stron' => $sciezkiDoPodgladow,
+            'sciezka_png' => $sciezkiDoPodgladow[$numerStrony - 1],
+            'numerStrony' => $numerStrony,
         ]);
     }
 

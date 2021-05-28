@@ -15,16 +15,16 @@ data modyfikacji dokumentu: {{ pismo.dataModyfikacji }}
 {% include "pismo/_form.html.twig" %}
 {% endblock %}
 {% block b_div_prawy %}
+{% set nazwa = pismo.nazwaZrodlaPrzedZarejestrowaniem %}
 strony: 
 {% set indeks = 1 %}
-{% set nazwa = pismo.NazwaZrodlaPrzedZarejestrowaniem %}
-{% for sciezka_png in sciezki_png %}
+{% for sciezka_png in sciezki_png_dla_stron %}
     <a href="{{ path('pismo_nowe_ze_skanu', {'nazwa': nazwa, 'numerStrony': indeks}) }}" >
-        {% if numerStrony == indeks %}
-        <{{ indeks }}> </b>
-        {% else %}
-            {{ indeks }}  
-        {% endif %}
+    {% if numerStrony == indeks %}
+    <{{ indeks }}> </b>
+    {% else %}
+        {{ indeks }}  
+    {% endif %}
     </a>
     {% set indeks = indeks + 1 %}
 {% endfor %}

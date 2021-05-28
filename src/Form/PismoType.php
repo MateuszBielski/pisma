@@ -2,10 +2,13 @@
 
 namespace App\Form;
 
+use App\Entity\Kontrahent;
 use App\Entity\Pismo;
+use App\Entity\RodzajDokumentu;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class PismoType extends AbstractType
 {
@@ -14,6 +17,14 @@ class PismoType extends AbstractType
         $builder
             ->add('nazwaPliku')
             ->add('oznaczenie')
+            ->add('rodzaj',EntityType::class,[
+                'class'=>RodzajDokumentu::class,
+                'choice_label' => 'nazwa'
+                ])
+            ->add('nadawca',EntityType::class,[
+                'class'=>Kontrahent::class,
+                'choice_label' => 'nazwa'
+                ])
         ;
     }
 

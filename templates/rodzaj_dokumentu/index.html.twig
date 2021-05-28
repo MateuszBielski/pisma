@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rodzaje dokumentów{% endblock %}
+
+{% block b_div_centr %}
+    <h3>Rodzaje dokumentów</h3>
+
+    <table class="table">
+        <tbody>
+        {% for rodzaj_dokumentu in rodzaj_dokumentus %}
+            <tr>
+                {#<td>{{ rodzaj_dokumentu.id }}</td>#}
+                <td>{{ rodzaj_dokumentu.nazwa }}</td>
+                {#<td>
+                    <a href="{{ path('rodzaj_dokumentu_show', {'id': rodzaj_dokumentu.id}) }}">show</a>
+                    <a href="{{ path('rodzaj_dokumentu_edit', {'id': rodzaj_dokumentu.id}) }}">edit</a>
+                </td>#}
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">brak</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('rodzaj_dokumentu_new') }}">Utwórz nowy</a>
+{% endblock %}

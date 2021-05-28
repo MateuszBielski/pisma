@@ -6,17 +6,44 @@
     <h3>Pismo</h3>
 {% endblock %}
 {% block b_div_lewy %}
-skan 7.pfd<br>
-skan 8.pfd<br>
-skan 9.pfd<br>
-skan 10.pfd<br>
-skan 11.pfd<br>
+{{ include('pismo/listaRej.html.twig') }}
 
 {% endblock %}
 {% block b_div_centr %}
-centrum {{ sciezka_do_img }}
+<table>
+    <tr>
+        <td>nazwa:</td>
+        <td>{{pismo.nazwaPliku}}</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>oznaczenie:</td>
+        <td>{{pismo.oznaczenie}}</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>rodzaj dokumentu:</td>
+        <td>{{pismo.rodzaj.nazwa}}</td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+<a href="{{path('pismo_edit', {'id' : pismo.id, 'numerStrony': numerStrony })}}">edytuj dane dokumentu</a>
 {% endblock %}
 {% block b_div_prawy %}
-
-<img src="/png/zychRozp.png" alt="nie mogę wyświetlić " width="100%">
+strony: 
+{% set indeks = 1 %}
+{% for sciezka_png in sciezki_png_dla_stron %}
+        <a href="{{ path('pismo_show', {'id' : pismo.id , 'numerStrony': indeks}) }}"> 
+        {% if numerStrony == indeks %}
+        <{{ indeks }}> </b>
+        {% else %}
+            {{ indeks }}  
+        {% endif %}
+    </a>
+    {% set indeks = indeks + 1 %}
+{% endfor %}
+<img src="{{ sciezka_png }}" alt="nie mogę wyświetlić " width="100%">
 {% endblock %}

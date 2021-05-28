@@ -103,4 +103,23 @@ class PismoTest extends TestCase
         $this->assertEquals('BRN3C...pdf',$pismo->NazwaSkroconaZrodla(5));
         $this->assertEquals('BRN3C2A...pdf',$pismo->NazwaSkroconaZrodla(7));
     }
+    public function testSciezkiDoPlikuPodgladowZarejestrowanych_jesliNieMaPodgladu()
+    {
+        $pismo = new Pismo("/skany/skan.pdf");
+        $sciezki = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
+        $this->assertEquals(1,count($sciezki));
+    }
+    public function testSetNazwaPliku_jestDostepDoNazwyPlikuPrzedZmiana()
+    {
+        $pismo = new Pismo("/jakis/folder/staraNazwa.pdf");
+        $pismo->setNazwaPliku("nowaNazwa.pdf");
+        $this->assertEquals('staraNazwa.pdf',$pismo->getNazwaPlikuPrzedZmiana());
+    }
+    /*
+    public function testBrakPodgladuZarejestrowanego_GenerujePodglad()
+    {
+        $pismo = new Pismo("/var/jakas/sciezka/skany/maPodglad2.pdf");
+    }*/
+    //jeśli zmiana nazwy pliku zarejestrowanego - zmiana w nazwach podglądu 
+    //Jeśli nie ma podglądu zrobić podgląd 
 }

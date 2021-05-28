@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PismoRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -37,6 +39,27 @@ class Pismo
     private $adresZrodlaPrzedZarejestrowaniem;
     private $dataModyfikacji;
     private $folderPodgladu = 'png/';
+    private $nazwaPlikuPrzedZmiana = '';
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Sprawa::class, mappedBy="dokumenty")
+     */
+    private $sprawy;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Kontrahent::class, inversedBy="odeMnie")
+     */
+    private $nadawca;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Kontrahent::class, inversedBy="doMnie")
+     */
+    private $odbiorca;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=RodzajDokumentu::class, inversedBy="dokumenty")
+     */
+    private $rodzaj;
     // private $nazwaZrodlaPrzedZarejestrowaniem;
 
     public function __construct(string $adresZrodlaPrzedZarejestrowaniem = "")
@@ -44,6 +67,7 @@ class Pismo
         $this->adresZrodlaPrzedZarejestrowaniem = $adresZrodlaPrzedZarejestrowaniem;
         $this->dataModyfikacji = @date("Y-m-d H:i", @filemtime($adresZrodlaPrzedZarejestrowaniem));
         $this->nazwaPliku = $this->getNazwaZrodlaPrzedZarejestrowaniem();
+        $this->sprawy = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -58,6 +82,7 @@ class Pismo
 
     public function setNazwaPliku(?string $nazwaPliku): self
     {
+        $this->nazwaPlikuPrzedZmiana = $this->nazwaPliku;
         $this->nazwaPliku = $nazwaPliku;
 
         return $this;
@@ -106,8 +131,8 @@ class Pismo
         $sciezki = [];
         // $nazwaBezRozszerzenia = $this->NazwaZrodlaBezRozszerzenia();
         $path = $this->folderPodgladu.$nazwa;
-        $nazwy = array_diff(scandir($path), array('..', '.'));
-        if(!count($nazwy)){
+        $nazwy = @array_diff(@scandir($path), array('..', '.'));
+        if(!$nazwy || !count($nazwy)){
             $sciezki[] = "folder $path jest pusty";
             return $sciezki;
         }
@@ -133,6 +158,12 @@ class Pismo
     {
        return $this->SciezkiPodgladowDlaNazwy($this->NazwaZrodlaBezRozszerzenia(),$slashWiodacy); 
     }
+    public function SciezkiDoPlikuPodgladowDlaNazwyPrzedZmiana($slashWiodacy = true): array
+    {
+        $nazwaPlikuBezRozszerzenia = substr($this->nazwaPlikuPrzedZmiana,0,strrpos($this->nazwaPlikuPrzedZmiana,'.'));
+        // echo "\nXXXx  ".$this->nazwaPliku." yyy ".$nazwaPlikuBezRozszerzenia;
+        return $this->SciezkiPodgladowDlaNazwy($nazwaPlikuBezRozszerzenia,$slashWiodacy);
+    }
     public function GenerujNazwyZeSciezkamiDlaDocelowychPodgladow(): array
     {
         $ileStronPodgladu = count($this->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem());
@@ -152,9 +183,24 @@ class Pismo
         $nazwaZrodlaPrzedZarejestrowaniem = $this->NazwaZrodlaBezRozszerzenia();
         for($i = 1 ; $i <= $ileStronPodgladu ; $i++)
         {   
-            $nazwy[] = $this->folderPodgladu.$nazwaZrodlaPrzedZarejestrowaniem."/".$nazwaPlikuBezRozszerzenia."-00000".$i.".png";
+            // $nazwy[] = $this->folderPodgladu.$nazwaZrodlaPrzedZarejestrowaniem."/".$nazwaPlikuBezRozszerzenia."-00000".$i.".png";
+            $nazwy[] = $this->folderPodgladu.$nazwaZrodlaPrzedZarejestrowaniem."/".$nazwaPlikuBezRozszerzenia."-".sprintf('%06s', $i).".png";
         }
         return $nazwy;
+    }
+    public function GenerujNazwyDocelowychPodgladowZeSciezkamiWfolderzePrzedZmiana()
+    {
+        $ileStronPodgladu = count($this->SciezkiDoPlikuPodgladowDlaNazwyPrzedZmiana());
+        $nazwy = [];
+        $nazwaBezRozszerzeniaPrzedZmiana = substr($this->nazwaPlikuPrzedZmiana,0,strrpos($this->nazwaPlikuPrzedZmiana,'.'));
+        $nazwaBezRozszerzeniaPoZmianie = substr($this->nazwaPliku,0,strrpos($this->nazwaPliku,'.'));
+        for($i = 1 ; $i <= $ileStronPodgladu ; $i++)
+        {   
+            // $nazwy[] = $this->folderPodgladu.$nazwaZrodlaPrzedZarejestrowaniem."/".$nazwaPlikuBezRozszerzenia."-00000".$i.".png";
+            $nazwy[] = $this->folderPodgladu.$nazwaBezRozszerzeniaPrzedZmiana."/".$nazwaBezRozszerzeniaPoZmianie."-".sprintf('%06s', $i).".png";
+        }
+        return $nazwy;
+
     }
     public function SciezkiDoPlikuPodgladowZarejestrowanych(): array
     {
@@ -162,6 +208,7 @@ class Pismo
         // echo "\nXXXx  ".$this->nazwaPliku." yyy ".$nazwaPlikuBezRozszerzenia;
         return $this->SciezkiPodgladowDlaNazwy($nazwaPlikuBezRozszerzenia);
     }
+    
     public function FolderZpodlgademPngWzglednieZgodnieZeZrodlem()
     {
         return $this->folderPodgladu.$this->NazwaZrodlaBezRozszerzenia()."/";
@@ -171,6 +218,11 @@ class Pismo
         // $arr = explode('.',$this->nazwaPliku);
 
         $nazwaBezRozszerzenia =  substr($this->nazwaPliku,0,strrpos($this->nazwaPliku,'.'));
+        return $this->folderPodgladu.$nazwaBezRozszerzenia."/";
+    }
+    public function FolderZpodlgademPngWzglednieZgodnieZnazwaPrzedZmiana()
+    {
+        $nazwaBezRozszerzenia =  substr($this->nazwaPlikuPrzedZmiana,0,strrpos($this->nazwaPlikuPrzedZmiana,'.'));
         return $this->folderPodgladu.$nazwaBezRozszerzenia."/";
     }
     public function NazwaZrodlaBezRozszerzenia(): string
@@ -190,5 +242,72 @@ class Pismo
     public function setFolderPodgladu(string $path)
     {
         $this->folderPodgladu = $path;
+    }
+
+    /**
+     * @return Collection|Sprawa[]
+     */
+    public function getSprawy(): Collection
+    {
+        return $this->sprawy;
+    }
+
+    public function addSprawy(Sprawa $sprawy): self
+    {
+        if (!$this->sprawy->contains($sprawy)) {
+            $this->sprawy[] = $sprawy;
+            $sprawy->addDokumenty($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSprawy(Sprawa $sprawy): self
+    {
+        if ($this->sprawy->removeElement($sprawy)) {
+            $sprawy->removeDokumenty($this);
+        }
+
+        return $this;
+    }
+
+    public function getNadawca(): ?Kontrahent
+    {
+        return $this->nadawca;
+    }
+
+    public function setNadawca(?Kontrahent $nadawca): self
+    {
+        $this->nadawca = $nadawca;
+
+        return $this;
+    }
+
+    public function getOdbiorca(): ?Kontrahent
+    {
+        return $this->odbiorca;
+    }
+
+    public function setOdbiorca(?Kontrahent $odbiorca): self
+    {
+        $this->odbiorca = $odbiorca;
+
+        return $this;
+    }
+
+    public function getRodzaj(): ?RodzajDokumentu
+    {
+        return $this->rodzaj;
+    }
+
+    public function setRodzaj(?RodzajDokumentu $rodzaj): self
+    {
+        $this->rodzaj = $rodzaj;
+
+        return $this;
+    }
+    public function getNazwaPlikuPrzedZmiana()
+    {
+        return $this->nazwaPlikuPrzedZmiana;
     }
 }

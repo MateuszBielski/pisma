@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Sprawa{% endblock %}
+
+{% block body %}
+    <h1>Edit Sprawa</h1>
+
+    {{ include('sprawa/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('sprawa_index') }}">back to list</a>
+
+    {{ include('sprawa/_delete_form.html.twig') }}
+{% endblock %}

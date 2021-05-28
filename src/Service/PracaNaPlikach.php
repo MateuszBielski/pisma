@@ -14,7 +14,8 @@ class PracaNaPlikach
     {
         
         
-        $nazwy = array_diff(scandir($path), array('..', '.'));
+        $nazwy = @array_diff(@scandir($path), array('..', '.'));
+        if(!$nazwy)$nazwy = [] ;
         if(!count($nazwy)){
             $nazwy[] = "folder $path jest pusty";
             return $nazwy;
@@ -86,14 +87,20 @@ class PracaNaPlikach
         
 
     }
-    public function RejestrujPismo(string $sciezkaDoZarejestrowanych,Pismo $pismo): bool
+    public function PrzeniesPlikiPdfiPodgladu(string $sciezkaDoZarejestrowanych,Pismo $pismo): bool
     {
         $adresZrodla = $pismo->getAdresZrodlaPrzedZarejestrowaniem();
         $nazwaPliku = $pismo->getNazwaPliku();
         $jestPodglad = $pismo->JestPodgladDlaZrodla();
         $adresPlikuPoZarejestrowaniu = $sciezkaDoZarejestrowanych.$nazwaPliku;
         if(!file_exists($adresZrodla))return false;
-        $przeniesioneZrodlo = rename($adresZrodla,$adresPlikuPoZarejestrowaniu);
+        //$przeniesioneZrodlo = rename($adresZrodla,$adresPlikuPoZarejestrowaniu);//nie chce działać na dysku zamontowanym z Windowsa
+        $przeniesioneZrodlo = false;
+        if(copy($adresZrodla,$adresPlikuPoZarejestrowaniu))
+        {
+            unlink($adresZrodla);
+            $przeniesioneZrodlo = true;
+        }
         if($jestPodglad && $przeniesioneZrodlo)
         {
             $sciezkiZrodla = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem(false);
@@ -110,6 +117,24 @@ class PracaNaPlikach
             return true;
         }
         return $przeniesioneZrodlo;
+    }
+    public function UaktualnijNazwyPlikowPodgladu(Pismo $pismo)
+    {
+        $staraNazwa = $pismo->getNazwaPlikuPrzedZmiana();
+        $nowaNazwa = $pismo->getNazwaPliku();
+        if($staraNazwa != $nowaNazwa)
+        {
+            $sciezkiZrodla = $pismo->SciezkiDoPlikuPodgladowDlaNazwyPrzedZmiana(false);
+            $sciezkiPoZmianie = $pismo->GenerujNazwyDocelowychPodgladowZeSciezkamiWfolderzePrzedZmiana();
+            $i = 0;
+            foreach($sciezkiZrodla as $sz)
+            {
+                rename($sz,$sciezkiPoZmianie[$i++]);
+            }
+            $folderPodgladuPrzedZmiana = $pismo->FolderZpodlgademPngWzglednieZgodnieZnazwaPrzedZmiana();
+            $folderPodgladuPoZmianie = $pismo->FolderZpodlgademPngWzglednieZgodnieZnazwaPliku();
+            $zmienionyFolder = rename($folderPodgladuPrzedZmiana,$folderPodgladuPoZmianie);
+        }
     }
     public function setUruchomienieProcesu(UruchomienieProcesu $uruchomienie)
     {
