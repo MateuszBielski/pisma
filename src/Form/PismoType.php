@@ -25,10 +25,6 @@ class PismoType extends AbstractType
                 'class'=>Kontrahent::class,
                 'choice_label' => 'nazwa'
                 ])
-            ->add('odbiorca',EntityType::class,[
-                'class'=>Kontrahent::class,
-                'choice_label' => 'nazwa'
-                ])
         ;
     }
 
