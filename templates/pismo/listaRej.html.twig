@@ -2,8 +2,23 @@
     {% for pismo in pisma %}
         <tr>
             <td>
+                {% if pismo.kierunek == 1 %}
+                p
+                {% endif %}
+            </td>
+            <td>
                 {# {% set nazwa = pismo.NazwaZrodlaPrzedZarejestrowaniem %} #}
-                <a href="{{ path('pismo_show', {'id': pismo.id, 'numerStrony': 1}) }}" >{{ pismo.nazwaPliku }}</a>
+                <a href="{{ path('pismo_show', {'id': pismo.id, 'numerStrony': 1}) }}" >
+                    {% if pismo_id == pismo.id %}
+                        {% set st = "<" %}
+                        {% set end = ">" %}
+
+                    {% else %}
+                        {% set st = "" %}
+                        {% set end = "" %}
+                    {% endif %}
+                        {{ st }}{{ pismo.nazwaPliku }}{{end}}
+                </a>
             </td>
             {# <td>
                 {% if pismo.JestPodgladDlaZrodla() %}+{% endif %}
@@ -12,9 +27,15 @@
             {% if pokazDate is defined %}
             
             <td>
-                {{ pismo.dataModyfikacji }}
+                {# {{ pismo.dataDokumentu }} #}
             </td>
             {% endif %}
+            <td>
+                {% if pismo.kierunek == 2 %}
+                w
+                {% endif %}
+            </td>
+            
         </tr>
     {% endfor %}
 </table>

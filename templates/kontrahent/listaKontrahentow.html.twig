@@ -1,0 +1,25 @@
+<table>
+    {% for kontr in kontrahents %}
+        <tr>
+            <td>
+                <a href="{{ path('kontrahent_show',{'id' : kontr.id}) }}">
+                    {% if kontrahent_id == kontr.id %}
+                        <<b>{{ kontr.nazwa }}</b>>
+                    {% else %}
+                        {{ kontr.nazwa }}
+                    {% endif %}
+                </a>
+    
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td>
+                brak wyników
+            </td>
+        </tr>
+    {% endfor %}
+        
+</table>
+
+

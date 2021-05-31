@@ -43,10 +43,11 @@ class PismoController extends AbstractController
         
 
         // $process->wait();
-
+        $pisma = $pismoRepository->findAll();
+        foreach($pisma as $p)$p->UstalStroneIKierunek();
 
         return $this->render('pismo/index.html.twig', [
-            'pisma' => $pismoRepository->findAll(),
+            'pisma' => $pisma,
         ]);;
     }
     /**
@@ -167,7 +168,8 @@ class PismoController extends AbstractController
         $pismo = $pismoRepository->find($id);
         $pismo->UstalStroneIKierunek();
         $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
-
+        $pisma = $pismoRepository->findAll();
+        foreach($pisma as $p)$p->UstalStroneIKierunek();
        
         return $this->render('pismo/show.html.twig', [
             'pismo' => $pismo,

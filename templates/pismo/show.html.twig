@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Pismo{% endblock %}
+{% block title %}{{ pismo.nazwaPliku }}{% endblock %}
 
 {% block b_div_pod_belka %}
-    <h3>Pismo</h3>
+    <h3>{{ pismo.nazwaPliku }}</h3>
 {% endblock %}
 {% block b_div_lewy %}
+{% set pismo_id = pismo.id %}
 {{ include('pismo/listaRej.html.twig') }}
 
 {% endblock %}
@@ -31,7 +32,11 @@
     </tr>
     <tr>
         <td>{{ pismo.kierunekOpisowo }}</td>
-        <td>{{ pismo.strona.nazwa }}</td>
+        <td><a href="{{ path('kontrahent_show',{'id': pismo.strona.id })}}">
+            {{ pismo.strona.nazwa }}
+            </a>
+        </td>
+
     </tr>
 </table>
 <br>
@@ -43,7 +48,7 @@ strony:
 {% for sciezka_png in sciezki_png_dla_stron %}
         <a href="{{ path('pismo_show', {'id' : pismo.id , 'numerStrony': indeks}) }}"> 
         {% if numerStrony == indeks %}
-        <{{ indeks }}> </b>
+        <<b>{{ indeks }}</b>>
         {% else %}
             {{ indeks }}  
         {% endif %}

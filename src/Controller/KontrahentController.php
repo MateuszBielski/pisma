@@ -58,9 +58,11 @@ class KontrahentController extends AbstractController
     /**
      * @Route("/{id}", name="kontrahent_show", methods={"GET"})
      */
-    public function show(Kontrahent $kontrahent): Response
+    public function show($id ,KontrahentRepository $kontrahentRepository): Response
     {
+        $kontrahent = $kontrahentRepository->find($id);
         return $this->render('kontrahent/show.html.twig', [
+            'kontrahents' => $kontrahentRepository->findAll(),
             'kontrahent' => $kontrahent,
         ]);
     }

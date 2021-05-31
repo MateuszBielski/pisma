@@ -32,3 +32,8 @@ Sortowanie dokumentów po dacie
 rejestrowanie pliku, jeżeli nie powiedzie się zmiana nazwy folderu, zrobić jeszcze raz podgląd, albo zapisać starą nazwę źródła
 funkcja nazwaPlikuBezRozszerzenia powinna uwzględniać wpisanie nazwy bez rozszerzenia
 Wfolderze ze skanami zarejestrowanymi znajdują się inne pliki
+
+Na liście kontrahentów zaznaczyć, który aktualnie jest przeglądany
+w edycji rodzaju dokumentu wybrać, które pola mają być aktywne
+
+Jak sformatować listę plików wychodzących i przychodzących. Z uwzględnieniem symbolu w , p, oraz symbl wybierz, jesli chcemy coś pobrać.

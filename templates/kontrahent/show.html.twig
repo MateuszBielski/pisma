@@ -1,26 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Kontrahent{% endblock %}
+{% block title %}{{ kontrahent.nazwa }}{% endblock %}
 
-{% block body %}
-    <h1>Kontrahent</h1>
+{% block b_div_pod_belka %}
+    <h3>{{ kontrahent.nazwa }}</h3>
+{% endblock %}
+{% block b_div_lewy %}
+{% set kontrahent_id = kontrahent.id %}
+{% include "kontrahent/listaKontrahentow.html.twig" %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ kontrahent.id }}</td>
-            </tr>
-            <tr>
-                <th>Nazwa</th>
-                <td>{{ kontrahent.nazwa }}</td>
-            </tr>
-        </tbody>
-    </table>
+{% endblock %}
+{% block b_div_centr %}
 
-    <a href="{{ path('kontrahent_index') }}">back to list</a>
+{% set pisma = kontrahent.odeMnie %}
+{{ include('pismo/listaRej.html.twig') }}
 
-    <a href="{{ path('kontrahent_edit', {'id': kontrahent.id}) }}">edit</a>
-
-    {{ include('kontrahent/_delete_form.html.twig') }}
+{% set pisma = kontrahent.doMnie %}
+{{ include('pismo/listaRej.html.twig') }}
 {% endblock %}
