@@ -2,6 +2,7 @@
 
 namespace App\Tests;
 
+use App\Entity\Kontrahent;
 use App\Entity\Pismo;
 use PHPUnit\Framework\TestCase;
 
@@ -114,6 +115,106 @@ class PismoTest extends TestCase
         $pismo = new Pismo("/jakis/folder/staraNazwa.pdf");
         $pismo->setNazwaPliku("nowaNazwa.pdf");
         $this->assertEquals('staraNazwa.pdf',$pismo->getNazwaPlikuPrzedZmiana());
+    }
+    public function testUstalStroneNaPodstawieKierunku()
+    {
+        $pismo = new Pismo;
+        $kierunek1 = 1;
+        $kierunek2 = 2;
+        $nadawca = new Kontrahent;
+        $nadawca->setNazwa('strona');
+        $odbiorca = new Kontrahent;
+        $odbiorca->setNazwa('strona');
+        $pismo->UstalStroneNaPodstawieKierunku($nadawca,$kierunek1);
+        $this->assertEquals(null,$pismo->getOdbiorca());
+        $this->assertEquals('strona',$pismo->getNadawca()->getNazwa());
+
+        $pismo->UstalStroneNaPodstawieKierunku($odbiorca,$kierunek2);
+        $this->assertEquals('strona',$pismo->getOdbiorca()->getNazwa());
+        $this->assertEquals(null,$pismo->getNadawca());
+
+    }
+    public function testUstawienieOdbiorcyZerujeNadawce()
+    {
+        $pismo = new Pismo;
+        $pismo->setNadawca(new Kontrahent);
+        $pismo->setOdbiorca(new Kontrahent);
+        $this->assertEquals(null,$pismo->getNadawca());
+    }
+    public function testUstawienieNadawcyZerujeOdbiorcy()
+    {
+        $pismo = new Pismo;
+        $pismo->setOdbiorca(new Kontrahent);
+        $pismo->setNadawca(new Kontrahent);
+        $this->assertEquals(null,$pismo->getOdbiorca());
+    }
+    public function testKierunekJesliJestNadawca()
+    {
+        $pismo = new Pismo;
+        $pismo->setNadawca(new Kontrahent);
+        $this->assertEquals(1,$pismo->getKierunek());
+    }
+    public function testKierunekJesliJestOdbiorca()
+    {
+        $pismo = new Pismo;
+        $pismo->setOdbiorca(new Kontrahent);
+        $this->assertEquals(2,$pismo->getKierunek());
+    }
+    public function testStronaJesliJestNadawca()
+    {
+        $pismo = new Pismo;
+        $k = new Kontrahent;
+        $pismo->setNadawca($k);
+        $this->assertEquals($k,$pismo->getStrona());
+    }
+    public function testStronaJesliJestOdbiorca()
+    {
+        $pismo = new Pismo;
+        $k = new Kontrahent;
+        $pismo->setOdbiorca($k);
+        $this->assertEquals($k,$pismo->getStrona());
+    }
+    public function testKierunek1_ustawiaNadawce()
+    {
+        $pismo = new Pismo;
+        $k = new Kontrahent;
+        $pismo->setStrona($k);
+        $pismo->setKierunek(1);
+        $this->assertEquals(null,$pismo->getOdbiorca());
+        $this->assertEquals($k,$pismo->getNadawca());
+    }
+    public function testKierunek2_ustawiaOdbiorce()
+    {
+        $pismo = new Pismo;
+        $k = new Kontrahent;
+        $pismo->setStrona($k);
+        $pismo->setKierunek(2);
+        $this->assertEquals(null,$pismo->getNadawca());
+        $this->assertEquals($k,$pismo->getOdbiorca());
+    }
+    public function testUstalKierunekIstroneJesliNadawca()
+    {
+        $pismo = new Pismo;
+        $k = new Kontrahent;
+        $pismo->setNadawca($k);
+        $pismo->UstalStroneIKierunek();
+        $this->assertEquals(1,$pismo->getKierunek());
+    }
+    public function testUstalKierunekIstroneJesliOdbiorca()
+    {
+        $pismo = new Pismo;
+        $k = new Kontrahent;
+        $pismo->setOdbiorca($k);
+        $pismo->UstalStroneIKierunek();
+        $this->assertEquals(2,$pismo->getKierunek());
+    }
+    public function testKierunekOpisowo()
+    {
+        $pismo = new Pismo;
+        $pismo->setKierunek(1);
+        $this->assertEquals("przychodzące od: ",$pismo->getKierunekOpisowo());
+        $pismo->setKierunek(2);
+        $this->assertEquals("wychodzące do: ",$pismo->getKierunekOpisowo());
     }
     /*
     public function testBrakPodgladuZarejestrowanego_GenerujePodglad()

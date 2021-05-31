@@ -6,23 +6,8 @@
     <h3>Nadawca / odbiorca</h3>
 {% endblock %}
 {% block b_div_centr %}
-<table>
-    {% for kontr in kontrahents %}
-        <tr>
-            <td>
-                {{ kontr.nazwa }}
-    
-            </td>
-        </tr>
-    {% else %}
-        <tr>
-            <td>
-                brak wyników
-            </td>
-        </tr>
-    {% endfor %}
-        
-</table>
+{% set kontrahent_id = -1 %}
+{% include "kontrahent/listaKontrahentow.html.twig" %}
 {% endblock %}
 {% block b_div_prawy %}
 <a href="{{ path('kontrahent_new') }}">Utwórz nowy</a>

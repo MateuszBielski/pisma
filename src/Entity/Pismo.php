@@ -71,6 +71,11 @@ class Pismo
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $opis;
+    
+    private $kierunek = 1;
+
+   
+    private $strona;
     // private $nazwaZrodlaPrzedZarejestrowaniem;
 
     public function __construct(string $adresZrodlaPrzedZarejestrowaniem = "")
@@ -80,7 +85,7 @@ class Pismo
         $timestamp = @filemtime($adresZrodlaPrzedZarejestrowaniem);
         $this->dataDokumentu = new DateTime();
         $this->dataDokumentu->setTimestamp($timestamp);
-        $this->dataModyfikacji = @date("Y-m-d H:i",$timestamp);
+        $this->dataModyfikacji = @date("Y-m-d",$timestamp);
         $this->nazwaPliku = $this->getNazwaZrodlaPrzedZarejestrowaniem();
         $this->sprawy = new ArrayCollection();
     }
@@ -293,8 +298,11 @@ class Pismo
 
     public function setNadawca(?Kontrahent $nadawca): self
     {
+        if(!$nadawca)return $this;
         $this->nadawca = $nadawca;
-
+        $this->odbiorca = null;
+        $this->kierunek = 1;
+        $this->strona = $nadawca;
         return $this;
     }
 
@@ -305,8 +313,12 @@ class Pismo
 
     public function setOdbiorca(?Kontrahent $odbiorca): self
     {
+        if(!$odbiorca)return $this;
+        // echo "\nXXXXXXXsetOdbiorca";
         $this->odbiorca = $odbiorca;
-
+        $this->nadawca = null;
+        $this->kierunek = 2;
+        $this->strona = $odbiorca;
         return $this;
     }
 
@@ -346,7 +358,71 @@ class Pismo
     public function setOpis(?string $opis): self
     {
         $this->opis = $opis;
+        return $this;
+    }
+    public function UstalStroneNaPodstawieKierunku(Kontrahent $strona, int $kierunek)
+    {
+        if($kierunek == 1)
+        {
+            $this->nadawca = $strona;
+            $this->odbiorca = null;
+        }
+        if($kierunek == 2)
+        {
+            $this->nadawca = null;
+            $this->odbiorca = $strona;
+        }
+    }
+    public function UstalStroneIKierunek()
+    {
+        if($this->nadawca)
+        {
+            $this->strona = $this->nadawca;
+            $this->kierunek = 1;
+            return;
+        }
+        if($this->odbiorca)
+        {
+            $this->strona = $this->odbiorca;
+            $this->kierunek = 2;
+            return;
+        }
+    }
 
+    public function getKierunek(): ?int
+    {
+        return $this->kierunek;
+    }
+    public function getKierunekOpisowo()
+    {
+        switch($this->kierunek)
+        {
+            case 1:
+            return 'przychodzące od: ';
+            case 2:
+            return 'wychodzące do: ';
+
+        }
+    }
+
+    public function setKierunek(?int $kierunek): self
+    {
+        $this->kierunek = $kierunek;
+        if($this->strona)
+        $this->UstalStroneNaPodstawieKierunku($this->strona,$kierunek);
+        return $this;
+    }
+
+    public function getStrona(): ?Kontrahent
+    {
+        return $this->strona;
+    }
+
+    public function setStrona(?Kontrahent $strona): self
+    {
+        $this->strona = $strona;
+        if($this->kierunek)
+        $this->UstalStroneNaPodstawieKierunku($this->strona,$this->kierunek);
         return $this;
     }
 }

@@ -43,10 +43,11 @@ class PismoController extends AbstractController
         
 
         // $process->wait();
-
+        $pisma = $pismoRepository->findAll();
+        foreach($pisma as $p)$p->UstalStroneIKierunek();
 
         return $this->render('pismo/index.html.twig', [
-            'pisma' => $pismoRepository->findAll(),
+            'pisma' => $pisma,
         ]);;
     }
     /**
@@ -137,6 +138,9 @@ class PismoController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid() && $pnp->PrzeniesPlikiPdfiPodgladu($this->getParameter('sciezka_do_zarejestrowanych'),$pismo)) {
 
+            // $strona = $form->get('strona')->getData();
+            // $kierunek = $form->get('kierunek')->getData();
+            // $pismo->UstalStroneNaPodstawieKierunku($strona,$kierunek);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($pismo);
             $entityManager->flush();
@@ -162,8 +166,10 @@ class PismoController extends AbstractController
     {
         // ;
         $pismo = $pismoRepository->find($id);
+        $pismo->UstalStroneIKierunek();
         $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
-
+        $pisma = $pismoRepository->findAll();
+        foreach($pisma as $p)$p->UstalStroneIKierunek();
        
         return $this->render('pismo/show.html.twig', [
             'pismo' => $pismo,
@@ -179,6 +185,7 @@ class PismoController extends AbstractController
      */
     public function edit($numerStrony, Request $request, Pismo $pismo): Response
     {
+        $pismo->UstalStroneIKierunek();
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
 
