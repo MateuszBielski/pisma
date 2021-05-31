@@ -29,7 +29,12 @@
         <td></td>
         <td></td>
     </tr>
+    <tr>
+        <td>{{ pismo.kierunekOpisowo }}</td>
+        <td>{{ pismo.strona.nazwa }}</td>
+    </tr>
 </table>
+<br>
 <a href="{{path('pismo_edit', {'id' : pismo.id, 'numerStrony': numerStrony })}}">edytuj dane dokumentu</a>
 {% endblock %}
 {% block b_div_prawy %}

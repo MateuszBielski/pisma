@@ -122,7 +122,7 @@ class PracaNaPlikach
     {
         $staraNazwa = $pismo->getNazwaPlikuPrzedZmiana();
         $nowaNazwa = $pismo->getNazwaPliku();
-        if($staraNazwa != $nowaNazwa)
+        if($staraNazwa && $staraNazwa != $nowaNazwa)
         {
             $sciezkiZrodla = $pismo->SciezkiDoPlikuPodgladowDlaNazwyPrzedZmiana(false);
             $sciezkiPoZmianie = $pismo->GenerujNazwyDocelowychPodgladowZeSciezkamiWfolderzePrzedZmiana();
