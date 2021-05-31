@@ -11,10 +11,9 @@
 
 {% endblock %}
 {% block b_div_centr %}
-
-{% set pisma = kontrahent.odeMnie %}
+{% set pismo_id = -1 %}
+{# {% set pisma = kontrahent.odeMnie %} #}
 {{ include('pismo/listaRej.html.twig') }}
 
-{% set pisma = kontrahent.doMnie %}
-{{ include('pismo/listaRej.html.twig') }}
+
 {% endblock %}

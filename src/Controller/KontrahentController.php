@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Kontrahent;
 use App\Form\KontrahentType;
 use App\Repository\KontrahentRepository;
+use App\Repository\PismoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,12 +59,15 @@ class KontrahentController extends AbstractController
     /**
      * @Route("/{id}", name="kontrahent_show", methods={"GET"})
      */
-    public function show($id ,KontrahentRepository $kontrahentRepository): Response
+    public function show($id ,KontrahentRepository $kontrahentRepository, PismoRepository $pr): Response
     {
         $kontrahent = $kontrahentRepository->find($id);
+        $pisma = $pr->findWszystkiePismaKontrahenta($kontrahent);
+        foreach($pisma as $p)$p->UstalStroneIKierunek();
         return $this->render('kontrahent/show.html.twig', [
             'kontrahents' => $kontrahentRepository->findAll(),
             'kontrahent' => $kontrahent,
+            'pisma' => $pisma,
         ]);
     }
 

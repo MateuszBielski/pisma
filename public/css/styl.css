@@ -15,8 +15,14 @@ a{
     text-decoration: none;
     color: rgb(229,178,128);
 }
-
+nav{
+    margin-left: auto;
+    margin-right: auto;
+    overflow: auto;
+}
 ul,li{
+    margin-left: auto;
+    margin-right: auto;
     /* nie ma kropek */
     list-style: none; 
     /* w jednej linii */

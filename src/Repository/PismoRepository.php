@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Kontrahent;
 use App\Entity\Pismo;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -17,6 +18,17 @@ class PismoRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Pismo::class);
+    }
+
+    public function findWszystkiePismaKontrahenta(Kontrahent $k)
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.nadawca = :k_id')
+            ->orWhere('p.odbiorca = :k_id')
+            ->setParameter('k_id', $k->getId())
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     // /**
