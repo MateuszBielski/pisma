@@ -26,6 +26,7 @@ class PismoRepository extends ServiceEntityRepository
             ->where('p.nadawca = :k_id')
             ->orWhere('p.odbiorca = :k_id')
             ->setParameter('k_id', $k->getId())
+            ->orderBy('p.dataDokumentu', 'DESC')
             ->getQuery()
             ->getResult()
         ;

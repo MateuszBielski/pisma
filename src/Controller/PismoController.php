@@ -26,7 +26,7 @@ class PismoController extends AbstractController
      */
     public function index(PismoRepository $pismoRepository): ?Response
     {
-        $pisma = $pismoRepository->findAll();
+        $pisma = $pismoRepository->findBy([], ['dataDokumentu' => 'DESC']);//findAll();
         $foldPdf = $this->getParameter('sciezka_do_zarejestrowanych');
         $entityManager = $this->getDoctrine()->getManager();
         foreach($pisma as $p)
@@ -162,12 +162,12 @@ class PismoController extends AbstractController
         $pismo = $pismoRepository->find($id);
         $pismo->UstalStroneIKierunek();
         $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
-        $pisma = $pismoRepository->findAll();
+        $pisma = $pismoRepository->findBy([], ['dataDokumentu' => 'DESC']);
         foreach($pisma as $p)$p->UstalStroneIKierunek();
        
         return $this->render('pismo/show.html.twig', [
             'pismo' => $pismo,
-            'pisma' => $pismoRepository->findAll(),
+            'pisma' => $pisma,
             'sciezki_png_dla_stron' => $sciezkiDoPodgladow,
             'sciezka_png' => $sciezkiDoPodgladow[$numerStrony - 1],
             'numerStrony' => $numerStrony,
@@ -194,7 +194,6 @@ class PismoController extends AbstractController
         return $this->render('pismo/edit.html.twig', [
             'pismo' => $pismo,
             'form' => $form->createView(),
-            // 'pisma' => $pismoRepository->findAll(),
             'sciezki_png_dla_stron' => $sciezkiDoPodgladow,
             'sciezka_png' => $sciezkiDoPodgladow[$numerStrony - 1],
             'numerStrony' => $numerStrony,
