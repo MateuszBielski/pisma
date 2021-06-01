@@ -1,0 +1,16 @@
+strony: 
+{% set indeks = 1 %}
+{% for sciezka in sciezki_dla_stron %}
+            <a href="{{ sciezka }}">
+        {% if numerStrony == indeks %}
+        <<b>{{ indeks }}</b>>
+        {% else %}
+            {{ indeks }}  
+        {% endif %}
+    </a>
+    {% set indeks = indeks + 1 %}
+{% endfor %}
+{% if sciezka_png|length > 0 %}
+<img src="{{ sciezka_png }}" alt="nie mogę wyświetlić " width="100%">
+
+{% endif %}

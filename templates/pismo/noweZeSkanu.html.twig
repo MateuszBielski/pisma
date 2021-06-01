@@ -10,9 +10,11 @@
     {{ include('pismo/listaNier.html.twig') }}
 {% endblock %}
 {% block b_div_centr %}
-miejsce na wprowadzenie danych dotyczących dokumentu<br>
+Ostatnio używane oznaczenie dokumentu:
+Wychodzące XYZ.zw<br>
 data modyfikacji dokumentu: {{ pismo.dataModyfikacji }}
 {% include "pismo/_form.html.twig" %}
+dodaj odbiorce/nadawce jesli brak na liście
 {% endblock %}
 {% block b_div_prawy %}
 {% set nazwa = pismo.nazwaZrodlaPrzedZarejestrowaniem %}

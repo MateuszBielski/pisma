@@ -8,17 +8,6 @@
 {% include "pismo/_form.html.twig" %}
 {% endblock %}
 {% block b_div_prawy %}
-strony: 
-{% set indeks = 1 %}
-{% for sciezka_png in sciezki_png_dla_stron %}
-        <a href="{{ path('pismo_edit', {'id' : pismo.id , 'numerStrony': indeks}) }}"> 
-        {% if numerStrony == indeks %}
-        <{{ indeks }}> </b>
-        {% else %}
-            {{ indeks }}  
-        {% endif %}
-    </a>
-    {% set indeks = indeks + 1 %}
-{% endfor %}
-<img src="{{ sciezka_png }}" alt="nie mogę wyświetlić " width="100%">
+{% include "pismo/_podglad.html.twig" %}
+
 {% endblock %}

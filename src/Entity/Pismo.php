@@ -42,6 +42,7 @@ class Pismo
     private $folderPodgladu = 'png/';
     private $nazwaPlikuPrzedZmiana = '';
     private $sciezkaDoFolderuPdf = "";
+    private $sciezkaGenerUrl;
 
     /**
      * @ORM\ManyToMany(targetEntity=Sprawa::class, mappedBy="dokumenty")
@@ -440,5 +441,13 @@ class Pismo
         if($this->kierunek)
         $this->UstalStroneNaPodstawieKierunku($this->strona,$this->kierunek);
         return $this;
+    }
+    public function setSciezkaGenerUrl(string $s)
+    {
+        $this->sciezkaGenerUrl = $s;
+    }
+    public function getSciezkaGenerUrl()       
+    {
+        return $this->sciezkaGenerUrl;
     }
 }

@@ -11,10 +11,12 @@
 
 {% endblock %}
 {% block b_div_centr %}
-{% set pismo_id = -1 %}
+{# {% set pismo_id =  %} #}
 {# {% set pisma = kontrahent.odeMnie %} #}
 {% set pokazDate = "tak" %}
+{# {% set sciezka = 'kontrahent_show' %} #}
 {{ include('pismo/listaRej.html.twig') }}
-
-
+{% endblock %}
+{% block b_div_prawy %}
+{% include "pismo/_podglad.html.twig" %}
 {% endblock %}

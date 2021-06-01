@@ -59,15 +59,43 @@ class KontrahentController extends AbstractController
     /**
      * @Route("/{id}", name="kontrahent_show", methods={"GET"})
      */
-    public function show($id ,KontrahentRepository $kontrahentRepository, PismoRepository $pr): Response
+    public function show($id ,KontrahentRepository $kontrahentRepository, PismoRepository $pr, Request $request): Response
     {
         $kontrahent = $kontrahentRepository->find($id);
         $pisma = $pr->findWszystkiePismaKontrahenta($kontrahent);
-        foreach($pisma as $p)$p->UstalStroneIKierunek();
+        $pismoId = $request->get('pismo_id');
+        $numerStrony = $request->get('numerStrony');
+        if($numerStrony == null)$numerStrony = 1;
+        $pismo = null;
+        $sciezkiDlaStron = [];
+        $sciezkaPng = '';
+        if($pismoId == null)$pismoId = -1;
+        else{
+            $pismo = $pr->find($pismoId);
+            $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
+            
+            $num = 0;
+            foreach($sciezkiDoPodgladow as $sc)
+            {
+                // echo "\n".$sc;
+                $sciezkiDlaStron[] = $this->generateUrl('kontrahent_show',['id'=> $id,'pismo_id'=> $pismoId,'numerStrony' => ++$num ]);
+            }
+            $sciezkaPng = $sciezkiDoPodgladow[$numerStrony - 1]; 
+        }
+        foreach($pisma as $p)
+        {
+            $p->UstalStroneIKierunek();
+            $p->setSciezkaGenerUrl($this->generateUrl('kontrahent_show',['id'=>$id,'pismo_id'=> $p->getId()]));
+        }
         return $this->render('kontrahent/show.html.twig', [
             'kontrahents' => $kontrahentRepository->findAll(),
             'kontrahent' => $kontrahent,
             'pisma' => $pisma,
+            // 'pismo'
+            'pismo_id' => $pismoId,
+            'sciezki_dla_stron' => $sciezkiDlaStron,
+            'numerStrony' => $numerStrony,
+            'sciezka_png' => $sciezkaPng,
         ]);
     }
 

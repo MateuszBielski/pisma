@@ -34,6 +34,7 @@ class PismoController extends AbstractController
             $p->UstalStroneIKierunek();
             $p->setSciezkaDoFolderuPdf($foldPdf);
             $p->UstalJesliTrzebaDateDokumentuZdatyMod();
+            $p->setSciezkaGenerUrl($this->generateUrl('pismo_show',['id'=> $p->getId(), 'numerStrony' => 1 ]));
             //poniższe na okoliczność jednorazowego zapisu daty jeśli brakowało
             $entityManager->persist($p);
         }
@@ -161,14 +162,21 @@ class PismoController extends AbstractController
         // ;
         $pismo = $pismoRepository->find($id);
         $pismo->UstalStroneIKierunek();
+        $pismo->setSciezkaGenerUrl($this->generateUrl('pismo_show',['id'=> $id, 'numerStrony' => $numerStrony ]));
         $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
+        $sciezkiDlaStron = [];
+        $num = 0;
+        foreach($sciezkiDoPodgladow as $sc)$sciezkiDlaStron[] = $this->generateUrl('pismo_show',['id'=> $id, 'numerStrony' => ++$num ]);
         $pisma = $pismoRepository->findBy([], ['dataDokumentu' => 'DESC']);
-        foreach($pisma as $p)$p->UstalStroneIKierunek();
+        foreach($pisma as $p){
+            $p->UstalStroneIKierunek();
+            $p->setSciezkaGenerUrl($this->generateUrl('pismo_show',['id'=> $p->getId(), 'numerStrony' => 1 ]));
+        }
        
         return $this->render('pismo/show.html.twig', [
             'pismo' => $pismo,
             'pisma' => $pisma,
-            'sciezki_png_dla_stron' => $sciezkiDoPodgladow,
+            'sciezki_dla_stron' => $sciezkiDlaStron,
             'sciezka_png' => $sciezkiDoPodgladow[$numerStrony - 1],
             'numerStrony' => $numerStrony,
         ]);
@@ -182,19 +190,24 @@ class PismoController extends AbstractController
         $pismo->UstalStroneIKierunek();
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
+        $id = $pismo->getId();
 
         if ($form->isSubmitted() && $form->isValid() ) {
             $this->getDoctrine()->getManager()->flush();
             $pnp = new PracaNaPlikach;
             $pnp->UaktualnijNazwyPlikowPodgladu($pismo);
-            return $this->redirectToRoute('pismo_show',['id'=>$pismo->getId(), 'numerStrony' => $numerStrony]);
+            return $this->redirectToRoute('pismo_show',['id'=>$id, 'numerStrony' => $numerStrony]);
         }
         // $numerStrony = 1;
+        // $pismo->
         $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
+        $sciezkiDlaStron = [];
+        $num = 0;
+        foreach($sciezkiDoPodgladow as $sc)$sciezkiDlaStron[] = $this->generateUrl('pismo_edit',['id'=> $id, 'numerStrony' => ++$num ]);
         return $this->render('pismo/edit.html.twig', [
             'pismo' => $pismo,
             'form' => $form->createView(),
-            'sciezki_png_dla_stron' => $sciezkiDoPodgladow,
+            'sciezki_dla_stron' => $sciezkiDlaStron,
             'sciezka_png' => $sciezkiDoPodgladow[$numerStrony - 1],
             'numerStrony' => $numerStrony,
         ]);

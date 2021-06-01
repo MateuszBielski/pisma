@@ -7,17 +7,17 @@
                 {% endif %}
             </td>
             <td>
-                {# {% set nazwa = pismo.NazwaZrodlaPrzedZarejestrowaniem %} #}
-                <a href="{{ path('pismo_show', {'id': pismo.id, 'numerStrony': 1}) }}" >
+                <a href="{{ pismo.sciezkaGenerUrl }}">
                     {% if pismo_id == pismo.id %}
-                        {% set st = "<" %}
-                        {% set end = ">" %}
-
+                        {% set st = '<<b>' %}
+                        {% set end = '</b>>' %}
+                        <<b>{{ pismo.nazwaPliku }}</b>>
                     {% else %}
-                        {% set st = "" %}
-                        {% set end = "" %}
+                    {% set st = "" %}
+                    {% set end = "" %}
+                        {{ pismo.nazwaPliku }}
                     {% endif %}
-                        {{ st }}{{ pismo.nazwaPliku }}{{end}}
+                        {# {{ st }}{{ pismo.nazwaPliku }}{{end}} #}
                 </a>
             </td>
             {# <td>

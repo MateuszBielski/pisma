@@ -7,6 +7,7 @@
 {% endblock %}
 {% block b_div_lewy %}
 {% set pismo_id = pismo.id %}
+{% set sciezka = 'pismo_show' %}
 {{ include('pismo/listaRej.html.twig') }}
 
 {% endblock %}
@@ -45,7 +46,7 @@
         {% if pismo.strona != null %}
         
         <td>
-            <a href="{{ path('kontrahent_show',{'id': pismo.strona.id })}}">
+            <a href="{{ path('kontrahent_show',{'id': pismo.strona.id, 'pismo_id': pismo.id, 'numer_strony': numerStrony })}}">
             {{ pismo.strona.nazwa }}
             </a>
         </td>
@@ -57,17 +58,5 @@
 <a href="{{path('pismo_edit', {'id' : pismo.id, 'numerStrony': numerStrony })}}">edytuj dane dokumentu</a>
 {% endblock %}
 {% block b_div_prawy %}
-strony: 
-{% set indeks = 1 %}
-{% for sciezka_png in sciezki_png_dla_stron %}
-        <a href="{{ path('pismo_show', {'id' : pismo.id , 'numerStrony': indeks}) }}"> 
-        {% if numerStrony == indeks %}
-        <<b>{{ indeks }}</b>>
-        {% else %}
-            {{ indeks }}  
-        {% endif %}
-    </a>
-    {% set indeks = indeks + 1 %}
-{% endfor %}
-<img src="{{ sciezka_png }}" alt="nie mogę wyświetlić " width="100%">
+{% include "pismo/_podglad.html.twig" %}
 {% endblock %}
