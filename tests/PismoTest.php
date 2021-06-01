@@ -4,6 +4,7 @@ namespace App\Tests;
 
 use App\Entity\Kontrahent;
 use App\Entity\Pismo;
+use DateTime;
 use PHPUnit\Framework\TestCase;
 
 class PismoTest extends TestCase
@@ -215,6 +216,37 @@ class PismoTest extends TestCase
         $this->assertEquals("przychodzące od: ",$pismo->getKierunekOpisowo());
         $pismo->setKierunek(2);
         $this->assertEquals("wychodzące do: ",$pismo->getKierunekOpisowo());
+    }
+    public function testDataModyfikacjiJestDataDokumentu_dlaNiezarejestrowanych()
+    {
+        $adresPliku = "tests/skanyDoTestow/dok2.pdf";
+        $pismo = new Pismo($adresPliku);
+        $dataModyfikacji = new DateTime;
+        $dataModyfikacji->setTimestamp(filemtime($adresPliku));
+        $this->assertEquals($dataModyfikacji,$pismo->getDataDokumentu());
+    }
+    public function testUstalJesliTrzebaDateDokumentuZdatyMod_nieTrzeba()
+    {
+        $pismo = new Pismo();
+        $data = new DateTime('now');
+        $pismo->setDataDokumentu($data);
+        $this->assertFalse($pismo->UstalJesliTrzebaDateDokumentuZdatyMod());
+    }
+    public function testUstalJesliTrzebaDateDokumentuZdatyMod_trzeba()
+    {
+        $pismo = new Pismo();
+        $nazwaPliku = "dok2.pdf";
+        $folderZplikiem = "tests/skanyDoTestow/";
+        $adresPliku = $folderZplikiem.$nazwaPliku;
+
+        $pismo->setNazwaPliku($nazwaPliku);
+        $pismo->setSciezkaDoFolderuPdf($folderZplikiem);
+        $pismo->UstawDateDokumentuNull();
+        $this->assertTrue($pismo->UstalJesliTrzebaDateDokumentuZdatyMod());
+
+        $dataModyfikacji = new DateTime;
+        $dataModyfikacji->setTimestamp(filemtime($adresPliku));
+        $this->assertEquals($dataModyfikacji,$pismo->getDataDokumentu());
     }
     /*
     public function testBrakPodgladuZarejestrowanego_GenerujePodglad()

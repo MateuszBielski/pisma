@@ -26,26 +26,20 @@ class PismoController extends AbstractController
      */
     public function index(PismoRepository $pismoRepository): ?Response
     {
-        /*
-        $imagick = new Imagick();
-        $imagick->readImage("/var/www/html/skany/współczynnikiLabWarsztatyArchiwumZPO.pdf");
-        // echo __DIR__;
-        print_r($imagick->getSize()) ;
-        // $imagick->setImageResolution ( 100, 2000 );
-        // print_r($imagick->identifyImage(true));
-        $imagick->writeImages('/var/www/html/skany/obraz.jpg',false);
-        */
-        $folder = $this->getParameter('sciezka_do_skanow');
-        // echo $folder;
-        // $process = new Process(['pdftopng',  $folder.'zych.pdf', $folder.'zychRozp']);//'-gray',
-        // $process->run();
-        // echo $process->getOutput();
-        
-
-        // $process->wait();
         $pisma = $pismoRepository->findAll();
-        foreach($pisma as $p)$p->UstalStroneIKierunek();
-
+        $foldPdf = $this->getParameter('sciezka_do_zarejestrowanych');
+        $entityManager = $this->getDoctrine()->getManager();
+        foreach($pisma as $p)
+        {
+            $p->UstalStroneIKierunek();
+            $p->setSciezkaDoFolderuPdf($foldPdf);
+            $p->UstalJesliTrzebaDateDokumentuZdatyMod();
+            //poniższe na okoliczność jednorazowego zapisu daty jeśli brakowało
+            $entityManager->persist($p);
+        }
+        //jeśli data jest w bazie, to nic nie robi
+        $entityManager->flush();
+            
         return $this->render('pismo/index.html.twig', [
             'pisma' => $pisma,
         ]);;

@@ -25,6 +25,12 @@
         <td></td>
     </tr>
     <tr>
+        <td>data na dokumencie</td>
+        <td>{{ pismo.dataDokumentu|date("Y-m-d") }}</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
         <td>rodzaj dokumentu:</td>
         <td>
             {% if pismo.rodzaj != null %}

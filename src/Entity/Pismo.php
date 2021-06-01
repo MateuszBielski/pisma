@@ -41,6 +41,7 @@ class Pismo
     private $dataModyfikacji;
     private $folderPodgladu = 'png/';
     private $nazwaPlikuPrzedZmiana = '';
+    private $sciezkaDoFolderuPdf = "";
 
     /**
      * @ORM\ManyToMany(targetEntity=Sprawa::class, mappedBy="dokumenty")
@@ -63,9 +64,9 @@ class Pismo
     private $rodzaj;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      */
-    private $dataDokumentu;
+    private $dataDokumentu = null;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -106,6 +107,10 @@ class Pismo
         $this->nazwaPliku = $nazwaPliku;
 
         return $this;
+    }
+    public function setSciezkaDoFolderuPdf(string $path)
+    {
+        $this->sciezkaDoFolderuPdf = $path;
     }
 
     public function getOznaczenie(): ?string
@@ -348,6 +353,17 @@ class Pismo
         $this->dataDokumentu = $dataDokumentu;
 
         return $this;
+    }
+    public function UstawDateDokumentuNull()
+    {
+        $this->dataDokumentu = null;
+    }
+    public function UstalJesliTrzebaDateDokumentuZdatyMod(): bool
+    {
+        if($this->dataDokumentu != null)return false;
+        $this->dataDokumentu = new DateTime();
+        $this->dataDokumentu->setTimestamp(@filemtime($this->sciezkaDoFolderuPdf.$this->nazwaPliku));
+        return true;
     }
 
     public function getOpis(): ?string

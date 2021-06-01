@@ -27,7 +27,7 @@
             {% if pokazDate is defined %}
             
             <td>
-                {# {{ pismo.dataDokumentu }} #}
+                {{ pismo.dataDokumentu|date("Y-m-d") }}
             </td>
             {% endif %}
             <td>
