@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Kontrahent;
 use App\Entity\Pismo;
+use App\Form\KontrahentType;
 use App\Form\PismoLadowaniePdfType;
 use App\Form\PismoType;
 use App\Repository\PismoRepository;
@@ -130,6 +132,20 @@ class PismoController extends AbstractController
         
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
+        $pismo->UstalStroneIKierunek();
+
+        $nowyKontrahent = new Kontrahent;
+        $nowyKontrahent->setNazwa('nazwa...');
+        $kontrahentForm = $this->createForm(KontrahentType::class,$nowyKontrahent);
+        $kontrahentForm->handleRequest($request);
+        
+        if($kontrahentForm->isSubmitted() && $kontrahentForm->isValid())
+        {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($nowyKontrahent);
+            $entityManager->flush();
+            $pismo->setStrona($nowyKontrahent);
+        }
 
         if ($form->isSubmitted() && $form->isValid() && $pnp->PrzeniesPlikiPdfiPodgladu($this->getParameter('sciezka_do_zarejestrowanych'),$pismo)) {
 
@@ -151,6 +167,7 @@ class PismoController extends AbstractController
             'sciezki_png_dla_stron' => $sciezkiDoPodgladow,
             'sciezka_png' => $sciezkiDoPodgladow[$numerStrony - 1],
             'numerStrony' => $numerStrony,
+            'kontrahentForm' => $kontrahentForm->createView(),
         ]);
     }
 
