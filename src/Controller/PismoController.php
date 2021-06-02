@@ -208,12 +208,14 @@ class PismoController extends AbstractController
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
         $id = $pismo->getId();
+        
 
         if ($form->isSubmitted() && $form->isValid() ) {
             $this->getDoctrine()->getManager()->flush();
             $pnp = new PracaNaPlikach;
             $pnp->UaktualnijNazwyPlikowPodgladu($pismo);
-            return $this->redirectToRoute('pismo_show',['id'=>$id, 'numerStrony' => $numerStrony]);
+            // return $this->redirectToRoute('pismo_show',['id'=>$id, 'numerStrony' => $numerStrony]);
+            return $this->redirectToRoute('kontrahent_show',['id'=> $pismo->getStrona()->getId(),'pismo_id'=> $id,'numerStrony' => $numerStrony]);
         }
         // $numerStrony = 1;
         // $pismo->

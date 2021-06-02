@@ -36,5 +36,13 @@
             {% endif %}
             
         </tr>
+        {% if pismo_id == pismo.id and wierszZopcjami is defined %}
+        <tr>
+            <td></td>
+            <td><a href="{{path('pismo_edit', {'id' : pismo.id, 'numerStrony': numerStrony })}}">edytuj dane</a></td>
+            <td></td>
+        </tr>
+        {% endif %}
+        
     {% endfor %}
 </table>

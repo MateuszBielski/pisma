@@ -96,6 +96,7 @@ class KontrahentController extends AbstractController
             'sciezki_dla_stron' => $sciezkiDlaStron,
             'numerStrony' => $numerStrony,
             'sciezka_png' => $sciezkaPng,
+            'wierszZopcjami' => true,
         ]);
     }
 
