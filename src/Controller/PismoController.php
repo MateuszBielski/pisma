@@ -138,7 +138,7 @@ class PismoController extends AbstractController
         $nowyKontrahent->setNazwa('nazwa...');
         $kontrahentForm = $this->createForm(KontrahentType::class,$nowyKontrahent);
         $kontrahentForm->handleRequest($request);
-        
+
         if($kontrahentForm->isSubmitted() && $kontrahentForm->isValid())
         {
             $entityManager = $this->getDoctrine()->getManager();

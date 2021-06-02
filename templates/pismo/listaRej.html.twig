@@ -1,16 +1,20 @@
 <table>
     {% for pismo in pisma %}
         <tr>
-            <td>
-                {% if pismo.kierunek == 1 %}
-                p
-                {% endif %}
+            {% if pismo.kierunek == 1 %}
+                <td class="ic_przychodzace">
+            {% elseif pismo.kierunek == 2 %}
+                <td class="ic_wychodzace" >
+            {% else %}
+                <td>
+            {% endif %}
             </td>
+                
             <td>
                 <a href="{{ pismo.sciezkaGenerUrl }}">
                     {% if pismo_id == pismo.id %}
-                        {% set st = '<<b>' %}
-                        {% set end = '</b>>' %}
+                        {# {% set st = '<<b>' %} #}
+                        {# {% set end = '</b>>' %} #}
                         <<b>{{ pismo.nazwaPliku }}</b>>
                     {% else %}
                     {% set st = "" %}
@@ -30,11 +34,6 @@
                 {{ pismo.dataDokumentu|date("Y-m-d") }}
             </td>
             {% endif %}
-            <td>
-                {% if pismo.kierunek == 2 %}
-                w
-                {% endif %}
-            </td>
             
         </tr>
     {% endfor %}

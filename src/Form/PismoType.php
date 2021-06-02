@@ -5,12 +5,14 @@ namespace App\Form;
 use App\Entity\Kontrahent;
 use App\Entity\Pismo;
 use App\Entity\RodzajDokumentu;
+use App\Repository\KontrahentRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class PismoType extends AbstractType
 {
@@ -19,7 +21,7 @@ class PismoType extends AbstractType
         $date = new \DateTime();
         $endYear = $date->format('Y');
         $builder
-            ->add('nazwaPliku')
+            ->add('nazwaPliku',TextType::class,['attr' => ['size'=>"40"]])
             ->add('dataDokumentu', DateType::class, [
                 'widget' => 'choice',
                 'years' => range(2001,$endYear+1),
@@ -45,6 +47,10 @@ class PismoType extends AbstractType
                 'class'=>Kontrahent::class,
                 'choice_label' => 'nazwa',
                 'label' => false,
+                'query_builder' => function (KontrahentRepository $kr) {
+                    return $kr->createQueryBuilder('k')
+                    ->orderBy('k.nazwa', 'ASC');
+                }
                 // 'mapped' => false,
                 ])
         ;

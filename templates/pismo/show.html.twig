@@ -6,6 +6,7 @@
     <h3>{{ pismo.nazwaPliku }}</h3>
 {% endblock %}
 {% block b_div_lewy %}
+Wszystkie pisma zarejestrowane:<br>
 {% set pismo_id = pismo.id %}
 {% set sciezka = 'pismo_show' %}
 {{ include('pismo/listaRej.html.twig') }}

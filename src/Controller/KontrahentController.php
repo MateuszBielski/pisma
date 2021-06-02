@@ -29,7 +29,7 @@ class KontrahentController extends AbstractController
             $kontrahenci[] = $k;
         }
         return $this->render('kontrahent/index.html.twig', [
-            'kontrahents' => $kontrahentRepository->findAll()//$kontrahenci//,
+            'kontrahents' => $kontrahentRepository->findBy([],['nazwa'=>'ASC']),//All()
         ]);
     }
 
@@ -88,7 +88,7 @@ class KontrahentController extends AbstractController
             $p->setSciezkaGenerUrl($this->generateUrl('kontrahent_show',['id'=>$id,'pismo_id'=> $p->getId()]));
         }
         return $this->render('kontrahent/show.html.twig', [
-            'kontrahents' => $kontrahentRepository->findAll(),
+            'kontrahents' => $kontrahentRepository->findBy([],['nazwa'=>'ASC']),
             'kontrahent' => $kontrahent,
             'pisma' => $pisma,
             // 'pismo'

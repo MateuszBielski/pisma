@@ -15,6 +15,11 @@ a{
     text-decoration: none;
     color: rgb(229,178,128);
 }
+a:hover{
+    /* czerwony ceglasty */
+    /* color: rgb(238, 115, 66); */
+    color: rgb(122,228,226)
+}
 nav{
     margin-left: auto;
     margin-right: auto;
@@ -47,6 +52,26 @@ li{
     margin-left: auto;
     margin-right: auto;
     width: 80%;
+}
+.ic_przychodzace{
+    content: '';
+    display: block;
+    height: 28px;  /*height of icon */
+    width: 35px;  /*width of icon */
+    /* position: absolute; */
+      /*where to replace the icon */
+    top: 0px;
+    background: url(przych2.gif) no-repeat;
+}
+.ic_wychodzace{
+    content: '';
+    display: block;
+    height: 31px;  /*height of icon */
+    width: 35px;  /*width of icon */
+    /* position: absolute; */
+      /*where to replace the icon */
+    top: 0px;
+    background: url(wych2.gif) no-repeat;
 }
 #belka_gora{
     background: rgb(42, 71, 75);
