@@ -39,7 +39,10 @@
         {% if pismo_id == pismo.id and wierszZopcjami is defined %}
         <tr>
             <td></td>
-            <td><a href="{{path('pismo_edit', {'id' : pismo.id, 'numerStrony': numerStrony })}}">edytuj dane</a></td>
+            <td>
+                <a href="{{path('pismo_edit', {'id' : pismo.id, 'numerStrony': numerStrony })}}">edytuj dane</a>
+                <a href="{{path('pismo_pobieranie',{'id' : pismo.id})}}">pobierz plik</a>
+            </td>
             <td></td>
         </tr>
         {% endif %}

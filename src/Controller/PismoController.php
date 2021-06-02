@@ -11,6 +11,7 @@ use App\Repository\PismoRepository;
 use App\Service\PracaNaPlikach;
 use App\Service\UruchomienieProcesu;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -172,6 +173,17 @@ class PismoController extends AbstractController
     }
 
     /**
+     * @Route("/pobieranie/{id}", name="pismo_pobieranie", methods={"GET","POST"})
+     */
+    public function Pobieranie(Pismo $pismo): ?BinaryFileResponse
+    {
+        $file = $this->getParameter('sciezka_do_zarejestrowanych').$pismo->getNazwaPliku();
+        // $file = 'path/to/file.txt';
+        $response = new BinaryFileResponse($file);
+        return $response;
+    }
+
+    /**
      * @Route("/{id}/{numerStrony}", name="pismo_show", methods={"GET"})
      */
     public function show(int $id,int $numerStrony, PismoRepository $pismoRepository): Response//Pismo $pismo
@@ -231,6 +243,8 @@ class PismoController extends AbstractController
             'numerStrony' => $numerStrony,
         ]);
     }
+    
+    
 
     /**
      * @Route("/{id}", name="pismo_delete", methods={"POST"})

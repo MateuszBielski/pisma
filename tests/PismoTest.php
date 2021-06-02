@@ -253,6 +253,6 @@ class PismoTest extends TestCase
     {
         $pismo = new Pismo("/var/jakas/sciezka/skany/maPodglad2.pdf");
     }*/
-    //jeśli zmiana nazwy pliku zarejestrowanego - zmiana w nazwach podglądu 
+    //jeśli zmiana nazwy pliku zarejestrowanego - zmiana pliku.pdf
     //Jeśli nie ma podglądu zrobić podgląd 
 }
