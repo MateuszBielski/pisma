@@ -1,9 +1,23 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ pismo.NazwaSkroconaZrodla(15) }}{% endblock %}
+{% block b_dodatkoweArkuszeIskrypty %}
+{# <script type="text/javascript" src="/js/jquery.js"></script> #}
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+{# <script type="text/javascript" src="/js/jquery.slim.js"></script>
+<script type="text/javascript" src="/js/jquery.slim.min.js"></script> #}
+{# <script type="text/javascript" src="/js/select2.full.js"></script>
+<script type="text/javascript" src="/js/select2.full.min.js"></script>
+<script type="text/javascript" src="/js/select2.js"></script> #}
+<script type="text/javascript" src="/js/select2.min.js"></script>
+<script type="text/javascript" src="/js/zmianaSelect.js"></script>
+<link href="/css/select2.min.css" rel="stylesheet"/>
+{# <link href="/css/select2.css" rel="stylesheet"/> #}
+{% endblock %}
 
 {% block b_div_pod_belka %}
     <h3>Niezarejestrowane: {{ pismo.nazwaZrodlaPrzedZarejestrowaniem }}</h3>
+    
 {% endblock %}
 {% block b_div_lewy %}
     <h4>Lista dokumentów do wprowadzenia:</h4>
@@ -34,4 +48,6 @@ strony:
 {% endfor %}
 <img src="{{ sciezka_png }}" alt="nie mogę wyświetlić " width="100%">
 {% endblock %}
-{% block belka_dol %}{% endblock %}
+{% block belka_dol %}
+
+{% endblock %}

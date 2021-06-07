@@ -46,6 +46,7 @@ class PismoType extends AbstractType
             ->add('strona',EntityType::class,[
                 'class'=>Kontrahent::class,
                 'choice_label' => 'nazwa',
+                'attr' => ['class' => 'dlaSelect2','style'=>"width: 70%"],
                 'label' => false,
                 'query_builder' => function (KontrahentRepository $kr) {
                     return $kr->createQueryBuilder('k')

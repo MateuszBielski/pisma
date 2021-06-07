@@ -1,26 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>labNeurol.pdf</title>
+        
+        <link href="/css/styl.css" rel="stylesheet"/>
+        <script type="text/javascript" src="/js/jquery.js"></script>
 
-<?php
-  
-// The location of the PDF file
-// on the server
-/*
-echo początek;
-$filename = "/home/mateusz/Dokumenty/Inwestycje/koszty i powierzchnie/współczynnikiLabWarsztatyArchiwumZPO.pdf";
-  
-// Header content type
-header("Content-type: application/pdf");
-  
-header("Content-Length: " . filesize($filename));
-  
-// Send the file to the browser.
-readfile($filename);
-*/
-//<embed src="/home/mateusz/Dokumenty/Inwestycje/koszty i powierzchnie/współczynnikiLabWarsztatyArchiwumZPO.pdf" width="500" height="400" type='application/pdf'> 
-//</embed>
-echo imagick;
-$imagick = new Imagick();
-// phpinfo();
-?> 
-początek
-<img src="/var/www/html/pisma/public/obraz.jpg" alt="nie mogę wyświetlić " width="60%">
-koniec
+        <script type="text/javascript" src="/js/select2.full.js"></script>
+
+        <script type="text/javascript" src="/js/zmianaSelect.js"></script>
+        <link href="/css/select2.min.css" rel="stylesheet"/>
+        <link href="/css/select2.css" rel="stylesheet"/>
+                
+    </head>
+<body>
+    treść
+    <label for="cars">Choose a car:</label>
+
+<select name="cars" id="cars" class="dlaSelect2">
+  <option value="volvo">Volvo</option>
+  <option value="saab">Saab</option>
+  <option value="mercedes">Mercedes</option>
+  <option value="audi">Audi</option>
+</select> 
+</body>
+

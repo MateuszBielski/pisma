@@ -11,6 +11,7 @@
         {% block javascripts %}
             {#{{ encore_entry_script_tags('app') }}#}
         {% endblock %}
+        {% block b_dodatkoweArkuszeIskrypty %}{% endblock %}
     </head>
     <body>
         <div id="caly_div">
@@ -18,40 +19,15 @@
 
                 <div class="pion_zwezony" id="belka_gora">
                     <nav>
-                        <ul>
-                            <li><a href="{{ path('pismo_nowe_index') }}" >nowe pisma</a></li>{#  #}
-                            <li><a href="{{ path('pismo_index') }}">pisma zarejestrowane</a></li>{#  #}
-                            <li><a href="{{ path('kontrahent_index') }}">nadawca / odbiorca</a></li>{# <a href="{{ path('kontrahent_index') }}">nadawca / odbiorca</a> #}
-                            <li><a href="{{ path('sprawa_index') }}">sprawa</a></li>{# sprawa #}
-                            <li><a href="{{ path('rodzaj_dokumentu_index') }}">rodzaje dokumentów</a></li>
+                        <ul class="ul_menu" >
+                            <li class="li_menu"><a href="{{ path('pismo_nowe_index') }}" >nowe pisma</a></li>{#  #}
+                            <li class="li_menu"><a href="{{ path('pismo_index') }}">pisma zarejestrowane</a></li>{#  #}
+                            <li class="li_menu"><a href="{{ path('kontrahent_index') }}">nadawca / odbiorca</a></li>{# <a href="{{ path('kontrahent_index') }}">nadawca / odbiorca</a> #}
+                            <li class="li_menu"><a href="{{ path('sprawa_index') }}">sprawa</a></li>{# sprawa #}
+                            <li class="li_menu"><a href="{{ path('rodzaj_dokumentu_index') }}">rodzaje dokumentów</a></li>
                         </ul>
                     </nav>
                 </div>
-                    {#<div class="pole_belka_gora">nowe pisma
-                    
-                </div>
-                <div class="pole_belka_gora">pisma zarejestrowane
-                    
-                </div>
-                <div class="pole_belka_gora">nadawca / odbiorca
-                    
-                </div>
-                <div class="pole_belka_gora">
-                    
-                </div>
-                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                <div class="pole_belka_gora">
-                    <a class="link" href="{{ path('member_user_indexUjemni') }}" >wezwania</a>
-                </div>
-                <div class="pole_belka_gora">
-                    <a class="link" href="{{ path('app_logout') }}" >wyloguj</a>
-                </div>
-                <div class="pole_belka_gora_doprawej">zalogowany jako: {{ app.user.username }}</div>
-                {% else %}
-                <div class="pole_belka_gora">
-                    <a class="link" href="{{ path('app_login') }}" >zaloguj się</a>
-                </div>
-                {% endif %} #}
             </div>
             <div class="pion_zwezony" id="div_pod_belka">
                 {% block b_div_pod_belka %}{% endblock %}
