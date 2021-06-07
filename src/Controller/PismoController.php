@@ -12,6 +12,7 @@ use App\Service\PracaNaPlikach;
 use App\Service\UruchomienieProcesu;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -180,6 +181,8 @@ class PismoController extends AbstractController
         $file = $this->getParameter('sciezka_do_zarejestrowanych').$pismo->getNazwaPliku();
         // $file = 'path/to/file.txt';
         $response = new BinaryFileResponse($file);
+        //pobieranie pliku , nie wyswietlenia https://geekster.pl/symfony/dynamiczne-tworzenie-i-pobieranie-archiwum-zip/
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
         return $response;
     }
 

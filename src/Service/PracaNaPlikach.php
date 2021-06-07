@@ -140,7 +140,8 @@ class PracaNaPlikach
     {
         $nazwaStara = $folderPdf.$pismo->getNazwaPlikuPrzedZmiana();
         $nazwaNowa = $folderPdf.$pismo->getNazwaPliku();
-        if($nazwaStara != $nazwaNowa)
+        
+        if(strlen($pismo->getNazwaPlikuPrzedZmiana()) && $nazwaStara != $nazwaNowa)
         rename($nazwaStara,$nazwaNowa);
     }
     public function setUruchomienieProcesu(UruchomienieProcesu $uruchomienie)

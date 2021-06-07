@@ -11,6 +11,8 @@
 /migrations
 .env
 composer.lock
+node_modules/
+package-lock.json
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
