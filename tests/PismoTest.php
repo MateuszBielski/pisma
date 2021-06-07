@@ -248,11 +248,11 @@ class PismoTest extends TestCase
         $dataModyfikacji->setTimestamp(filemtime($adresPliku));
         $this->assertEquals($dataModyfikacji,$pismo->getDataDokumentu());
     }
+   
     /*
     public function testBrakPodgladuZarejestrowanego_GenerujePodglad()
     {
         $pismo = new Pismo("/var/jakas/sciezka/skany/maPodglad2.pdf");
     }*/
-    //jeśli zmiana nazwy pliku zarejestrowanego - zmiana pliku.pdf
     //Jeśli nie ma podglądu zrobić podgląd 
 }

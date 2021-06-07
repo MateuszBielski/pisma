@@ -226,6 +226,7 @@ class PismoController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
             $pnp = new PracaNaPlikach;
             $pnp->UaktualnijNazwyPlikowPodgladu($pismo);
+            $pnp->UaktualnijNazwePlikuPdf($this->getParameter('sciezka_do_zarejestrowanych'),$pismo);
             // return $this->redirectToRoute('pismo_show',['id'=>$id, 'numerStrony' => $numerStrony]);
             return $this->redirectToRoute('kontrahent_show',['id'=> $pismo->getStrona()->getId(),'pismo_id'=> $id,'numerStrony' => $numerStrony]);
         }

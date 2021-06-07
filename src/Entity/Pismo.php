@@ -106,7 +106,6 @@ class Pismo
     {
         $this->nazwaPlikuPrzedZmiana = $this->nazwaPliku;
         $this->nazwaPliku = $nazwaPliku;
-
         return $this;
     }
     public function setSciezkaDoFolderuPdf(string $path)

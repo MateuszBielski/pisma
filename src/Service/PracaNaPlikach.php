@@ -136,6 +136,13 @@ class PracaNaPlikach
             $zmienionyFolder = rename($folderPodgladuPrzedZmiana,$folderPodgladuPoZmianie);
         }
     }
+    public function UaktualnijNazwePlikuPdf(string $folderPdf,Pismo $pismo)
+    {
+        $nazwaStara = $folderPdf.$pismo->getNazwaPlikuPrzedZmiana();
+        $nazwaNowa = $folderPdf.$pismo->getNazwaPliku();
+        if($nazwaStara != $nazwaNowa)
+        rename($nazwaStara,$nazwaNowa);
+    }
     public function setUruchomienieProcesu(UruchomienieProcesu $uruchomienie)
     {
         $this->uruchomienie = $uruchomienie;

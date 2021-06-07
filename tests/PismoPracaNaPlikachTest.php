@@ -226,6 +226,25 @@ class PismoPracaNaPlikachTest extends TestCase
 
 
     }
+    public function testUaktualnijNazwePlikuPdf()
+    {
+        
+        $pismo = new Pismo;
+        $nazwaPliku1 = "plikPrzedZmiana.pdf";
+        $nazwaPliku2 =  "plikPoZmianie.pdf";
+        $folderZplikiem = "tests/pustyFolder/";
+        
+        fclose(fopen($folderZplikiem.$nazwaPliku1,'w'));
+        
+        $pismo->setNazwaPliku($nazwaPliku1);
+        $pismo->setNazwaPliku($nazwaPliku2);
+        
+        $pnp = new PracaNaPlikach;
+        $pnp->UaktualnijNazwePlikuPdf($folderZplikiem,$pismo);
+
+        $this->assertTrue(file_exists($folderZplikiem.$nazwaPliku2));
+        unlink($folderZplikiem.$nazwaPliku2);//
+    }
     //jeśli pusty folder surowychPDF
     //utworzenie folderu png jeśli nie ma
     
