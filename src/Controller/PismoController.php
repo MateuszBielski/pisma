@@ -138,30 +138,28 @@ class PismoController extends AbstractController
         $pismoZformularza = $request->request->get('pismo');
         $nowaNazwaKontrahenta = $pismoZformularza['strona'];
         $entityManager = $this->getDoctrine()->getManager();
-        // echo "\nXXXX".$nowaNazwaKontrahenta;
-        if(strlen($nowaNazwaKontrahenta)){
-            $nowyKontrahent = $kr->findBy(['nazwa'=>$nowaNazwaKontrahenta]);
-            if(!count($nowyKontrahent)){
-
-                $nowyKontrahent = new Kontrahent;
-                $nowyKontrahent->setNazwa($nowaNazwaKontrahenta);
-                // $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($nowyKontrahent);
-                $pismo->setStrona($nowyKontrahent);
-                $entityManager->flush();
-                $pismoZformularza['strona'] = $nowyKontrahent->getId();
-                $request->request->set('pismo',$pismoZformularza);
-            }
+        $utworzycNowegoKontrahenta = false;
+        if(!is_int($nowaNazwaKontrahenta) && strlen($nowaNazwaKontrahenta))
+        {
+            $utworzycNowegoKontrahenta = true;
+            $pismoZformularza['strona'] = null;
+            $request->request->set('pismo',$pismoZformularza);
         }
+        
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
         
 
         if ($form->isSubmitted() && $form->isValid() && $pnp->PrzeniesPlikiPdfiPodgladu($this->getParameter('sciezka_do_zarejestrowanych'),$pismo)) {
-
+            if($utworzycNowegoKontrahenta)
+            {
+                $nowyKontrahent = new Kontrahent;
+                $nowyKontrahent->setNazwa($nowaNazwaKontrahenta);
+                $entityManager->persist($nowyKontrahent);
+                $pismo->setStrona($nowyKontrahent);
+            }
             
             $entityManager->persist($pismo);
-            $entityManager->persist($nowyKontrahent);
             $entityManager->flush();
 
             return $this->redirectToRoute('pismo_nowe_index');

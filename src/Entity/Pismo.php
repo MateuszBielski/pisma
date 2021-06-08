@@ -376,7 +376,7 @@ class Pismo
         $this->opis = $opis;
         return $this;
     }
-    public function UstalStroneNaPodstawieKierunku(Kontrahent $strona, int $kierunek)
+    public function UstalStroneNaPodstawieKierunku(?Kontrahent $strona, int $kierunek)
     {
         if($kierunek == 1)
         {
