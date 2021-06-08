@@ -51,7 +51,9 @@ class PismoType extends AbstractType
                 'query_builder' => function (KontrahentRepository $kr) {
                     return $kr->createQueryBuilder('k')
                     ->orderBy('k.nazwa', 'ASC');
-                }
+                },
+                //błędy przekazuje na początek całego formularza
+                'error_bubbling' => true,
                 // 'mapped' => false,
                 ])
         ;

@@ -7,6 +7,7 @@ use App\Entity\Pismo;
 use App\Form\KontrahentType;
 use App\Form\PismoLadowaniePdfType;
 use App\Form\PismoType;
+use App\Repository\KontrahentRepository;
 use App\Repository\PismoRepository;
 use App\Service\PracaNaPlikach;
 use App\Service\UruchomienieProcesu;
@@ -124,38 +125,43 @@ class PismoController extends AbstractController
     /**
      * @Route("/noweZeSkanu/{nazwa}/{numerStrony}", name="pismo_nowe_ze_skanu", methods={"GET","POST"})
      */
-    public function noweZeSkanu(Request $request, string $nazwa, $numerStrony = 1): Response
+    public function noweZeSkanu(Request $request, string $nazwa, $numerStrony = 1, KontrahentRepository $kr): Response
     {
         $pnp = new PracaNaPlikach;
         // $pnp->PobierzWszystkieNazwyPlikowZfolderu($this->getParameter('sciezka_do_skanow'));
         $pismo = $pnp->UtworzPismoNaPodstawie($this->getParameter('sciezka_do_skanow'),$nazwa);
         $pnp->setUruchomienieProcesu(new UruchomienieProcesu);
         $pnp->GenerujPodgladJesliNieMaDlaPisma($this->getParameter('sciezka_do_png'),$pismo);
+
         
+        
+        $pismoZformularza = $request->request->get('pismo');
+        $nowaNazwaKontrahenta = $pismoZformularza['strona'];
+        $entityManager = $this->getDoctrine()->getManager();
+        // echo "\nXXXX".$nowaNazwaKontrahenta;
+        if(strlen($nowaNazwaKontrahenta)){
+            $nowyKontrahent = $kr->findBy(['nazwa'=>$nowaNazwaKontrahenta]);
+            if(!count($nowyKontrahent)){
+
+                $nowyKontrahent = new Kontrahent;
+                $nowyKontrahent->setNazwa($nowaNazwaKontrahenta);
+                // $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($nowyKontrahent);
+                $pismo->setStrona($nowyKontrahent);
+                $entityManager->flush();
+                $pismoZformularza['strona'] = $nowyKontrahent->getId();
+                $request->request->set('pismo',$pismoZformularza);
+            }
+        }
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
-        $pismo->UstalStroneIKierunek();
-
-        $nowyKontrahent = new Kontrahent;
-        $nowyKontrahent->setNazwa('nazwa...');
-        $kontrahentForm = $this->createForm(KontrahentType::class,$nowyKontrahent);
-        $kontrahentForm->handleRequest($request);
-
-        if($kontrahentForm->isSubmitted() && $kontrahentForm->isValid())
-        {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($nowyKontrahent);
-            $entityManager->flush();
-            $pismo->setStrona($nowyKontrahent);
-        }
+        
 
         if ($form->isSubmitted() && $form->isValid() && $pnp->PrzeniesPlikiPdfiPodgladu($this->getParameter('sciezka_do_zarejestrowanych'),$pismo)) {
 
-            // $strona = $form->get('strona')->getData();
-            // $kierunek = $form->get('kierunek')->getData();
-            // $pismo->UstalStroneNaPodstawieKierunku($strona,$kierunek);
-            $entityManager = $this->getDoctrine()->getManager();
+            
             $entityManager->persist($pismo);
+            $entityManager->persist($nowyKontrahent);
             $entityManager->flush();
 
             return $this->redirectToRoute('pismo_nowe_index');
@@ -169,7 +175,7 @@ class PismoController extends AbstractController
             'sciezki_png_dla_stron' => $sciezkiDoPodgladow,
             'sciezka_png' => $sciezkiDoPodgladow[$numerStrony - 1],
             'numerStrony' => $numerStrony,
-            'kontrahentForm' => $kontrahentForm->createView(),
+            // 'kontrahentForm' => $kontrahentForm->createView(),
         ]);
     }
 
@@ -230,7 +236,6 @@ class PismoController extends AbstractController
             $pnp = new PracaNaPlikach;
             $pnp->UaktualnijNazwyPlikowPodgladu($pismo);
             $pnp->UaktualnijNazwePlikuPdf($this->getParameter('sciezka_do_zarejestrowanych'),$pismo);
-            // return $this->redirectToRoute('pismo_show',['id'=>$id, 'numerStrony' => $numerStrony]);
             return $this->redirectToRoute('kontrahent_show',['id'=> $pismo->getStrona()->getId(),'pismo_id'=> $id,'numerStrony' => $numerStrony]);
         }
         // $numerStrony = 1;

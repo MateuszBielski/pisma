@@ -28,9 +28,9 @@ Ostatnio używane oznaczenie dokumentu:
 Wychodzące XYZ.zw<br>
 data modyfikacji dokumentu: {{ pismo.dataModyfikacji }}
 {% include "pismo/_form.html.twig" %}
-dodaj odbiorce/nadawce jesli brak na liście:
+{# dodaj odbiorce/nadawce jesli brak na liście:
 {% set form = kontrahentForm %}
-{% include "kontrahent/_form.html.twig" %}
+{% include "kontrahent/_form.html.twig" %} #}
 {% endblock %}
 {% block b_div_prawy %}
 {% set nazwa = pismo.nazwaZrodlaPrzedZarejestrowaniem %}
