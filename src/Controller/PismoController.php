@@ -99,6 +99,29 @@ class PismoController extends AbstractController
             ]);
 
     }
+    /**
+     * @Route("/indexAjax", name="pismo_indexAjax", methods={"GET","POST"})
+     */
+    public function indexAjax(PismoRepository $pr, Request $request): ?Response
+    {
+        $fraza = $request->query->get("fraza");
+        $pisma = $pr->WyszukajPoFragmencieNazwyPliku($fraza);
+        foreach($pisma as $p)
+        {
+            $p->UstalStroneIKierunek();
+            // $p->setSciezkaDoFolderuPdf($foldPdf);
+            $p->UstalJesliTrzebaDateDokumentuZdatyMod();
+            $p->setSciezkaGenerUrl($this->generateUrl('pismo_show',['id'=> $p->getId(), 'numerStrony' => 1 ]));
+            //poniższe na okoliczność jednorazowego zapisu daty jeśli brakowało
+            // $entityManager->persist($p);
+        }
+        $response = $this->render('pismo/listaRej.html.twig',[
+            'pisma' => $pisma,
+            'pismo_id' => -1,
+            ]);
+        $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
+        return  $response; 
+    }
 
     /**
      * @Route("/new", name="pismo_new", methods={"GET","POST"})

@@ -31,6 +31,17 @@ class PismoRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+    public function WyszukajPoFragmencieNazwyPliku(string $fraza)
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.nazwaPliku LIKE :fraza')
+            ->setParameter('fraza', '%'.$fraza.'%')
+            ->orderBy('p.dataDokumentu', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+        // 'tr.subDescription LIKE :val or myTable.mainDescription LIKE :val'
+    }
 
     // /**
     //  * @return Pismo[] Returns an array of Pismo objects

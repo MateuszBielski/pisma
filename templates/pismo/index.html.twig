@@ -8,7 +8,10 @@
 {% block b_div_centr %}
     {% set pokazDate = "tak" %}
     {% set pismo_id = -1 %}
-    {% set sciezka = 'pismo_show' %}
-    {{ include('pismo/listaRej.html.twig') }}
+    {# {% set sciezka = 'pismo_show' %} #}
+    {% include "pismo/_wyszukajAjax.html.twig" %}
+    <div id="div_lista_rej">
+        {{ include('pismo/listaRej.html.twig') }}
+    </div>
 {% endblock %}
 {% block belka_dol %}{% endblock %}
