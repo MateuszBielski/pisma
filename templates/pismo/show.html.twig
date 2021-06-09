@@ -17,48 +17,7 @@ Wszystkie pisma zarejestrowane:<br>
 
 {% endblock %}
 {% block b_div_centr %}
-<table>
-    <tr>
-        <td>nazwa:</td>
-        <td>{{pismo.nazwaPliku}}</td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>oznaczenie:</td>
-        <td>{{pismo.oznaczenie}}</td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>data na dokumencie</td>
-        <td>{{ pismo.dataDokumentu|date("Y-m-d") }}</td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>rodzaj dokumentu:</td>
-        <td>
-            {% if pismo.rodzaj != null %}
-                {{pismo.rodzaj.nazwa}}
-            {% endif %}
-        </td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>{{ pismo.kierunekOpisowo }}</td>
-        {% if pismo.strona != null %}
-        
-        <td>
-            <a href="{{ path('kontrahent_show',{'id': pismo.strona.id, 'pismo_id': pismo.id, 'numer_strony': numerStrony })}}">
-            {{ pismo.strona.nazwa }}
-            </a>
-        </td>
-        {% endif %}
-
-    </tr>
-</table>
+{% include "pismo/_szczegoly.html.twig" %}
 <br>
 <a href="{{path('pismo_edit', {'id' : pismo.id, 'numerStrony': numerStrony })}}">edytuj dane dokumentu</a>
 {% endblock %}

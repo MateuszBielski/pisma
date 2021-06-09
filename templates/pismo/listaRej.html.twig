@@ -40,6 +40,14 @@
         <tr>
             <td></td>
             <td>
+                {% include "pismo/_szczegoly.html.twig" %}
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                {# <a href="{{path('pismo_show', {'id' : pismo.id, 'numerStrony': numerStrony })}}">szczegóły</a> #}
                 <a href="{{path('pismo_edit', {'id' : pismo.id, 'numerStrony': numerStrony })}}">edytuj dane</a>
                 <a href="{{path('pismo_pobieranie',{'id' : pismo.id})}}">pobierz plik</a>
             </td>

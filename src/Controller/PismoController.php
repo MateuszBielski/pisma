@@ -157,10 +157,9 @@ class PismoController extends AbstractController
         $pnp->GenerujPodgladJesliNieMaDlaPisma($this->getParameter('sciezka_do_png'),$pismo);
 
         
-        
         $pismoZformularza = $request->request->get('pismo');
         $nowaNazwaKontrahenta = $pismoZformularza['strona'];
-        $entityManager = $this->getDoctrine()->getManager();
+        
         $utworzycNowegoKontrahenta = false;
         if(!is_numeric($nowaNazwaKontrahenta) && strlen($nowaNazwaKontrahenta))
         {
@@ -175,6 +174,7 @@ class PismoController extends AbstractController
         
         
         if ($form->isSubmitted() && $form->isValid() && $pnp->PrzeniesPlikiPdfiPodgladu($this->getParameter('sciezka_do_zarejestrowanych'),$pismo)) {
+            $entityManager = $this->getDoctrine()->getManager();
             if($utworzycNowegoKontrahenta)
             {
                 $nowyKontrahent = new Kontrahent;
@@ -247,14 +247,35 @@ class PismoController extends AbstractController
      */
     public function edit($numerStrony, Request $request, Pismo $pismo): Response
     {
+        
         $pismo->UstalStroneIKierunek();
+        $pismoZformularza = $request->request->get('pismo');
+        $nowaNazwaKontrahenta = $pismoZformularza['strona'];
+        
+        $utworzycNowegoKontrahenta = false;
+        if(!is_numeric($nowaNazwaKontrahenta) && strlen($nowaNazwaKontrahenta))
+        {
+            $utworzycNowegoKontrahenta = true;
+            $pismoZformularza['strona'] = null;
+            $request->request->set('pismo',$pismoZformularza);
+        }
+        
+        
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
         $id = $pismo->getId();
         
 
         if ($form->isSubmitted() && $form->isValid() ) {
-            $this->getDoctrine()->getManager()->flush();
+            $em = $this->getDoctrine()->getManager();
+            if($utworzycNowegoKontrahenta)
+            {
+                $nowyKontrahent = new Kontrahent;
+                $nowyKontrahent->setNazwa($nowaNazwaKontrahenta);
+                $em->persist($nowyKontrahent);
+                $pismo->setStrona($nowyKontrahent);
+            }
+            $em->flush();
             $pnp = new PracaNaPlikach;
             $pnp->UaktualnijNazwyPlikowPodgladu($pismo);
             $pnp->UaktualnijNazwePlikuPdf($this->getParameter('sciezka_do_zarejestrowanych'),$pismo);
