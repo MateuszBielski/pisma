@@ -97,6 +97,7 @@ class KontrahentController extends AbstractController
             'numerStrony' => $numerStrony,
             'sciezka_png' => $sciezkaPng,
             'wierszZopcjami' => true,
+            'przyciskUsun' => (count($pisma)?"ukryj":"pokaż")
         ]);
     }
 

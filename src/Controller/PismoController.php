@@ -139,7 +139,7 @@ class PismoController extends AbstractController
         $nowaNazwaKontrahenta = $pismoZformularza['strona'];
         $entityManager = $this->getDoctrine()->getManager();
         $utworzycNowegoKontrahenta = false;
-        if(!is_int($nowaNazwaKontrahenta) && strlen($nowaNazwaKontrahenta))
+        if(!is_numeric($nowaNazwaKontrahenta) && strlen($nowaNazwaKontrahenta))
         {
             $utworzycNowegoKontrahenta = true;
             $pismoZformularza['strona'] = null;
@@ -148,8 +148,9 @@ class PismoController extends AbstractController
         
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
+        // echo "\nXXXX".$nowaNazwaKontrahenta."YYY".($utworzycNowegoKontrahenta ? "tak":"nie");
         
-
+        
         if ($form->isSubmitted() && $form->isValid() && $pnp->PrzeniesPlikiPdfiPodgladu($this->getParameter('sciezka_do_zarejestrowanych'),$pismo)) {
             if($utworzycNowegoKontrahenta)
             {

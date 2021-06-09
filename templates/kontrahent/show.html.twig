@@ -16,7 +16,9 @@
 {% set pokazDate = "tak" %}
 {# {% set sciezka = 'kontrahent_show' %} #}
 {{ include('pismo/listaRej.html.twig') }}
-{% include "kontrahent/_delete_form.html.twig" %}
+{% if przyciskUsun == "pokaż" %}
+    {% include "kontrahent/_delete_form.html.twig" %}
+{% endif %}
 {% endblock %}
 {% block b_div_prawy %}
 {% include "pismo/_podglad.html.twig" %}
