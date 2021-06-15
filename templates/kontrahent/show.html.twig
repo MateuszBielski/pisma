@@ -7,8 +7,10 @@
 {% endblock %}
 {% block b_div_lewy %}
 {% set kontrahent_id = kontrahent.id %}
-{% include "kontrahent/listaKontrahentow.html.twig" %}
-
+{% include "kontrahent/_wyszukajAjax.html.twig" %}
+<div id="div_lista_kontrahentow">
+    {% include "kontrahent/listaKontrahentow.html.twig" %}
+</div>
 {% endblock %}
 {% block b_div_centr %}
 {# {% set pismo_id =  %} #}

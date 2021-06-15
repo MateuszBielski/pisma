@@ -25,6 +25,9 @@ nav{
     margin-right: auto;
     overflow: auto;
 }
+table{
+    word-break: break-all;
+}
 .ul_menu,.li_menu{
     margin-left: auto;
     margin-right: auto;

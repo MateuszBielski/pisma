@@ -18,6 +18,17 @@ class KontrahentRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Kontrahent::class);
     }
+    public function WyszukajPoFragmencieNazwyPliku(string $fraza)
+    {
+        return $this->createQueryBuilder('k')
+            ->where('k.nazwa LIKE :fraza')
+            ->setParameter('fraza', '%'.$fraza.'%')
+            ->orderBy('k.nazwa', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+        // 'tr.subDescription LIKE :val or myTable.mainDescription LIKE :val'
+    }
 
     // /**
     //  * @return Kontrahent[] Returns an array of Kontrahent objects

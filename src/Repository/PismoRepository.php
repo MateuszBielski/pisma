@@ -40,7 +40,6 @@ class PismoRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
-        // 'tr.subDescription LIKE :val or myTable.mainDescription LIKE :val'
     }
 
     // /**

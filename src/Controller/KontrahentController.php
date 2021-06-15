@@ -32,6 +32,31 @@ class KontrahentController extends AbstractController
             'kontrahents' => $kontrahentRepository->findBy([],['nazwa'=>'ASC']),//All()
         ]);
     }
+    /**
+     * @Route("/indexAjax", name="kontrahent_indexAjax", methods={"GET","POST"})
+     */
+    public function indexAjax(KontrahentRepository $kr, Request $request): ?Response
+    {
+        $fraza = $request->query->get("fraza");
+        $kontrahenci = $kr->WyszukajPoFragmencieNazwyPliku($fraza);
+        /*
+        foreach($pisma as $p)
+        {
+            $p->UstalStroneIKierunek();
+            // $p->setSciezkaDoFolderuPdf($foldPdf);
+            $p->UstalJesliTrzebaDateDokumentuZdatyMod();
+            $p->setSciezkaGenerUrl($this->generateUrl('pismo_show',['id'=> $p->getId(), 'numerStrony' => 1 ]));
+            //poniższe na okoliczność jednorazowego zapisu daty jeśli brakowało
+            // $entityManager->persist($p);
+        }
+        */
+        $response = $this->render('kontrahent/listaKontrahentow.html.twig',[
+            'kontrahents' => $kontrahenci,
+            'kontrahent_id' => -1,
+            ]);
+        $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
+        return  $response; 
+    }
 
     /**
      * @Route("/new", name="kontrahent_new", methods={"GET","POST"})
