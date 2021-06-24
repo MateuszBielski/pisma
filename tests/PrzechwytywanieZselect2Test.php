@@ -5,6 +5,8 @@ namespace App\Tests;
 use App\Entity\Kontrahent;
 use App\Entity\Pismo;
 use App\Service\PrzechwytywanieZselect2;
+use Doctrine\ORM\EntityManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -140,7 +142,9 @@ class PrzechwytywanieZselect2Test extends TestCase
 
         $przechwytywanie = new PrzechwytywanieZselect2;
         $przechwytywanie->przechwycNazweStronyDlaPisma($request);
-        $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($pismo);
+        $emMock = $this->createMock(EntityManager::class);
+        $emMock->method('persist');
+        $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($pismo,$emMock);
         $this->assertEquals('przedZmiana',$pismo->getStrona()->getNazwa());
     }
     public function _testPrzechwyconeUtrwal_ustawiaWtymObiekcieKtorymTrzeba()

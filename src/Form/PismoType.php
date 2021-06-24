@@ -21,7 +21,7 @@ class PismoType extends AbstractType
         $date = new \DateTime();
         $endYear = $date->format('Y');
         $builder
-            ->add('nazwaPliku',TextType::class,['attr' => ['size'=>"40"]])
+            ->add('nazwaPliku',TextType::class,[/*'attr' => ['size'=>"40"]*/])
             ->add('dataDokumentu', DateType::class, [
                 'widget' => 'choice',
                 'years' => range(2001,$endYear+1),
@@ -32,7 +32,7 @@ class PismoType extends AbstractType
             ->add('rodzaj',EntityType::class,[
                 'class'=>RodzajDokumentu::class,
                 'choice_label' => 'nazwa',
-                'attr' => ['class' => 'dlaSelect2','style'=>"width: 40%"],
+                'attr' => ['class' => 'dlaSelect2','style'=>"width: 40%"],//
                 ])
             ->add('kierunek',ChoiceType::class,[
                 // 'mapped' => false,
