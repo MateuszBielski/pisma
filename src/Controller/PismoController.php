@@ -160,16 +160,8 @@ class PismoController extends AbstractController
         
         $przechwytywanie = new PrzechwytywanieZselect2;
         $przechwytywanie->przechwycNazweStronyDlaPisma($request);
-        /*
-        $pismoZformularza = $request->request->get('pismo');
-        $nowaNazwaKontrahenta = $pismoZformularza['strona'];
-        $utworzycNowegoKontrahenta = false;
-        if(!is_numeric($nowaNazwaKontrahenta) && strlen($nowaNazwaKontrahenta))
-        {
-            $utworzycNowegoKontrahenta = true;
-            $pismoZformularza['strona'] = null;
-            $request->request->set('pismo',$pismoZformularza);
-        }*/
+        $przechwytywanie->przechwycRodzajStronyDlaPisma($request);
+        
         
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
@@ -179,15 +171,6 @@ class PismoController extends AbstractController
         if ($form->isSubmitted() && $form->isValid() && $pnp->PrzeniesPlikiPdfiPodgladu($this->getParameter('sciezka_do_zarejestrowanych'),$pismo)) {
             $entityManager = $this->getDoctrine()->getManager();
             $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($pismo,$entityManager);
-            /*
-            if($utworzycNowegoKontrahenta)
-            {
-                $nowyKontrahent = new Kontrahent;
-                $nowyKontrahent->setNazwa($nowaNazwaKontrahenta);
-                $entityManager->persist($nowyKontrahent);
-                $pismo->setStrona($nowyKontrahent);
-            }
-            */
             
             $entityManager->persist($pismo);
             $entityManager->flush();

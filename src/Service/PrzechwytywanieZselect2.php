@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Kontrahent;
 use App\Entity\Pismo;
+use App\Entity\RodzajDokumentu;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 class PrzechwytywanieZselect2
 {
     private $utworzycNowegoKontrahenta = false;
+    private $utworzycNowyRodzaj = false;
     
     public function przechwyc(Request $request,array $pola)
     {
@@ -37,6 +39,18 @@ class PrzechwytywanieZselect2
             $request->request->set('pismo',$pismo);
         }
     }
+    public function przechwycRodzajDokumentuDlaPisma(Request $request)
+    {
+        $pismo = $request->request->get('pismo');
+        $rodzaj = $pismo['rodzaj'];
+        if(!is_numeric($rodzaj) && strlen($rodzaj))
+        {
+            $this->utworzycNowyRodzaj = true;
+            $this->nowaNazwaRodzaju = $rodzaj;
+            $pismo['rodzaj'] = null;
+            $request->request->set('pismo',$pismo);
+        }
+    }
     public function przechwyconaNazweStronyDlaPismaUtrwal(Pismo $pismo, EntityManagerInterface $em)
     {
         if($this->utworzycNowegoKontrahenta)
@@ -46,6 +60,15 @@ class PrzechwytywanieZselect2
 
             $em->persist($nowyKontrahent);
             $pismo->setStrona($nowyKontrahent);
+        }
+    }
+    public function przechwyconaRodzajDokumentuDlaPismaUtrwal(Pismo $pismo, EntityManagerInterface $em)
+    {
+        if($this->utworzycNowyRodzaj)
+        {
+            $nowyRodzaj = new RodzajDokumentu;
+            $nowyRodzaj->setNazwa($this->nowaNazwaRodzaju);
+            $pismo->setRodzaj($nowyRodzaj);
         }
     }
 }
