@@ -37,13 +37,14 @@ class PrzechwytywanieZselect2
             $request->request->set('pismo',$pismo);
         }
     }
-    public function przechwyconaNazweStronyDlaPismaUtrwal(Pismo $pismo, EntityManagerInterface $entityManager = null)
+    public function przechwyconaNazweStronyDlaPismaUtrwal(Pismo $pismo, EntityManagerInterface $em)
     {
         if($this->utworzycNowegoKontrahenta)
         {
             $nowyKontrahent = new Kontrahent;
             $nowyKontrahent->setNazwa($this->nowaNazwaKontrahenta);
-            $entityManager->persist($nowyKontrahent);
+
+            $em->persist($nowyKontrahent);
             $pismo->setStrona($nowyKontrahent);
         }
     }

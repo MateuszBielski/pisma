@@ -4,9 +4,10 @@ namespace App\Tests;
 
 use App\Entity\Kontrahent;
 use App\Entity\Pismo;
+use App\Service\EntityManagerMock;
+use App\Service\EntityManagerWrapper;
 use App\Service\PrzechwytywanieZselect2;
 use Doctrine\ORM\EntityManager;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -105,7 +106,8 @@ class PrzechwytywanieZselect2Test extends TestCase
 
         $przechwytywanie = new PrzechwytywanieZselect2;
         $przechwytywanie->przechwycNazweStronyDlaPisma($request);
-        $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($pismo);
+        $emMock = new EntityManagerMock();
+        $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($pismo,$emMock);
         $this->assertEquals('poZmianie',$pismo->getStrona()->getNazwa());
     }
     public function testPrzechwyconaNazweStronyDlaPismaUtrwal_nieUstawiaJesliLiczbowa()
@@ -123,7 +125,8 @@ class PrzechwytywanieZselect2Test extends TestCase
 
         $przechwytywanie = new PrzechwytywanieZselect2;
         $przechwytywanie->przechwycNazweStronyDlaPisma($request);
-        $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($pismo);
+        $emMock = new EntityManagerMock();
+        $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($pismo,$emMock);
         $this->assertEquals('przedZmiana',$pismo->getStrona()->getNazwa());
     }
 
@@ -142,10 +145,9 @@ class PrzechwytywanieZselect2Test extends TestCase
 
         $przechwytywanie = new PrzechwytywanieZselect2;
         $przechwytywanie->przechwycNazweStronyDlaPisma($request);
-        $emMock = $this->createMock(EntityManager::class);
-        $emMock->method('persist');
+        $emMock = new EntityManagerMock();
         $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($pismo,$emMock);
-        $this->assertEquals('przedZmiana',$pismo->getStrona()->getNazwa());
+        $this->assertTrue($emMock->usedPersist);
     }
     public function _testPrzechwyconeUtrwal_ustawiaWtymObiekcieKtorymTrzeba()
     {
