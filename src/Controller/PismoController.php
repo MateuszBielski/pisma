@@ -10,6 +10,7 @@ use App\Form\PismoType;
 use App\Repository\KontrahentRepository;
 use App\Repository\PismoRepository;
 use App\Service\PracaNaPlikach;
+use App\Service\PrzechwytywanieZselect2;
 use App\Service\UruchomienieProcesu;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -157,16 +158,10 @@ class PismoController extends AbstractController
         $pnp->GenerujPodgladJesliNieMaDlaPisma($this->getParameter('sciezka_do_png'),$pismo);
 
         
-        $pismoZformularza = $request->request->get('pismo');
-        $nowaNazwaKontrahenta = $pismoZformularza['strona'];
+        $przechwytywanie = new PrzechwytywanieZselect2;
+        $przechwytywanie->przechwycNazweStronyDlaPisma($request);
+        $przechwytywanie->przechwycRodzajStronyDlaPisma($request);
         
-        $utworzycNowegoKontrahenta = false;
-        if(!is_numeric($nowaNazwaKontrahenta) && strlen($nowaNazwaKontrahenta))
-        {
-            $utworzycNowegoKontrahenta = true;
-            $pismoZformularza['strona'] = null;
-            $request->request->set('pismo',$pismoZformularza);
-        }
         
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
@@ -175,13 +170,7 @@ class PismoController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid() && $pnp->PrzeniesPlikiPdfiPodgladu($this->getParameter('sciezka_do_zarejestrowanych'),$pismo)) {
             $entityManager = $this->getDoctrine()->getManager();
-            if($utworzycNowegoKontrahenta)
-            {
-                $nowyKontrahent = new Kontrahent;
-                $nowyKontrahent->setNazwa($nowaNazwaKontrahenta);
-                $entityManager->persist($nowyKontrahent);
-                $pismo->setStrona($nowyKontrahent);
-            }
+            $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($pismo,$entityManager);
             
             $entityManager->persist($pismo);
             $entityManager->flush();
