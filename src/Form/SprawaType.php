@@ -13,7 +13,7 @@ class SprawaType extends AbstractType
     {
         $builder
             ->add('nazwa')
-            ->add('dokumenty')
+            // ->add('dokumenty')
         ;
     }
 

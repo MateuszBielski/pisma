@@ -2,10 +2,10 @@
 
 {% block title %}New Sprawa{% endblock %}
 
-{% block body %}
-    <h1>Create new Sprawa</h1>
+{% block b_div_pod_belka %}
+    <h1>Utwórz sprawę</h1>
 
     {{ include('sprawa/_form.html.twig') }}
 
-    <a href="{{ path('sprawa_index') }}">back to list</a>
+    <a href="{{ path('sprawa_index') }}">powrót do listy</a>
 {% endblock %}

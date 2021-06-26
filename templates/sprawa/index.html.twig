@@ -1,35 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Sprawa index{% endblock %}
-
-{% block body %}
-    <h1>Sprawa index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nazwa</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for sprawa in sprawas %}
-            <tr>
-                <td>{{ sprawa.id }}</td>
-                <td>{{ sprawa.nazwa }}</td>
-                <td>
-                    <a href="{{ path('sprawa_show', {'id': sprawa.id}) }}">show</a>
-                    <a href="{{ path('sprawa_edit', {'id': sprawa.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('sprawa_new') }}">Create new</a>
+{% block title %}Sprawy{% endblock %}
+{% block b_div_pod_belka %}
+    <h3>Lista spraw</h3>
+{% endblock %}
+    
+{% block b_div_prawy %}
+    <a href="{{ path('sprawa_new') }}">Utwórz nową sprawę</a>
 {% endblock %}
