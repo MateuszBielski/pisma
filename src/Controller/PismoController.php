@@ -160,7 +160,7 @@ class PismoController extends AbstractController
         
         $przechwytywanie = new PrzechwytywanieZselect2;
         $przechwytywanie->przechwycNazweStronyDlaPisma($request);
-        $przechwytywanie->przechwycRodzajStronyDlaPisma($request);
+        $przechwytywanie->przechwycRodzajDokumentuDlaPisma($request);
         
         
         $form = $this->createForm(PismoType::class, $pismo);
@@ -171,6 +171,7 @@ class PismoController extends AbstractController
         if ($form->isSubmitted() && $form->isValid() && $pnp->PrzeniesPlikiPdfiPodgladu($this->getParameter('sciezka_do_zarejestrowanych'),$pismo)) {
             $entityManager = $this->getDoctrine()->getManager();
             $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($pismo,$entityManager);
+            $przechwytywanie->przechwyconyRodzajDokumentuDlaPismaUtrwal($pismo,$entityManager);
             
             $entityManager->persist($pismo);
             $entityManager->flush();
@@ -238,16 +239,10 @@ class PismoController extends AbstractController
     {
         
         $pismo->UstalStroneIKierunek();
-        $pismoZformularza = $request->request->get('pismo');
-        $nowaNazwaKontrahenta = $pismoZformularza['strona'];
-        
-        $utworzycNowegoKontrahenta = false;
-        if(!is_numeric($nowaNazwaKontrahenta) && strlen($nowaNazwaKontrahenta))
-        {
-            $utworzycNowegoKontrahenta = true;
-            $pismoZformularza['strona'] = null;
-            $request->request->set('pismo',$pismoZformularza);
-        }
+
+        $przechwytywanie = new PrzechwytywanieZselect2;
+        $przechwytywanie->przechwycNazweStronyDlaPisma($request);
+        $przechwytywanie->przechwycRodzajDokumentuDlaPisma($request);
         
         
         $form = $this->createForm(PismoType::class, $pismo);
@@ -257,13 +252,8 @@ class PismoController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid() ) {
             $em = $this->getDoctrine()->getManager();
-            if($utworzycNowegoKontrahenta)
-            {
-                $nowyKontrahent = new Kontrahent;
-                $nowyKontrahent->setNazwa($nowaNazwaKontrahenta);
-                $em->persist($nowyKontrahent);
-                $pismo->setStrona($nowyKontrahent);
-            }
+            $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($pismo,$em);
+            $przechwytywanie->przechwyconyRodzajDokumentuDlaPismaUtrwal($pismo,$em);
             $em->flush();
             $pnp = new PracaNaPlikach;
             $pnp->UaktualnijNazwyPlikowPodgladu($pismo);

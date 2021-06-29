@@ -62,12 +62,13 @@ class PrzechwytywanieZselect2
             $pismo->setStrona($nowyKontrahent);
         }
     }
-    public function przechwyconaRodzajDokumentuDlaPismaUtrwal(Pismo $pismo, EntityManagerInterface $em)
+    public function przechwyconyRodzajDokumentuDlaPismaUtrwal(Pismo $pismo, EntityManagerInterface $em)
     {
         if($this->utworzycNowyRodzaj)
         {
             $nowyRodzaj = new RodzajDokumentu;
             $nowyRodzaj->setNazwa($this->nowaNazwaRodzaju);
+            $em->persist($nowyRodzaj);
             $pismo->setRodzaj($nowyRodzaj);
         }
     }

@@ -151,7 +151,7 @@ class PrzechwytywanieZselect2Test extends TestCase
         $this->assertTrue($emMock->usedPersist);
     }
 
-    public function testPrzechwycRodzajDokumentuDlaPisma_zerujeJesliParametrTekstowy(): void
+    public function testPrzechwyconyRodzajDokumentuDlaPisma_zerujeJesliParametrTekstowy(): void
     {
         $rPismo = [];
         $rPismo['rodzaj'] = 'nowaNazwa';
@@ -162,7 +162,7 @@ class PrzechwytywanieZselect2Test extends TestCase
         $przechwytywanie->przechwycRodzajDokumentuDlaPisma($request);
         $this->assertEquals(null,$request->request->get('pismo')['rodzaj']);
     }
-    public function testPrzechwycRodzajDokumentuDlaPisma_ZachowujeJesliParametrLiczbowy(): void
+    public function testPrzechwyconyRodzajDokumentuDlaPisma_ZachowujeJesliParametrLiczbowy(): void
     {
         $rPismo = [];
         $rPismo['rodzaj'] = 3;
@@ -173,7 +173,7 @@ class PrzechwytywanieZselect2Test extends TestCase
         $przechwytywanie->przechwycRodzajDokumentuDlaPisma($request);
         $this->assertEquals(3,$request->request->get('pismo')['rodzaj']);
     }
-    public function testPrzechwycRodzajDokumentuDlaPisma_ZachowujeJesliWartoscZerowejDlugosci(): void
+    public function testPrzechwyconyRodzajDokumentuDlaPisma_ZachowujeJesliWartoscZerowejDlugosci(): void
     {
         $rPismo = [];
         $rPismo['rodzaj'] = "";
@@ -185,7 +185,7 @@ class PrzechwytywanieZselect2Test extends TestCase
         $this->assertEquals('',$request->request->get('pismo')['rodzaj']);
     }
 
-    public function testPrzechwyconaRodzajDokumentuDlaPismaUtrwal_ustawiaWobiekcie()
+    public function testPrzechwyconyRodzajDokumentuDlaPismaUtrwal_ustawiaWobiekcie()
     {
         $pismo = new Pismo;
         $kPrzedZmiana = new RodzajDokumentu;
@@ -201,48 +201,48 @@ class PrzechwytywanieZselect2Test extends TestCase
         $przechwytywanie = new PrzechwytywanieZselect2;
         $przechwytywanie->przechwycRodzajDokumentuDlaPisma($request);
         $emMock = new EntityManagerMock();
-        $przechwytywanie->przechwyconaRodzajDokumentuDlaPismaUtrwal($pismo,$emMock);
+        $przechwytywanie->przechwyconyRodzajDokumentuDlaPismaUtrwal($pismo,$emMock);
         $this->assertEquals('poZmianie',$pismo->getRodzaj()->getNazwa());
     }
-    /*
-    public function testPrzechwyconaNazweStronyDlaPismaUtrwal_nieUstawiaJesliLiczbowa()
+    
+    public function testPrzechwyconyRodzajDokumentuDlaPismaUtrwal_nieUstawiaJesliLiczbowa()
     {
         $pismo = new Pismo;
-        $kPrzedZmiana = new Kontrahent;
+        $kPrzedZmiana = new RodzajDokumentu;
         $kPrzedZmiana->setNazwa('przedZmiana');
-        $pismo->setStrona($kPrzedZmiana);
+        $pismo->setRodzaj($kPrzedZmiana);
         
         $rPismo = [];
-        $rPismo['strona'] = 7;
+        $rPismo['rodzaj'] = 7;
         $request = new Request();
         $request->request->set('pismo',$rPismo);
 
 
         $przechwytywanie = new PrzechwytywanieZselect2;
-        $przechwytywanie->przechwycNazweStronyDlaPisma($request);
+        $przechwytywanie->przechwycRodzajDokumentuDlaPisma($request);
         $emMock = new EntityManagerMock();
-        $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($pismo,$emMock);
-        $this->assertEquals('przedZmiana',$pismo->getStrona()->getNazwa());
+        $przechwytywanie->przechwyconyRodzajDokumentuDlaPismaUtrwal($pismo,$emMock);
+        $this->assertEquals('przedZmiana',$pismo->getRodzaj()->getNazwa());
     }
-
-    public function testPrzechwyconaNazweStronyDlaPismaUtrwal_entityManagerPersist()
+    
+    public function testPrzechwyconyRodzajDokumentuDlaPismaUtrwal_entityManagerPersist()
     {
         $pismo = new Pismo;
-        $kPrzedZmiana = new Kontrahent;
+        $kPrzedZmiana = new RodzajDokumentu;
         $kPrzedZmiana->setNazwa('przedZmiana');
-        $pismo->setStrona($kPrzedZmiana);
+        $pismo->setRodzaj($kPrzedZmiana);
         
         $rPismo = [];
-        $rPismo['strona'] = 'nowyKontrahent';
+        $rPismo['rodzaj'] = 'nowyRodzaj';
         $request = new Request();
         $request->request->set('pismo',$rPismo);
 
 
         $przechwytywanie = new PrzechwytywanieZselect2;
-        $przechwytywanie->przechwycNazweStronyDlaPisma($request);
+        $przechwytywanie->przechwycRodzajDokumentuDlaPisma($request);
         $emMock = new EntityManagerMock();
-        $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($pismo,$emMock);
+        $przechwytywanie->przechwyconyRodzajDokumentuDlaPismaUtrwal($pismo,$emMock);
         $this->assertTrue($emMock->usedPersist);
     }
-    */
+    
 }
