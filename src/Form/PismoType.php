@@ -20,6 +20,7 @@ class PismoType extends AbstractType
     {
         $date = new \DateTime();
         $endYear = $date->format('Y');
+
         $builder
             ->add('nazwaPliku',TextType::class,[/*'attr' => ['size'=>"40"]*/])
             ->add('dataDokumentu', DateType::class, [
@@ -32,7 +33,7 @@ class PismoType extends AbstractType
             ->add('rodzaj',EntityType::class,[
                 'class'=>RodzajDokumentu::class,
                 'choice_label' => 'nazwa',
-                'attr' => ['class' => 'dlaSelect2','style'=>"width: 40%"],//
+                'attr' => ['class' => 'dlaSelect2','style'=>"width: 40%",'adresAjax' => '/rodzaj/dokumentu/indexAjax'],//
                 ])
             ->add('kierunek',ChoiceType::class,[
                 // 'mapped' => false,
@@ -47,7 +48,7 @@ class PismoType extends AbstractType
             ->add('strona',EntityType::class,[
                 'class'=>Kontrahent::class,
                 'choice_label' => 'nazwa',
-                'attr' => ['class' => 'dlaSelect2','style'=>"width: 70%"],
+                'attr' => ['class' => 'dlaSelect2','style'=>"width: 70%", 'adresAjax' => '/kontrahent/indexAjax'],
                 'label' => false,
                 'query_builder' => function (KontrahentRepository $kr) {
                     return $kr->createQueryBuilder('k')
