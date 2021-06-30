@@ -3,8 +3,16 @@
 {% block title %}Sprawy{% endblock %}
 {% block b_div_pod_belka %}
     <h3>Lista spraw</h3>
+    <table>
+        {% for sprawa in sprawy %}
+            <tr>
+                <td>{{ sprawa.getOpis() }}</td>
+                <td>druga kolumna</td>
+            </tr>
+        {% endfor %}
+    </table>
 {% endblock %}
     
-{% block b_div_prawy %}
+{% block b_div_centr %}
     <a href="{{ path('sprawa_new') }}">Utwórz nową sprawę</a>
 {% endblock %}

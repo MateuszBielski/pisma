@@ -20,7 +20,7 @@ class Sprawa
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $nazwa;
 
@@ -30,7 +30,7 @@ class Sprawa
     private $dokumenty;
 
     /**
-     * @ORM\OneToMany(targetEntity=WyrazWciagu::class, mappedBy="sprawa")
+     * @ORM\OneToMany(targetEntity=WyrazWciagu::class, mappedBy="sprawa", cascade={"persist", "remove"})
      */
     private $opis;
 
@@ -89,7 +89,7 @@ class Sprawa
         return $this->opis;
     }
     
-
+    //to jest używane przy zapisie
     public function addOpi(WyrazWciagu $opi): self
     {
         if (!$this->opis->contains($opi)) {
@@ -111,16 +111,17 @@ class Sprawa
 
         return $this;
     }
-
+    //używane przy odczycie z bazy
     public function getOpis(): string
     {
         $result = '';
         foreach($this->opis as $wyraz)
         {
-            $result .=$wyraz." ";
+            $result .=$wyraz->getWartosc()."+";
         }
         return rtrim($result," ");
     }
+    //to chyba nie jest używane
     public function setOpis(?string $opis)
     {
         $this->opis = new ArrayCollection();

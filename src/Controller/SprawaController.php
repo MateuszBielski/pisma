@@ -21,7 +21,7 @@ class SprawaController extends AbstractController
     public function index(SprawaRepository $sprawaRepository): Response
     {
         return $this->render('sprawa/index.html.twig', [
-            'sprawas' => $sprawaRepository->findAll(),
+            'sprawy' => $sprawaRepository->findAll(),
         ]);
     }
 
