@@ -69,15 +69,16 @@ class Pismo
      */
     private $dataDokumentu = null;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $opis;
-    
+        
     private $kierunek = 1;
 
    
     private $strona;
+
+    /**
+     * @ORM\OneToMany(targetEntity=WyrazWciagu::class, mappedBy="pismo")
+     */
+    private $opis;
     // private $nazwaZrodlaPrzedZarejestrowaniem;
 
     public function __construct(string $adresZrodlaPrzedZarejestrowaniem = "")
@@ -90,6 +91,7 @@ class Pismo
         $this->dataModyfikacji = @date("Y-m-d",$timestamp);
         $this->nazwaPliku = $this->getNazwaZrodlaPrzedZarejestrowaniem();
         $this->sprawy = new ArrayCollection();
+        $this->opis = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -366,16 +368,7 @@ class Pismo
         return true;
     }
 
-    public function getOpis(): ?string
-    {
-        return $this->opis;
-    }
-
-    public function setOpis(?string $opis): self
-    {
-        $this->opis = $opis;
-        return $this;
-    }
+    
     public function UstalStroneNaPodstawieKierunku(?Kontrahent $strona, int $kierunek)
     {
         if($kierunek == 1)
@@ -448,5 +441,35 @@ class Pismo
     public function getSciezkaGenerUrl()       
     {
         return $this->sciezkaGenerUrl;
+    }
+
+    /**
+     * @return Collection|WyrazWciagu[]
+     */
+    public function getOpis(): Collection
+    {
+        return $this->opis;
+    }
+
+    public function addOpi(WyrazWciagu $opi): self
+    {
+        if (!$this->opis->contains($opi)) {
+            $this->opis[] = $opi;
+            $opi->setPismo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOpi(WyrazWciagu $opi): self
+    {
+        if ($this->opis->removeElement($opi)) {
+            // set the owning side to null (unless already changed)
+            if ($opi->getPismo() === $this) {
+                $opi->setPismo(null);
+            }
+        }
+
+        return $this;
     }
 }

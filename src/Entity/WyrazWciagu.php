@@ -27,6 +27,16 @@ class WyrazWciagu
      */
     private $kolejnosc;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Sprawa::class, inversedBy="opis")
+     */
+    private $sprawa;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Pismo::class, inversedBy="opis")
+     */
+    private $pismo;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +62,30 @@ class WyrazWciagu
     public function setKolejnosc(int $kolejnosc): self
     {
         $this->kolejnosc = $kolejnosc;
+
+        return $this;
+    }
+
+    public function getSprawa(): ?Sprawa
+    {
+        return $this->sprawa;
+    }
+
+    public function setSprawa(?Sprawa $sprawa): self
+    {
+        $this->sprawa = $sprawa;
+
+        return $this;
+    }
+
+    public function getPismo(): ?Pismo
+    {
+        return $this->pismo;
+    }
+
+    public function setPismo(?Pismo $pismo): self
+    {
+        $this->pismo = $pismo;
 
         return $this;
     }

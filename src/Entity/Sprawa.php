@@ -29,9 +29,15 @@ class Sprawa
      */
     private $dokumenty;
 
+    /**
+     * @ORM\OneToMany(targetEntity=WyrazWciagu::class, mappedBy="sprawa")
+     */
+    private $opis;
+
     public function __construct()
     {
         $this->dokumenty = new ArrayCollection();
+        $this->opis = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -71,6 +77,36 @@ class Sprawa
     public function removeDokumenty(Pismo $dokumenty): self
     {
         $this->dokumenty->removeElement($dokumenty);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|WyrazWciagu[]
+     */
+    public function getOpis(): Collection
+    {
+        return $this->opis;
+    }
+
+    public function addOpi(WyrazWciagu $opi): self
+    {
+        if (!$this->opis->contains($opi)) {
+            $this->opis[] = $opi;
+            $opi->setSprawa($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOpi(WyrazWciagu $opi): self
+    {
+        if ($this->opis->removeElement($opi)) {
+            // set the owning side to null (unless already changed)
+            if ($opi->getSprawa() === $this) {
+                $opi->setSprawa(null);
+            }
+        }
 
         return $this;
     }
