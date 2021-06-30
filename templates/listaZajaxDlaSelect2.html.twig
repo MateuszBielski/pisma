@@ -1,0 +1,15 @@
+{
+    "results": [
+        {% for poz in pozycje %}
+            {
+                "id": "{{ poz.id }}",
+                "text": "{{ poz.nazwa }}"
+            }{{ not loop.last ? ', ' }}
+        {% endfor %}
+    ]
+}
+
+
+    
+
+

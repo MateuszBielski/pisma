@@ -18,7 +18,7 @@ class KontrahentRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Kontrahent::class);
     }
-    public function WyszukajPoFragmencieNazwyPliku(string $fraza)
+    public function WyszukajPoFragmencieNazwy(string $fraza)
     {
         if(!strlen($fraza))
         {
@@ -31,7 +31,6 @@ class KontrahentRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
-        // 'tr.subDescription LIKE :val or myTable.mainDescription LIKE :val'
     }
 
     // /**

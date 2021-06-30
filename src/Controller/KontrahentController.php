@@ -38,7 +38,7 @@ class KontrahentController extends AbstractController
     public function indexAjax(KontrahentRepository $kr, Request $request): ?Response
     {
         $fraza = $request->query->get("fraza");
-        $kontrahenci = $kr->WyszukajPoFragmencieNazwyPliku($fraza);
+        $kontrahenci = $kr->WyszukajPoFragmencieNazwy($fraza);
         
         $response = $this->render('kontrahent/listaKontrahentow.html.twig',[
             'kontrahents' => $kontrahenci,
@@ -54,11 +54,9 @@ class KontrahentController extends AbstractController
     {
         $fraza = $request->query->get("fraza");
         if(!$fraza)$fraza = '';
-        $kontrahenci = $kr->WyszukajPoFragmencieNazwyPliku($fraza);
         
-        $response = $this->render('kontrahent/listaKontrahentowZajaxDlaSelect2.html.twig',[
-            'kontrahents' => $kontrahenci,
-            'kontrahent_id' => -1,
+        $response = $this->render('listaZajaxDlaSelect2.html.twig',[
+            'pozycje' => $kr->WyszukajPoFragmencieNazwy($fraza)
             ]);
         $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
         return  $response; 

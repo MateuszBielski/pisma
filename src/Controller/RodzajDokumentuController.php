@@ -24,6 +24,20 @@ class RodzajDokumentuController extends AbstractController
             'rodzaj_dokumentus' => $rodzajDokumentuRepository->findAll(),
         ]);
     }
+     /**
+     * @Route("/indexAjaxSelect2", name="rodzaj_dokumentu_indexAjax_select2", methods={"GET","POST"})
+     */
+    public function indexAjaxSelect2(RodzajDokumentuRepository $rdr, Request $request): ?Response
+    {
+        $fraza = $request->query->get("fraza");
+        if(!$fraza)$fraza = '';
+        
+        $response = $this->render('listaZajaxDlaSelect2.html.twig',[
+            'pozycje' =>  $rdr->WyszukajPoFragmencieNazwy($fraza),
+            ]);
+        $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
+        return  $response; 
+    }
 
     /**
      * @Route("/new", name="rodzaj_dokumentu_new", methods={"GET","POST"})

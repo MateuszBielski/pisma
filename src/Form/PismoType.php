@@ -33,7 +33,8 @@ class PismoType extends AbstractType
             ->add('rodzaj',EntityType::class,[
                 'class'=>RodzajDokumentu::class,
                 'choice_label' => 'nazwa',
-                'attr' => ['class' => 'dlaSelect2','style'=>"width: 40%",'adresAjax' => '/rodzaj/dokumentu/indexAjax'],//
+                'attr' => ['class' => 'dlaSelect2','style'=>"width: 40%",'adresAjax' => '/rodzaj/dokumentu/indexAjaxSelect2'],
+                'placeholder' => '...',//
                 ])
             ->add('kierunek',ChoiceType::class,[
                 // 'mapped' => false,

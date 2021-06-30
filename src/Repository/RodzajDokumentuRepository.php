@@ -18,6 +18,20 @@ class RodzajDokumentuRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, RodzajDokumentu::class);
     }
+    public function WyszukajPoFragmencieNazwy(string $fraza)
+    {
+        if(!strlen($fraza))
+        {
+            return $this->findAll();
+        }
+        return $this->createQueryBuilder('r')
+            ->where('r.nazwa LIKE :fraza')
+            ->setParameter('fraza', '%'.$fraza.'%')
+            ->orderBy('r.nazwa', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
     // /**
     //  * @return RodzajDokumentu[] Returns an array of RodzajDokumentu objects
