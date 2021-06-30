@@ -8,6 +8,7 @@ $(document).ready(function() {
             },
             dataType: 'json',
             data: function (params) {
+                // var term = (params.term != null)? params.term : '';
                 var query = {
                   fraza: params.term,
                 //   type: 'public'
@@ -16,12 +17,7 @@ $(document).ready(function() {
                 // Query parameters will be ?search=[term]&type=public
                 return query;
             },
-            processResults: function (data) {
-                // Transforms the top-level key of the response object from 'items' to 'results'
-                return {
-                  results: data.items
-                };
-            }
+            
         }
     });
 });

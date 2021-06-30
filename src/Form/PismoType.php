@@ -48,7 +48,7 @@ class PismoType extends AbstractType
             ->add('strona',EntityType::class,[
                 'class'=>Kontrahent::class,
                 'choice_label' => 'nazwa',
-                'attr' => ['class' => 'dlaSelect2','style'=>"width: 70%", 'adresAjax' => '/kontrahent/indexAjax'],
+                'attr' => ['class' => 'dlaSelect2','style'=>"width: 70%", 'adresAjax' => '/kontrahent/indexAjaxSelect2'],
                 'label' => false,
                 'query_builder' => function (KontrahentRepository $kr) {
                     return $kr->createQueryBuilder('k')
@@ -56,6 +56,7 @@ class PismoType extends AbstractType
                 },
                 //błędy przekazuje na początek całego formularza
                 'error_bubbling' => true,
+                'placeholder' => '...',
                 // 'mapped' => false,
                 ])
         ;

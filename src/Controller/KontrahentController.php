@@ -39,18 +39,24 @@ class KontrahentController extends AbstractController
     {
         $fraza = $request->query->get("fraza");
         $kontrahenci = $kr->WyszukajPoFragmencieNazwyPliku($fraza);
-        /*
-        foreach($pisma as $p)
-        {
-            $p->UstalStroneIKierunek();
-            // $p->setSciezkaDoFolderuPdf($foldPdf);
-            $p->UstalJesliTrzebaDateDokumentuZdatyMod();
-            $p->setSciezkaGenerUrl($this->generateUrl('pismo_show',['id'=> $p->getId(), 'numerStrony' => 1 ]));
-            //poniższe na okoliczność jednorazowego zapisu daty jeśli brakowało
-            // $entityManager->persist($p);
-        }
-        */
+        
         $response = $this->render('kontrahent/listaKontrahentow.html.twig',[
+            'kontrahents' => $kontrahenci,
+            'kontrahent_id' => -1,
+            ]);
+        $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
+        return  $response; 
+    }
+    /**
+     * @Route("/indexAjaxSelect2", name="kontrahent_indexAjax_select2", methods={"GET","POST"})
+     */
+    public function indexAjaxSelect2(KontrahentRepository $kr, Request $request): ?Response
+    {
+        $fraza = $request->query->get("fraza");
+        if(!$fraza)$fraza = '';
+        $kontrahenci = $kr->WyszukajPoFragmencieNazwyPliku($fraza);
+        
+        $response = $this->render('kontrahent/listaKontrahentowZajaxDlaSelect2.html.twig',[
             'kontrahents' => $kontrahenci,
             'kontrahent_id' => -1,
             ]);

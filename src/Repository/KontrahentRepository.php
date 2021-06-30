@@ -20,6 +20,10 @@ class KontrahentRepository extends ServiceEntityRepository
     }
     public function WyszukajPoFragmencieNazwyPliku(string $fraza)
     {
+        if(!strlen($fraza))
+        {
+            return $this->findAll();
+        }
         return $this->createQueryBuilder('k')
             ->where('k.nazwa LIKE :fraza')
             ->setParameter('fraza', '%'.$fraza.'%')
