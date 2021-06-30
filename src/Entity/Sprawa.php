@@ -84,10 +84,11 @@ class Sprawa
     /**
      * @return Collection|WyrazWciagu[]
      */
-    public function getOpis(): Collection
+    public function getOpisCol(): Collection
     {
         return $this->opis;
     }
+    
 
     public function addOpi(WyrazWciagu $opi): self
     {
@@ -109,5 +110,22 @@ class Sprawa
         }
 
         return $this;
+    }
+
+    public function getOpis(): string
+    {
+        $result = '';
+        foreach($this->opis as $wyraz)
+        {
+            $result .=$wyraz." ";
+        }
+        return rtrim($result," ");
+    }
+    public function setOpis(?string $opis)
+    {
+        $this->opis = new ArrayCollection();
+        $arr = explode(" ",$opis);
+        foreach($arr as $wyraz)
+        $this->opis[] = $wyraz;
     }
 }
