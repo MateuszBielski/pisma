@@ -1,0 +1,9 @@
+    <table>
+        {% for sprawa in sprawy %}
+            <tr>
+                <td>{{ sprawa.id }}</td>
+                <td>{{ sprawa.getOpis() }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+

@@ -18,6 +18,33 @@ class SprawaRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Sprawa::class);
     }
+    public function wyszukajPoFragmentachWyrazuOpisu(string $fragmenty)
+    {
+        $frArr = explode(' ',$fragmenty);
+        $wiecej = (count($frArr) > 1)? true :false;
+        $result = $this->createQueryBuilder('s')
+        ->setParameter('frag', array_shift($frArr).'%')
+        ->join("s.opis",'opis')
+        ->where("opis.wartosc LIKE :frag")
+        ;
+        $n = 1;
+        while($fr = array_shift($frArr))
+        {
+            $fr .='%';
+            $par = "frag".$n++;
+            $op = "opis".$n;
+            $result = $result->setParameter("$par",$fr)
+            ->join("s.opis",$op)//bez tego poniższe wyklucza wszystko
+            ->andWhere("$op.wartosc LIKE :$par")
+            ;
+        }
+        $result = $result
+        ->getQuery()
+        ->getResult();
+        ;
+
+         return $result;
+    }
 
     // /**
     //  * @return Sprawa[] Returns an array of Sprawa objects

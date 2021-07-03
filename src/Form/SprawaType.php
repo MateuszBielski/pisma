@@ -18,50 +18,8 @@ class SprawaType extends AbstractType
         $builder
             ->add('opis',TextareaType::class)
             // ->add('dokumenty')
+            ->addEventSubscriber(new SprawaEventSubscriber)
         ;
-        $builder->get('opis')
-        ->addModelTransformer(new CallbackTransformer(
-            function ($opis) {
-                //to jest wywoływane po funkcji sprawa->getOpis()
-                $result = '';
-                if($opis == null)
-                return 'brak opisu';
-                return $opis;
-                // foreach($opis as $wyraz)
-                // {
-                //     $result .=$wyraz."+";
-                // }
-                return rtrim($result," ");
-            },
-            function ($opis) {
-                // transform the string back to an array
-                $opisArr = new ArrayCollection();
-                $arr = explode(" ",$opis);
-                $kolejnosc = 0;
-                foreach($arr as $w)
-                {
-                    $wyraz = new WyrazWciagu;
-                    $wyraz->setWartosc($w);
-                    $wyraz->setKolejnosc($kolejnosc++);
-                    $opisArr[] = $wyraz;
-                }
-                return $opisArr;
-            }
-        ))
-    ;/*
-        $builder->get('tags')
-        ->addModelTransformer(new CallbackTransformer(
-            function ($tagsAsArray) {
-                // transform the array to a string
-                return implode(', ', $tagsAsArray);
-            },
-            function ($tagsAsString) {
-                // transform the string back to an array
-                return explode(', ', $tagsAsString);
-            }
-        ))
-    ;
-    */
     }
 
     public function configureOptions(OptionsResolver $resolver)

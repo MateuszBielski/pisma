@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\SprawaRepository;
+use App\Service\KonwOpis_Str_Acoll;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -34,8 +35,12 @@ class Sprawa
      */
     private $opis;
 
+    private $konw;
+    private $niepotrzebneWyrazy = [];
+
     public function __construct()
     {
+        $this->konw = new KonwOpis_Str_Acoll;
         $this->dokumenty = new ArrayCollection();
         $this->opis = new ArrayCollection();
     }
@@ -92,6 +97,7 @@ class Sprawa
     //to jest używane przy zapisie
     public function addOpi(WyrazWciagu $opi): self
     {
+        // echo count($this->opis)." ";
         if (!$this->opis->contains($opi)) {
             $this->opis[] = $opi;
             $opi->setSprawa($this);
@@ -103,7 +109,6 @@ class Sprawa
     public function removeOpi(WyrazWciagu $opi): self
     {
         if ($this->opis->removeElement($opi)) {
-            // set the owning side to null (unless already changed)
             if ($opi->getSprawa() === $this) {
                 $opi->setSprawa(null);
             }
@@ -111,22 +116,29 @@ class Sprawa
 
         return $this;
     }
-    //używane przy odczycie z bazy
     public function getOpis(): string
     {
-        $result = '';
-        foreach($this->opis as $wyraz)
-        {
-            $result .=$wyraz->getWartosc()."+";
-        }
-        return rtrim($result," ");
+        if($this->konw == null)$this->konw = new KonwOpis_Str_Acoll;
+        return $this->konw->Acoll_to_string($this->opis);
     }
-    //to chyba nie jest używane
-    public function setOpis(?string $opis)
+    public function setOpis(?string $opis): Sprawa
     {
-        $this->opis = new ArrayCollection();
-        $arr = explode(" ",$opis);
-        foreach($arr as $wyraz)
-        $this->opis[] = $wyraz;
+        $this->opis = $this->konw->String_to_Collection($opis);
+        foreach($this->opis as $o)$o->setSprawa($this);
+        return $this;
     }
+    public function setOpisJesliZmieniony(?string $nowyOpis): bool
+    {
+        if($nowyOpis === $this->getOpis())
+        return false;
+        foreach($this->opis as $o)$this->niepotrzebneWyrazy[] = $o;
+        foreach($this->niepotrzebneWyrazy as $n)$this->removeOpi($n);
+        $this->setOpis($nowyOpis);
+        return true;
+    }
+    public function NiepotrzebneWyrazy()
+    {
+        return $this->niepotrzebneWyrazy;
+    }
+
 }

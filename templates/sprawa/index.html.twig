@@ -3,14 +3,10 @@
 {% block title %}Sprawy{% endblock %}
 {% block b_div_pod_belka %}
     <h3>Lista spraw</h3>
-    <table>
-        {% for sprawa in sprawy %}
-            <tr>
-                <td>{{ sprawa.getOpis() }}</td>
-                <td>druga kolumna</td>
-            </tr>
-        {% endfor %}
-    </table>
+    {% include "sprawa/_wyszukajAjax.html.twig" %}
+    <div id="div_lista_spraw">
+        {{ include('sprawa/listaSpraw.html.twig') }}
+    </div>
 {% endblock %}
     
 {% block b_div_centr %}

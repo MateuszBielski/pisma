@@ -24,6 +24,23 @@ class SprawaController extends AbstractController
             'sprawy' => $sprawaRepository->findAll(),
         ]);
     }
+    /**
+     * @Route("/indexAjax", name="sprawa_indexAjax", methods={"GET","POST"})
+     */
+    public function indexAjax(SprawaRepository $sr, Request $request): ?Response
+    {
+        $fraza = $request->query->get("fraza");
+        // $kontrahenci = $sr->WyszukajPoFragmencieNazwy($fraza);
+        $sprawy = $sr->wyszukajPoFragmentachWyrazuOpisu($fraza);
+        // $sprawy = $sr->findAll();
+        
+        $response = $this->render('sprawa/listaSpraw.html.twig',[
+            'sprawy' => $sprawy,
+            // 'kontrahent_id' => -1,
+            ]);
+        $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
+        return  $response; 
+    }
 
     /**
      * @Route("/new", name="sprawa_new", methods={"GET","POST"})
@@ -67,7 +84,10 @@ class SprawaController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $em = $this->getDoctrine()->getManager();
+            foreach($sprawa->NiepotrzebneWyrazy() as $n)
+            $em->remove($n);
+            $em->flush();
 
             return $this->redirectToRoute('sprawa_index');
         }

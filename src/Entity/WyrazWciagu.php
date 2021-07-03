@@ -37,6 +37,11 @@ class WyrazWciagu
      */
     private $pismo;
 
+    public function __construct(string $wart = '')
+    {
+        $this->wartosc = $wart;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
