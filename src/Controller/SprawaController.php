@@ -41,6 +41,22 @@ class SprawaController extends AbstractController
         $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
         return  $response; 
     }
+    /**
+     * @Route("/indexAjaxSelect2", name="sprawa_indexAjax_select2", methods={"GET","POST"})
+     */
+    public function indexAjaxSelect2(SprawaRepository $kr, Request $request): ?Response
+    {
+        $fraza = $request->query->get("fraza");
+        if(!$fraza)$fraza = '';
+        $pozycje = $kr->wyszukajPoFragmentachWyrazuOpisu($fraza);
+        foreach($pozycje as $p)$p->NazwePobierzzopisu();
+        
+        $response = $this->render('listaZajaxDlaSelect2.html.twig',[
+            'pozycje' => $pozycje,
+            ]);
+        $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
+        return  $response; 
+    }
 
     /**
      * @Route("/new", name="sprawa_new", methods={"GET","POST"})

@@ -5,7 +5,9 @@ namespace App\Form;
 use App\Entity\Kontrahent;
 use App\Entity\Pismo;
 use App\Entity\RodzajDokumentu;
+use App\Entity\Sprawa;
 use App\Repository\KontrahentRepository;
+use App\Repository\SprawaRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -33,7 +35,7 @@ class PismoType extends AbstractType
             ->add('rodzaj',EntityType::class,[
                 'class'=>RodzajDokumentu::class,
                 'choice_label' => 'nazwa',
-                'attr' => ['class' => 'dlaSelect2','style'=>"width: 40%",'adresAjax' => '/rodzaj/dokumentu/indexAjaxSelect2'],
+                'attr' => ['class' => 'dlaSelect2','style'=>"width: 85%",'adresAjax' => '/rodzaj/dokumentu/indexAjaxSelect2'],
                 'placeholder' => '...',//
                 ])
             ->add('kierunek',ChoiceType::class,[
@@ -49,7 +51,7 @@ class PismoType extends AbstractType
             ->add('strona',EntityType::class,[
                 'class'=>Kontrahent::class,
                 'choice_label' => 'nazwa',
-                'attr' => ['class' => 'dlaSelect2','style'=>"width: 70%", 'adresAjax' => '/kontrahent/indexAjaxSelect2'],
+                'attr' => ['class' => 'dlaSelect2','style'=>"width: 85%", 'adresAjax' => '/kontrahent/indexAjaxSelect2'],
                 'label' => false,
                 'query_builder' => function (KontrahentRepository $kr) {
                     return $kr->createQueryBuilder('k')
@@ -60,6 +62,23 @@ class PismoType extends AbstractType
                 'placeholder' => '...',
                 // 'mapped' => false,
                 ])
+            ->add('sprawy',EntityType::class,[
+                'multiple' => true,
+                'class'=>Sprawa::class,
+                'choice_label' => function(Sprawa $s){return $s->getOpis();},
+                'attr'=>[/*'class' => 'dlaSelect2',*/'style'=>"width:85%", 'adresAjax' => '/sprawa/indexAjaxSelect2'],
+                'label'=>'dotyczy',
+                'query_builder' => function (SprawaRepository $sr){
+                    return $sr->createQueryBuilder('s')
+                    ->setMaxResults(5)
+                    ->orderBy('s.nazwa','ASC');
+                },
+                'placeholder' => '...',
+                /*
+                */
+                
+            ])
+            // ->addEventSubscriber(new PismoEventSubscriber)
         ;
     }
 

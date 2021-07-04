@@ -57,4 +57,11 @@ class SprawaTest extends TestCase
             $this->assertEquals($s,$r->getSprawa());
         }
     }
+    public function testNazwePobierzZopisu()
+    {
+        $s = new Sprawa;
+        $s->setOpis('jakaś nazwa');
+        $s->NazwePobierzZopisu();
+        $this->assertEquals('jakaś nazwa',$s->getNazwa());
+    }
 }

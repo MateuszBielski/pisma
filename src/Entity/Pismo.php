@@ -45,7 +45,7 @@ class Pismo
     private $sciezkaGenerUrl;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Sprawa::class, mappedBy="dokumenty")
+     * @ORM\ManyToMany(targetEntity=Sprawa::class, inversedBy="dokumenty")
      */
     private $sprawy;
 
@@ -283,7 +283,7 @@ class Pismo
     {
         if (!$this->sprawy->contains($sprawy)) {
             $this->sprawy[] = $sprawy;
-            $sprawy->addDokumenty($this);
+            // $sprawy->addDokumenty($this);
         }
 
         return $this;

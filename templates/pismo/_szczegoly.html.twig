@@ -40,4 +40,12 @@
         {% endif %}
 
     </tr>
+    {% for sprawa in pismo.sprawy %}
+        <tr>
+            <td>{{ loop.first ? 'dotyczy:' }}</td>
+            <td>
+                {{sprawa.opis}}
+            </td>
+        </tr>
+    {% endfor %}
 </table>

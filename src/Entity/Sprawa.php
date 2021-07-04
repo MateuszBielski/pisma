@@ -26,7 +26,7 @@ class Sprawa
     private $nazwa;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Pismo::class, inversedBy="sprawy")
+     * @ORM\ManyToMany(targetEntity=Pismo::class, mappedBy="sprawy")
      */
     private $dokumenty;
 
@@ -74,6 +74,7 @@ class Sprawa
     {
         if (!$this->dokumenty->contains($dokumenty)) {
             $this->dokumenty[] = $dokumenty;
+            $dokumenty->addSprawy($this);
         }
 
         return $this;
@@ -139,6 +140,10 @@ class Sprawa
     public function NiepotrzebneWyrazy()
     {
         return $this->niepotrzebneWyrazy;
+    }
+    public function NazwePobierzZopisu()
+    {
+        $this->nazwa = $this->getOpis();
     }
 
 }
