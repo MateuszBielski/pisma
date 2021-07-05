@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PismoRepository;
+use App\Service\KonwOpis_Str_Acoll;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -80,6 +81,8 @@ class Pismo
      */
     private $opis;
     // private $nazwaZrodlaPrzedZarejestrowaniem;
+    private $konw;
+    private $niepotrzebneWyrazy = [];
 
     public function __construct(string $adresZrodlaPrzedZarejestrowaniem = "")
     {
@@ -446,9 +449,15 @@ class Pismo
     /**
      * @return Collection|WyrazWciagu[]
      */
-    public function getOpis(): Collection
+    public function getOpisCol(): Collection
     {
         return $this->opis;
+    }
+
+    public function getOpis(): string
+    {
+        if($this->konw == null)$this->konw = new KonwOpis_Str_Acoll;
+        return $this->konw->Acoll_to_string($this->opis);
     }
 
     public function addOpi(WyrazWciagu $opi): self
@@ -471,6 +480,25 @@ class Pismo
         }
 
         return $this;
+    }
+    public function setOpis(?string $opis): Pismo
+    {
+        if(!$this->konw)$this->konw = new KonwOpis_Str_Acoll;
+        $this->opis = $this->konw->String_to_Collection($opis);
+        foreach($this->opis as $o)$o->setPismo($this);
+        return $this;
+    }
+    public function setOpisJesliZmieniony(?string $nowyOpis): bool 
+    {
+        if($nowyOpis === $this->getOpis())
+        return false;
+        foreach($this->opis as $o)$this->niepotrzebneWyrazy[] = $o;
+        $this->setOpis($nowyOpis);
+        return true;
+    }
+    public function NiepotrzebneWyrazy()
+    {
+        return $this->niepotrzebneWyrazy;
     }
     public function PrzechwycOpisyNowychsSpraw(array &$sprawy)
     {

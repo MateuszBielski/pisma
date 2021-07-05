@@ -14,6 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class PismoType extends AbstractType
@@ -24,7 +25,8 @@ class PismoType extends AbstractType
         $endYear = $date->format('Y');
 
         $builder
-            ->add('nazwaPliku',TextType::class,[/*'attr' => ['size'=>"40"]*/])
+            // ->add('nazwaPliku',TextType::class,[/*'attr' => ['size'=>"40"]*/])
+            ->add('opis',TextareaType::class)
             ->add('dataDokumentu', DateType::class, [
                 'widget' => 'choice',
                 'years' => range(2001,$endYear+1),

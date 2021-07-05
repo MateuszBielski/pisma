@@ -10,6 +10,7 @@ use Symfony\Component\Form\FormEvents;
 class PismoEventSubscriber implements EventSubscriberInterface
 {
     private $przechwytywanie;
+    private $opisStr;
     public static function getSubscribedEvents(): array
     {
         return [
@@ -43,7 +44,11 @@ class PismoEventSubscriber implements EventSubscriberInterface
         $sprawy = $form['sprawy'];
         $this->przechwytywanie = new PrzechwytywanieZselect2;
         $this->przechwytywanie->PrzechwycOpisyNowychSprawDlaPisma($sprawy);
+
+        $this->opisStr = $form['opis'];
+        $form['opis'] = '';
         $form['sprawy'] = $sprawy;
+
         $event->setData($form);
         // print_r($sprawy);
         // $form = $event->getForm();
@@ -54,7 +59,10 @@ class PismoEventSubscriber implements EventSubscriberInterface
         //w tym miejscu dane są już ustawione w obiekcie
         // $event->setData(coś);
         $pismo = $event->getData();
+        $pismo->setOpis($this->opisStr);
         $pismo->UtworzIdodajNoweSprawyWgOpisow($this->przechwytywanie->PrzechwyconeOpisySpraw());
+
+        echo $pismo->getOpis();
         // $event->setData($pismo);
         // foreach($event->getData()->getSprawy() as $s)
         // echo $s->getOpis();

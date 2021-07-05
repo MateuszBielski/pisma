@@ -302,6 +302,57 @@ class PismoTest extends TestCase
         $this->assertEquals(4,count($pismo->getSprawy()));
 
    }
+   public function testSetOpis()
+    {
+        $pismo = new Pismo;
+        $opis = 'jest to pismo z testu setOpis';
+        $pismo->setOpis($opis);
+        $this->assertEquals('jest to pismo z testu setOpis',$pismo->getOpis());
+    }
+    public function testUstawienieOpisuZerowejDlugosci()
+    {
+        $pismo = new Pismo;
+        $pismo->setOpis('');
+        $this->assertEquals('',$pismo->getOpis());
+    }
+    public function testUstawienieOpisuNull()
+    {
+        $pismo = new Pismo;
+        $pismo->setOpis(null);
+        $this->assertEquals('',$pismo->getOpis());
+    }
+    public function testSetOpisJesliZmieniony_nieZmienia()
+    {
+        $s = new Pismo;
+        $s->setOpis('opis pierwszy');
+        $this->assertFalse($s->setOpisJesliZmieniony('opis pierwszy'));
+    }
+    public function testSetOpisJesliZmieniony_zmienia()
+    {
+        $s = new Pismo;
+        $s->setOpis('opis pierwszy');
+        $this->assertTrue($s->setOpisJesliZmieniony('opis drugi'));
+        $this->assertEquals('opis drugi',$s->getOpis());
+    }
+
+    public function testListaWyrazowDoUsuniecia()
+    {
+        $s = new Pismo;
+        $s->setOpis('opis pierwszy');
+        $s->setOpisJesliZmieniony('inny opis');
+        $doUsuniecia = $s->NiepotrzebneWyrazy();
+        $this->assertEquals('opis',$doUsuniecia[0]->getWartosc());
+        $this->assertEquals('pierwszy',$doUsuniecia[1]->getWartosc());
+    }
+    public function testSetOpis_WyrazyNalezaDoPisma()
+    {
+        $s = new Pismo;
+        $s->setOpis('jakiś opis ciąg dalszy');
+        foreach($s->getOpisCol() as $r)
+        {
+            $this->assertEquals($s,$r->getPismo());
+        }
+    }
     /*
     public function testBrakPodgladuZarejestrowanego_GenerujePodglad()
     {
