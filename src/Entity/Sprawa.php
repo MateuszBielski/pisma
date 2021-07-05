@@ -125,6 +125,7 @@ class Sprawa
     public function setOpis(?string $opis): Sprawa
     {
         $this->opis = $this->konw->String_to_Collection($opis);
+        $this->nazwa = $opis;
         foreach($this->opis as $o)$o->setSprawa($this);
         return $this;
     }

@@ -8,8 +8,10 @@
 {% block title %}{{pismo.nazwaPliku}}{% endblock %}
 {% block b_div_pod_belka %}
     <h3>Edycja danych dokumentu</h3>
+    {{pismo.nazwaPliku}}
 {% endblock %}
 {% block b_div_centr %}
+
 {% include "pismo/_form.html.twig" %}
 {% endblock %}
 {% block b_div_prawy %}

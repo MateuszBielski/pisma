@@ -27,7 +27,7 @@ class PismoEventSubscriber implements EventSubscriberInterface
         //odczytuje zawsze w przed handle request
         // $this->pismo = $event->getData();
         // $form = $event->getForm();
-
+        // echo "onPreSetData";
         
     }
 
@@ -46,10 +46,11 @@ class PismoEventSubscriber implements EventSubscriberInterface
         $this->przechwytywanie->PrzechwycOpisyNowychSprawDlaPisma($sprawy);
 
         $this->opisStr = $form['opis'];
+
         $form['opis'] = '';
         $form['sprawy'] = $sprawy;
-
         $event->setData($form);
+        
         // print_r($sprawy);
         // $form = $event->getForm();
 
@@ -57,12 +58,12 @@ class PismoEventSubscriber implements EventSubscriberInterface
     public function onSubmit(FormEvent $event)
     {
         //w tym miejscu dane są już ustawione w obiekcie
-        // $event->setData(coś);
         $pismo = $event->getData();
-        $pismo->setOpis($this->opisStr);
+        $pismo->setOpisJesliZmieniony($this->opisStr);
         $pismo->UtworzIdodajNoweSprawyWgOpisow($this->przechwytywanie->PrzechwyconeOpisySpraw());
 
-        echo $pismo->getOpis();
+        // echo $pismo->getOpis();
+
         // $event->setData($pismo);
         // foreach($event->getData()->getSprawy() as $s)
         // echo $s->getOpis();

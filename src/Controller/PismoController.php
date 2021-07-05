@@ -249,17 +249,25 @@ class PismoController extends AbstractController
         $form->handleRequest($request);
         $id = $pismo->getId();
         
-
+        
         if ($form->isSubmitted() && $form->isValid() ) {
             $em = $this->getDoctrine()->getManager();
             $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($pismo,$em);
             $przechwytywanie->przechwyconyRodzajDokumentuDlaPismaUtrwal($pismo,$em);
-            $em->flush();
+            foreach($pismo->NiepotrzebneWyrazy() as $n)
+            {
+                $em->remove($n);
+                echo $n->getWartosc();
+            }
+            
+            // $em->flush();
             $pnp = new PracaNaPlikach;
             $pnp->UaktualnijNazwyPlikowPodgladu($pismo);
             $pnp->UaktualnijNazwePlikuPdf($this->getParameter('sciezka_do_zarejestrowanych'),$pismo);
-            return $this->redirectToRoute('kontrahent_show',['id'=> $pismo->getStrona()->getId(),'pismo_id'=> $id,'numerStrony' => $numerStrony]);
+            // return $this->redirectToRoute('kontrahent_show',['id'=> $pismo->getStrona()->getId(),'pismo_id'=> $id,'numerStrony' => $numerStrony]);
+        
         }
+        
         // $numerStrony = 1;
         // $pismo->
         $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();

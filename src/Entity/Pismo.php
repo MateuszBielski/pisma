@@ -77,7 +77,7 @@ class Pismo
     private $strona;
 
     /**
-     * @ORM\OneToMany(targetEntity=WyrazWciagu::class, mappedBy="pismo")
+     * @ORM\OneToMany(targetEntity=WyrazWciagu::class, mappedBy="pismo", cascade={"persist", "remove"})
      */
     private $opis;
     // private $nazwaZrodlaPrzedZarejestrowaniem;

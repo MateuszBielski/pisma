@@ -67,19 +67,20 @@ class PismoType extends AbstractType
             ->add('sprawy',EntityType::class,[
                 'multiple' => true,
                 'class'=>Sprawa::class,
-                'choice_label' => function(Sprawa $s){return $s->getOpis();},
+                'choice_label' => function(Sprawa $s){return $s->getNazwa();},
                 'attr'=>['class' => 'dlaSelect2','style'=>"width:85%", 'adresAjax' => '/sprawa/indexAjaxSelect2'],
                 'label'=>'dotyczy',
                 'query_builder' => function (SprawaRepository $sr){
-                    return $sr->createQueryBuilder('s')
-                    ->setMaxResults(5)
-                    ->orderBy('s.nazwa','ASC');
+                    return $sr->createQueryBuilder('s');
+                    // ->setMaxResults(8)
+                    // ->orderBy('s.nazwa','ASC');
                 },
                 'placeholder' => '...',
+            ])
                 /*
                 */
                 
-            ])
+            
             ->addEventSubscriber(new PismoEventSubscriber)
         ;
     }
