@@ -15,6 +15,7 @@ class PrzechwytywanieZselect2
 {
     private $utworzycNowegoKontrahenta = false;
     private $utworzycNowyRodzaj = false;
+    private $opisySpraw = [];
     
     public function przechwyc(Request $request,array $pola)
     {
@@ -71,5 +72,25 @@ class PrzechwytywanieZselect2
             $em->persist($nowyRodzaj);
             $pismo->setRodzaj($nowyRodzaj);
         }
+    }
+    public function PrzechwycOpisyNowychSprawDlaPisma(array &$sprawy)
+    {
+        $doUsuniecia = [];
+        $this->opisySpraw = [];
+        foreach($sprawy as $s)
+        {
+            if(!is_numeric($s)){
+                // $sprawa = new Sprawa;
+                // $sprawa->setOpis($s);
+                // $this->addSprawy(($sprawa));
+                $this->opisySpraw[] = $s;
+                $doUsuniecia[] = $s;
+            }
+        }
+        $sprawy = array_values(array_diff($sprawy,$doUsuniecia));
+    }
+    public function PrzechwyconeOpisySpraw(): array
+    {
+        return $this->opisySpraw;
     }
 }

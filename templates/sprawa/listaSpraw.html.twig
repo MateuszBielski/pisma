@@ -2,7 +2,12 @@
         {% for sprawa in sprawy %}
             <tr>
                 <td>{{ sprawa.id }}</td>
-                <td>{{ sprawa.getOpis() }}</td>
+                <td>
+                    <a href="{{ path('sprawa_show',{'id': sprawa.id})}}">
+                        {{ sprawa.getOpis() }}
+                    </a>
+                    
+                </td>
             </tr>
         {% endfor %}
     </table>

@@ -45,7 +45,7 @@ class Pismo
     private $sciezkaGenerUrl;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Sprawa::class, inversedBy="dokumenty")
+     * @ORM\ManyToMany(targetEntity=Sprawa::class, inversedBy="dokumenty", cascade={"persist","remove"})
      */
     private $sprawy;
 
@@ -471,5 +471,29 @@ class Pismo
         }
 
         return $this;
+    }
+    public function PrzechwycOpisyNowychsSpraw(array &$sprawy)
+    {
+        $doUsuniecia = [];
+        foreach($sprawy as $s)
+        {
+            if(!is_numeric($s)){
+                $sprawa = new Sprawa;
+                $sprawa->setOpis($s);
+                $this->addSprawy(($sprawa));
+                $w = $s;
+                $doUsuniecia[] = $w;
+            }
+        }
+        $sprawy = array_values(array_diff($sprawy,$doUsuniecia));
+    }
+    public function UtworzIdodajNoweSprawyWgOpisow(array $opisySpraw)
+    {
+        foreach($opisySpraw as $s)
+        {
+            $sprawa = new Sprawa;
+            $sprawa->setOpis($s);
+            $this->addSprawy(($sprawa));
+        }
     }
 }

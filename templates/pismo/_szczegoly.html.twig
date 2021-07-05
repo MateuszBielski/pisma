@@ -44,7 +44,9 @@
         <tr>
             <td>{{ loop.first ? 'dotyczy:' }}</td>
             <td>
-                {{sprawa.opis}}
+                <a href="{{ path('sprawa_show', {'id': sprawa.id}) }}">
+                    {{sprawa.opis}}
+                </a>
             </td>
         </tr>
     {% endfor %}

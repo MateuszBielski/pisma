@@ -24,17 +24,6 @@
                         {# {{ st }}{{ pismo.nazwaPliku }}{{end}} #}
                 </a>
             </td>
-            {# <td>
-                {% if pismo.JestPodgladDlaZrodla() %}+{% endif %}
-                
-            </td> #}
-            {% if pokazDate is defined %}
-            
-            <td>
-                {{ pismo.dataDokumentu|date("Y-m-d") }}
-            </td>
-            {% endif %}
-            
         </tr>
         {% if pismo_id == pismo.id and wierszZopcjami is defined %}
         <tr>

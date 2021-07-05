@@ -86,8 +86,15 @@ class SprawaController extends AbstractController
      */
     public function show(Sprawa $sprawa): Response
     {
+        $pisma = $sprawa->getDokumenty();
+        foreach($pisma as $p)
+        {
+            $p->setSciezkaGenerUrl($this->generateUrl('pismo_show',['id'=> $p->getId(), 'numerStrony' => 1 ]));
+        }
         return $this->render('sprawa/show.html.twig', [
             'sprawa' => $sprawa,
+            'pisma' => $pisma,
+            'pismo_id' => -1,
         ]);
     }
 

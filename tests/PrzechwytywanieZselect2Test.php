@@ -244,5 +244,49 @@ class PrzechwytywanieZselect2Test extends TestCase
         $przechwytywanie->przechwyconyRodzajDokumentuDlaPismaUtrwal($pismo,$emMock);
         $this->assertTrue($emMock->usedPersist);
     }
+   
+
+    public function testPrzechwycOpisyNowychsSpraw_usuwaWykorzystaneOpisy()
+    {
+        $przechwytywanie = new PrzechwytywanieZselect2;
+        $sprawy = [3,5,'opisowa wartość',12,'inny opis',32,24];
+        $przechwytywanie->PrzechwycOpisyNowychSprawDlaPisma($sprawy);
+        $this->assertEquals([3,5,12,32,24],$sprawy);
+    }
+    public function testPrzechwycOpisyNowychSpraw_PusteZwracaPuste()
+    {
+        $sprawy = [];
+
+        $przechwytywanie = new PrzechwytywanieZselect2;
+        $przechwytywanie->PrzechwycOpisyNowychSprawDlaPisma($sprawy);
+
+        $this->assertEquals(0,count($przechwytywanie->PrzechwyconeOpisySpraw()));
+    }
     
+    public function testPrzechwycOpisyNowychSpraw__TylkoDlaOpisowychWartosci()
+    {
+            $sprawy = [3,5,'opisowa wartość'];
+            
+            $przechwytywanie = new PrzechwytywanieZselect2;
+            $przechwytywanie->PrzechwycOpisyNowychSprawDlaPisma($sprawy);
+
+            $this->assertEquals(1,count($przechwytywanie->PrzechwyconeOpisySpraw()));
+    }
+    /*
+    public function testPrzechwycOpisyNowychsSpraw_nieTworzyDlaPustego()
+    {
+            $przechwytywanie = new PrzechwytywanieZselect2;
+            $sprawy = [];
+            $przechwytywanie->PrzechwycOpisyNowychsSpraw($sprawy);
+            $this->assertEquals(0,count($pismo->getSprawy()));
+    }
+    public function testPrzechwycOpisyNowychsSpraw_utworzNoweSprawy()
+    {
+        $sprawy = ['nowy opis1','nowy opis2'];
+        $pismo = new Pismo();
+        $pismo->PrzechwycOpisyNowychsSpraw($sprawy);
+        $this->assertEquals('nowy opis1',$pismo->getSprawy()[0]->getOpis());
+        $this->assertEquals('nowy opis2',$pismo->getSprawy()[1]->getOpis());
+    }
+    */
 }

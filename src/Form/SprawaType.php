@@ -19,13 +19,12 @@ class SprawaType extends AbstractType
     {
         $builder
             ->add('opis',TextareaType::class)
-            ->add('dokumenty',EntityType::class,[
-                'class'=>Pismo::class,
-                'multiple'=> true,
-                'choice_label' => 'nazwaPliku',
-                'required' => false
-            ])
-            // ->add('dokumenty')
+            // ->add('dokumenty',EntityType::class,[
+            //     'class'=>Pismo::class,
+            //     'multiple'=> true,
+            //     'choice_label' => 'nazwaPliku',
+            //     'required' => false
+            // ])
             ->addEventSubscriber(new SprawaEventSubscriber)
         ;
     }

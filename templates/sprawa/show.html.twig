@@ -3,20 +3,12 @@
 {% block title %}Sprawa{% endblock %}
 
 {% block body %}
-    <h1>Sprawa</h1>
+{% block b_div_pod_belka %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ sprawa.id }}</td>
-            </tr>
-            <tr>
-                <th>Nazwa</th>
-                <td>{{ sprawa.nazwa }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <h3>{{ sprawa.id }} {{ sprawa.opis }}</h3>
+   {% include "pismo/listaRej.html.twig" %} 
+{% endblock %}
+
 
     <a href="{{ path('sprawa_index') }}">back to list</a>
 

@@ -2,13 +2,14 @@
 
 namespace App\Form;
 
+use App\Service\PrzechwytywanieZselect2;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
 class PismoEventSubscriber implements EventSubscriberInterface
 {
-    private $pismo;
+    private $przechwytywanie;
     public static function getSubscribedEvents(): array
     {
         return [
@@ -23,8 +24,9 @@ class PismoEventSubscriber implements EventSubscriberInterface
     public function onPreSetData(FormEvent $event): void
     {
         //odczytuje zawsze w przed handle request
-        $this->sprawa = $event->getData();
-        $form = $event->getForm();
+        // $this->pismo = $event->getData();
+        // $form = $event->getForm();
+
         
     }
 
@@ -37,18 +39,25 @@ class PismoEventSubscriber implements EventSubscriberInterface
     public function onPreSubmit(FormEvent $event): void
     {
         //nowe dane z formularza są już dostępne, nie ma dostępu do aktulanej sprawy
-        $sprawy = $event->getData()['sprawy'];
-        print_r($sprawy);
+        $form = $event->getData();
+        $sprawy = $form['sprawy'];
+        $this->przechwytywanie = new PrzechwytywanieZselect2;
+        $this->przechwytywanie->PrzechwycOpisyNowychSprawDlaPisma($sprawy);
+        $form['sprawy'] = $sprawy;
+        $event->setData($form);
+        // print_r($sprawy);
         // $form = $event->getForm();
 
     }
     public function onSubmit(FormEvent $event)
     {
-        //w tym miejscu dane są już ustawione w obiekcie sprawa
+        //w tym miejscu dane są już ustawione w obiekcie
         // $event->setData(coś);
         $pismo = $event->getData();
-        foreach($pismo->getSprawy() as $s)
-        echo $s->getOpis();
+        $pismo->UtworzIdodajNoweSprawyWgOpisow($this->przechwytywanie->PrzechwyconeOpisySpraw());
+        // $event->setData($pismo);
+        // foreach($event->getData()->getSprawy() as $s)
+        // echo $s->getOpis();
     }
     public function onPostSubmit(FormEvent $event)
     {

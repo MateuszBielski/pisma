@@ -4,6 +4,7 @@ namespace App\Tests;
 
 use App\Entity\Kontrahent;
 use App\Entity\Pismo;
+use App\Entity\Sprawa;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 
@@ -248,7 +249,59 @@ class PismoTest extends TestCase
         $dataModyfikacji->setTimestamp(filemtime($adresPliku));
         $this->assertEquals($dataModyfikacji,$pismo->getDataDokumentu());
     }
-   
+   public function testPrzechwycOpisyNowychsSpraw_utworzNoweSprawy()
+   {
+       $sprawy = ['nowy opis1','nowy opis2'];
+       $pismo = new Pismo();
+       $pismo->PrzechwycOpisyNowychsSpraw($sprawy);
+       $this->assertEquals('nowy opis1',$pismo->getSprawy()[0]->getOpis());
+       $this->assertEquals('nowy opis2',$pismo->getSprawy()[1]->getOpis());
+   }
+   public function testPrzechwycOpisyNowychsSpraw_nieTworzyDlaPustego()
+   {
+        $pismo = new Pismo();
+        $sprawy = [];
+        $pismo->PrzechwycOpisyNowychsSpraw($sprawy);
+        $this->assertEquals(0,count($pismo->getSprawy()));
+   }
+   public function testPrzechwycOpisyNowychsSpraw_dodajeNowaTylkoDlaOpisowejWartosci()
+   {
+        $pismo = new Pismo();
+        $sprawy = [3,5,'opisowa wartość'];
+        $spr3 = new Sprawa;
+        $spr5 = new Sprawa;
+        $pismo->addSprawy($spr3);
+        $pismo->addSprawy($spr5);
+        $pismo->PrzechwycOpisyNowychsSpraw($sprawy);
+        $this->assertEquals(3,count($pismo->getSprawy()));
+   }
+
+   public function testPrzechwycOpisyNowychsSpraw_usuwaWykorzystaneOpisy()
+   {
+        $pismo = new Pismo();
+        $sprawy = [3,5,'opisowa wartość',12,'inny opis',32,24];
+        $pismo->PrzechwycOpisyNowychsSpraw($sprawy);
+        $this->assertEquals([3,5,12,32,24],$sprawy);
+   }
+   public function testUtworzIdodajNoweSprawyWgOpisow()
+   {
+        $pismo = new Pismo();
+        $opisySpraw = ['opis jeden', 'opis dwa', 'jeszcze inny opis'];
+        $pismo->UtworzIdodajNoweSprawyWgOpisow($opisySpraw);
+        $this->assertEquals('opis jeden',$pismo->getSprawy()[0]->getOpis());
+        $this->assertEquals('opis dwa',$pismo->getSprawy()[1]->getOpis());
+        $this->assertEquals('jeszcze inny opis',$pismo->getSprawy()[2]->getOpis());
+
+   }
+   public function testUtworzIdodajNoweSprawy_NieUsuwaIstniejacych()
+   {
+        $pismo = new Pismo();
+        $opisySpraw = ['opis jeden', 'opis dwa', 'jeszcze inny opis'];
+        $pismo->addSprawy(new Sprawa);
+        $pismo->UtworzIdodajNoweSprawyWgOpisow($opisySpraw);
+        $this->assertEquals(4,count($pismo->getSprawy()));
+
+   }
     /*
     public function testBrakPodgladuZarejestrowanego_GenerujePodglad()
     {
