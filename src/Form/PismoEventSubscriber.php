@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Service\PrzechwytywanieZselect2;
+use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -25,9 +26,9 @@ class PismoEventSubscriber implements EventSubscriberInterface
     public function onPreSetData(FormEvent $event): void
     {
         //odczytuje zawsze w przed handle request
-        // $this->pismo = $event->getData();
+        $this->pismo = $event->getData();
         // $form = $event->getForm();
-        // echo "onPreSetData";
+       
         
     }
 
@@ -47,28 +48,28 @@ class PismoEventSubscriber implements EventSubscriberInterface
 
         $this->opisStr = $form['opis'];
 
-        $form['opis'] = '';
+        $this->pismo->setOpisJesliZmieniony($this->opisStr);
+        $this->pismo->UtworzIdodajNoweSprawyWgOpisow($this->przechwytywanie->PrzechwyconeOpisySpraw());
+        
         $form['sprawy'] = $sprawy;
         $event->setData($form);
         
-        // print_r($sprawy);
-        // $form = $event->getForm();
+
 
     }
     public function onSubmit(FormEvent $event)
     {
         //w tym miejscu dane są już ustawione w obiekcie
-        $pismo = $event->getData();
-        $pismo->setOpisJesliZmieniony($this->opisStr);
-        $pismo->UtworzIdodajNoweSprawyWgOpisow($this->przechwytywanie->PrzechwyconeOpisySpraw());
-
+        $event->setData($this->pismo);
+        $em = $event->getDoctrine()->getEntityManager();
+        // $pismo = $event->getData();
+        // echo "onSubmit";
         // echo $pismo->getOpis();
 
-        // $event->setData($pismo);
-        // foreach($event->getData()->getSprawy() as $s)
-        // echo $s->getOpis();
     }
     public function onPostSubmit(FormEvent $event)
     {
+
     }
+
 }

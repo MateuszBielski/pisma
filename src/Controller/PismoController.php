@@ -254,10 +254,11 @@ class PismoController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($pismo,$em);
             $przechwytywanie->przechwyconyRodzajDokumentuDlaPismaUtrwal($pismo,$em);
+            echo "przed remove";
             foreach($pismo->NiepotrzebneWyrazy() as $n)
             {
-                $em->remove($n);
                 echo $n->getWartosc();
+                $em->remove($n);
             }
             
             // $em->flush();
