@@ -123,6 +123,31 @@ class PismoController extends AbstractController
         $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
         return  $response; 
     }
+    /**
+     * @Route("/indexAjaxWgOpisuKontrahIstrony", name="pismo_indexAjax_WgOpisuKontrahIstrony", methods={"GET","POST"})
+     */
+    public function indexAjaxWgOpisuKontrahIstrony(PismoRepository $pr, Request $request): ?Response
+    {
+        $opisPisma = $request->query->get("opisPisma");
+        $opisSprawy = $request->query->get("opisSprawy");
+        $nazwaKontrahenta = $request->query->get("nazwaKontrahenta");
+        $pisma = $pr->WyszukajPoFragmencieNazwyPliku($opisPisma);
+        foreach($pisma as $p)
+        {
+            $p->UstalStroneIKierunek();
+            // $p->setSciezkaDoFolderuPdf($foldPdf);
+            $p->UstalJesliTrzebaDateDokumentuZdatyMod();
+            $p->setSciezkaGenerUrl($this->generateUrl('pismo_show',['id'=> $p->getId(), 'numerStrony' => 1 ]));
+            //poniższe na okoliczność jednorazowego zapisu daty jeśli brakowało
+            // $entityManager->persist($p);
+        }
+        $response = $this->render('pismo/listaRej.html.twig',[
+            'pisma' => $pisma,
+            'pismo_id' => -1,
+            ]);
+        $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
+        return  $response; 
+    }
 
     /**
      * @Route("/new", name="pismo_new", methods={"GET","POST"})

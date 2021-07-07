@@ -12,14 +12,15 @@
                 
             <td>
                 <a href="{{ pismo.sciezkaGenerUrl }}">
+                    {% set nazwa = (pismo.opis != '') ? pismo.opis : pismo.nazwaPliku %}
                     {% if pismo_id == pismo.id %}
                         {# {% set st = '<<b>' %} #}
                         {# {% set end = '</b>>' %} #}
-                        <<b>{{ pismo.nazwaPliku }}</b>>
+                        <<b>{{ nazwa }}</b>>
                     {% else %}
                     {% set st = "" %}
                     {% set end = "" %}
-                        {{ pismo.nazwaPliku }}
+                        {{ nazwa }}
                     {% endif %}
                         {# {{ st }}{{ pismo.nazwaPliku }}{{end}} #}
                 </a>
