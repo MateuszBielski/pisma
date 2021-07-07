@@ -256,7 +256,7 @@ class PismoController extends AbstractController
             $przechwytywanie->przechwyconyRodzajDokumentuDlaPismaUtrwal($pismo,$em);
             foreach($pismo->NiepotrzebneWyrazy() as $n)
             {
-                echo $n->getWartosc();
+                // echo "id ".$n->getId()." ".$n->getWartosc()." ";
 
                 $em->remove($n);
             }
@@ -265,7 +265,8 @@ class PismoController extends AbstractController
             $pnp = new PracaNaPlikach;
             $pnp->UaktualnijNazwyPlikowPodgladu($pismo);
             $pnp->UaktualnijNazwePlikuPdf($this->getParameter('sciezka_do_zarejestrowanych'),$pismo);
-            return $this->redirectToRoute('kontrahent_show',['id'=> $pismo->getStrona()->getId(),'pismo_id'=> $id,'numerStrony' => $numerStrony]);
+            return $this->redirectToRoute('pismo_show',['id'=> $id,'numerStrony' => $numerStrony]);
+            // return $this->redirectToRoute('kontrahent_show',['id'=> $pismo->getStrona()->getId(),'pismo_id'=> $id,'numerStrony' => $numerStrony]);
         
         }
         

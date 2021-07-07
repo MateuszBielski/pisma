@@ -41,17 +41,17 @@ class PismoEventSubscriber implements EventSubscriberInterface
 
     public function onPreSubmit(FormEvent $event): void
     {
-        //nowe dane z formularza są już dostępne, nie ma dostępu do aktulanej sprawy
+        //nowe dane z formularza są już dostępne, nie ma dostępu do aktulanego obiektu
         $form = $event->getData();
         $sprawy = $form['sprawy'];
         $this->przechwytywanie = new PrzechwytywanieZselect2;
         $this->przechwytywanie->PrzechwycOpisyNowychSprawDlaPisma($sprawy);
 
         $this->opisStr = $form['opis'];
-
         // $this->pismo->setOpisJesliZmieniony($this->opisStr);
         // $this->pismo->UtworzIdodajNoweSprawyWgOpisow($this->przechwytywanie->PrzechwyconeOpisySpraw());
         
+        $form['opis'] = $this->staryOpisStr;//udajemy, że opis został nie zmieniony
         $form['sprawy'] = $sprawy;
         $event->setData($form);
         
@@ -61,18 +61,20 @@ class PismoEventSubscriber implements EventSubscriberInterface
     public function onSubmit(FormEvent $event)
     {
         //w tym miejscu dane są już ustawione w obiekcie
+        // echo "onSubmit";
         $pismo = $event->getData();
-        $pismo->setOpis($this->staryOpisStr);
+        // $staryOpis = 
+        // $pismo->setOpis($this->staryOpisStr);
         $pismo->setOpisJesliZmieniony($this->opisStr);
         $pismo->UtworzIdodajNoweSprawyWgOpisow($this->przechwytywanie->PrzechwyconeOpisySpraw());
         $event->setData($pismo);
         // $em = $event->getDoctrine()->getEntityManager();
 
         // $pismo = $event->getData();
-        echo "onSubmit";
-        foreach($pismo->NiepotrzebneWyrazy() as $n)
-        echo $n->getWartosc();
-        echo ">";
+        
+        // foreach($pismo->NiepotrzebneWyrazy() as $n)
+        // echo "id ".$n->getId()." ".$n->getWartosc()." ";
+        // echo ">";
         // echo $pismo->getOpis();
 
     }
