@@ -21,6 +21,10 @@ class SprawaController extends AbstractController
     public function index(SprawaRepository $sprawaRepository): Response
     {
         $sprawy = $sprawaRepository->findAll();
+        // foreach($sprawy as $s){
+        //     $s->NazwePobierzZopisu();
+        // }
+        // $this->getDoctrine()->getManager()->flush();
         return $this->render('sprawa/index.html.twig', [
             'sprawy' => $sprawy,
         ]);

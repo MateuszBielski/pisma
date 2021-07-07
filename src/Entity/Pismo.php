@@ -493,6 +493,7 @@ class Pismo
         if($nowyOpis === $this->getOpis())
         return false;
         foreach($this->opis as $o)$this->niepotrzebneWyrazy[] = $o;
+        foreach($this->niepotrzebneWyrazy as $n)$this->removeOpi($n);
         $this->setOpis($nowyOpis);
         return true;
     }

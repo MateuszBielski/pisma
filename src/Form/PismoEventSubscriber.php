@@ -12,6 +12,7 @@ class PismoEventSubscriber implements EventSubscriberInterface
 {
     private $przechwytywanie;
     private $opisStr;
+    private $staryOpisStr;
     public static function getSubscribedEvents(): array
     {
         return [
@@ -26,7 +27,7 @@ class PismoEventSubscriber implements EventSubscriberInterface
     public function onPreSetData(FormEvent $event): void
     {
         //odczytuje zawsze w przed handle request
-        $this->pismo = $event->getData();
+        $this->staryOpisStr = $event->getData()->getOpis();
         // $form = $event->getForm();
        
         
@@ -48,8 +49,8 @@ class PismoEventSubscriber implements EventSubscriberInterface
 
         $this->opisStr = $form['opis'];
 
-        $this->pismo->setOpisJesliZmieniony($this->opisStr);
-        $this->pismo->UtworzIdodajNoweSprawyWgOpisow($this->przechwytywanie->PrzechwyconeOpisySpraw());
+        // $this->pismo->setOpisJesliZmieniony($this->opisStr);
+        // $this->pismo->UtworzIdodajNoweSprawyWgOpisow($this->przechwytywanie->PrzechwyconeOpisySpraw());
         
         $form['sprawy'] = $sprawy;
         $event->setData($form);
@@ -60,10 +61,18 @@ class PismoEventSubscriber implements EventSubscriberInterface
     public function onSubmit(FormEvent $event)
     {
         //w tym miejscu dane są już ustawione w obiekcie
-        $event->setData($this->pismo);
-        $em = $event->getDoctrine()->getEntityManager();
+        $pismo = $event->getData();
+        $pismo->setOpis($this->staryOpisStr);
+        $pismo->setOpisJesliZmieniony($this->opisStr);
+        $pismo->UtworzIdodajNoweSprawyWgOpisow($this->przechwytywanie->PrzechwyconeOpisySpraw());
+        $event->setData($pismo);
+        // $em = $event->getDoctrine()->getEntityManager();
+
         // $pismo = $event->getData();
-        // echo "onSubmit";
+        echo "onSubmit";
+        foreach($pismo->NiepotrzebneWyrazy() as $n)
+        echo $n->getWartosc();
+        echo ">";
         // echo $pismo->getOpis();
 
     }

@@ -353,6 +353,16 @@ class PismoTest extends TestCase
             $this->assertEquals($s,$r->getPismo());
         }
     }
+    public function testSetOpisJesliZmieniony_niepotrzebneWyrazyNieNalezaDoPisma()
+    {
+        $s = new Pismo;
+        $s->setOpis('opis pierwszy');
+        $s->setOpisJesliZmieniony('inny opis');
+        foreach($s->NiepotrzebneWyrazy() as $n)
+        {
+            $this->assertEquals(null,$n->getPismo());
+        }
+    }
     /*
     public function testBrakPodgladuZarejestrowanego_GenerujePodglad()
     {

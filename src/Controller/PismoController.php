@@ -176,7 +176,7 @@ class PismoController extends AbstractController
             $entityManager->persist($pismo);
             $entityManager->flush();
 
-            return $this->redirectToRoute('pismo_nowe_index');
+            return $this->redirectToRoute('pismo_index');
         }
         $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem();
         return $this->render('pismo/noweZeSkanu.html.twig', [
@@ -254,18 +254,18 @@ class PismoController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($pismo,$em);
             $przechwytywanie->przechwyconyRodzajDokumentuDlaPismaUtrwal($pismo,$em);
-            echo "przed remove";
             foreach($pismo->NiepotrzebneWyrazy() as $n)
             {
                 echo $n->getWartosc();
+
                 $em->remove($n);
             }
             
-            // $em->flush();
+            $em->flush();
             $pnp = new PracaNaPlikach;
             $pnp->UaktualnijNazwyPlikowPodgladu($pismo);
             $pnp->UaktualnijNazwePlikuPdf($this->getParameter('sciezka_do_zarejestrowanych'),$pismo);
-            // return $this->redirectToRoute('kontrahent_show',['id'=> $pismo->getStrona()->getId(),'pismo_id'=> $id,'numerStrony' => $numerStrony]);
+            return $this->redirectToRoute('kontrahent_show',['id'=> $pismo->getStrona()->getId(),'pismo_id'=> $id,'numerStrony' => $numerStrony]);
         
         }
         
