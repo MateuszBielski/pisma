@@ -21,7 +21,6 @@ class SprawaRepository extends ServiceEntityRepository
     public function wyszukajPoFragmentachWyrazuOpisu(string $fragmenty)
     {
         $frArr = explode(' ',$fragmenty);
-        $wiecej = (count($frArr) > 1)? true :false;
         $result = $this->createQueryBuilder('s')
         ->setParameter('frag', array_shift($frArr).'%')
         ->join("s.opis",'opis')

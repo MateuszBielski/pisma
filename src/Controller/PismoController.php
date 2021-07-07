@@ -42,10 +42,11 @@ class PismoController extends AbstractController
             $p->UstalJesliTrzebaDateDokumentuZdatyMod();
             $p->setSciezkaGenerUrl($this->generateUrl('pismo_show',['id'=> $p->getId(), 'numerStrony' => 1 ]));
             //poniższe na okoliczność jednorazowego zapisu daty jeśli brakowało
-            $entityManager->persist($p);
+            // $entityManager->persist($p);
+            // $p->OpisZnazwyPliku();
         }
         //jeśli data jest w bazie, to nic nie robi
-        $entityManager->flush();
+        // $entityManager->flush();
             
         return $this->render('pismo/index.html.twig', [
             'pisma' => $pisma,
@@ -131,7 +132,7 @@ class PismoController extends AbstractController
         $opisPisma = $request->query->get("opisPisma");
         $opisSprawy = $request->query->get("opisSprawy");
         $nazwaKontrahenta = $request->query->get("nazwaKontrahenta");
-        $pisma = $pr->WyszukajPoFragmencieNazwyPliku($opisPisma);
+        $pisma = $pr->WyszukajPoFragmentachOpisuKontrahIsprawy($opisPisma,$opisSprawy,$nazwaKontrahenta);
         foreach($pisma as $p)
         {
             $p->UstalStroneIKierunek();

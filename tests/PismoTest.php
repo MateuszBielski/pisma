@@ -5,6 +5,7 @@ namespace App\Tests;
 use App\Entity\Kontrahent;
 use App\Entity\Pismo;
 use App\Entity\Sprawa;
+use App\Entity\WyrazWciagu;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 
@@ -362,6 +363,58 @@ class PismoTest extends TestCase
         {
             $this->assertEquals(null,$n->getPismo());
         }
+    }
+    public function testOpisZnazwyPliku_obcinaRozszerzenie()
+    {
+        $p = new Pismo;
+        $p->setNazwaPliku('jakaśNazwa.pdf');
+        $p->OpisZnazwyPliku();
+        $this->assertEquals('jakaśNazwa',$p->getOpis());
+    }
+    public function testOpisZnazwyPliku_NieObcinaJesliNieMaRozsz()
+    {
+        $p = new Pismo;
+        $p->setNazwaPliku('jakaśNazwa');
+        $p->OpisZnazwyPliku();
+        $this->assertEquals('jakaśNazwa',$p->getOpis());
+    }
+    public function testOpisZnazwyPliku_rozdzielaSpacja()
+    {
+        $p = new Pismo;
+        $p->setNazwaPliku('jakaś Nazwa');
+        $p->OpisZnazwyPliku();
+        $this->assertEquals(2,count($p->getOpisCol()));
+    }
+
+    public function testOpisZnazwyPliku_rozdzielaDolnaKreska()
+    {
+        $p = new Pismo;
+        $p->setNazwaPliku('jakaś_Inna_Nazwa');
+        $p->OpisZnazwyPliku();
+        $this->assertEquals(3,count($p->getOpisCol()));
+    }
+    public function testSetOpisUstawiaOpisCiag()
+    {
+        $p = new Pismo;
+        $p->setOpis('nazwa pliku');
+        $this->assertEquals('nazwa pliku',$p->getOpisCiag());
+    }
+    public function testOpisZnazwyPliku_nieUstawiaJesliOpisIstnial()
+    {
+        $p = new Pismo;
+        $p->setNazwaPliku('nazwa pliku');
+        $p->setOpis('opis1 pliku');
+        $p->OpisZnazwyPliku();
+        $this->assertEquals('opis1 pliku',$p->getOpis());
+    }
+    public function testOpisZnazwyPliku_UstawiaOpisCiag()
+    {
+        $p = new Pismo;
+        $p->setNazwaPliku('nazwa pliku');
+        $p->addOpi(new WyrazWciagu('opis1'));
+        $p->addOpi(new WyrazWciagu('pliku'));
+        $p->OpisZnazwyPliku();
+        $this->assertEquals('opis1 pliku',$p->getOpisCiag());
     }
     /*
     public function testBrakPodgladuZarejestrowanego_GenerujePodglad()

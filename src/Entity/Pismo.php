@@ -84,6 +84,11 @@ class Pismo
     private $konw;
     private $niepotrzebneWyrazy = [];
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $opisCiag;
+
     public function __construct(string $adresZrodlaPrzedZarejestrowaniem = "")
     {
         $this->adresZrodlaPrzedZarejestrowaniem = $adresZrodlaPrzedZarejestrowaniem;
@@ -485,6 +490,7 @@ class Pismo
     {
         if(!$this->konw)$this->konw = new KonwOpis_Str_Acoll;
         $this->opis = $this->konw->String_to_Collection($opis);
+        $this->opisCiag = $opis;
         foreach($this->opis as $o)$o->setPismo($this);
         return $this;
     }
@@ -524,5 +530,30 @@ class Pismo
             $sprawa->setOpis($s);
             $this->addSprawy(($sprawa));
         }
+    }
+
+    public function getOpisCiag(): ?string
+    {
+        return $this->opisCiag;
+    }
+
+    public function setOpisCiag(?string $opisCiag): self
+    {
+        $this->opisCiag = $opisCiag;
+
+        return $this;
+    }
+    public function OpisZnazwyPliku()
+    {
+        if(count($this->opis))
+        {
+            $this->opisCiag = $this->getOpis();
+            return;
+        } 
+        $poz = strpos($this->nazwaPliku,'.');
+        
+        $nazwa = ( $poz != false ) ? substr($this->nazwaPliku,0,$poz): $this->nazwaPliku;
+        $nazwa = str_replace("_"," ",$nazwa);
+        $this->setOpis($nazwa); 
     }
 }

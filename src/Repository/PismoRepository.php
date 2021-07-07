@@ -41,6 +41,32 @@ class PismoRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+    public function WyszukajPoFragmentachOpisuKontrahIsprawy(string $pismo,string $sprawa,string $kontrahent)
+    {
+        $frArrP = explode(' ',$pismo);
+        $result = $this->createQueryBuilder('p')
+        ->setParameter('frag', array_shift($frArrP).'%')
+        ->join("p.opis",'opis')
+        ->where("opis.wartosc LIKE :frag")
+        ;
+        $n = 1;
+        while($fr = array_shift($frArrP))
+        {
+            $fr .='%';
+            $par = "frag".$n++;
+            $op = "opis".$n;
+            $result = $result->setParameter("$par",$fr)
+            ->join("p.opis",$op)//bez tego poniższe wyklucza wszystko
+            ->andWhere("$op.wartosc LIKE :$par")
+            ;
+        }
+        $result = $result
+        ->getQuery()
+        ->getResult();
+        ;
+
+         return $result;
+    }
 
     // /**
     //  * @return Pismo[] Returns an array of Pismo objects
