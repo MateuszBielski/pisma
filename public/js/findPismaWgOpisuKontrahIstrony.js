@@ -2,9 +2,11 @@ jQuery(document).ready(function() {
     var input_opisPisma = $('#input_find_pismo_wgOpisu');
     var input_opisSprawy = $('#input_find_pismo_wgSprawy');
     var input_nazwaKontrahenta = $('#input_find_pismo_wgKontrahenta');
+    var inputs_Pisma_Sprawy_Kontrahent = $('#input_find_pismo_wgOpisu, #input_find_pismo_wgSprawy, #input_find_pismo_wgKontrahenta');//
     // console.log(input_find_pismo.val());
     // console.log('początek');
-    input_opisPisma.on('input',function(){
+    inputs_Pisma_Sprawy_Kontrahent.on('input',function(){
+    // $(document).on('input',)
         $.ajax({
                 url: "/pismo/indexAjaxWgOpisuKontrahIstrony",
                 type: "GET",

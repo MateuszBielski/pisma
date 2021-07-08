@@ -65,6 +65,7 @@ class PismoType extends AbstractType
                 // 'mapped' => false,
                 ])
             ->add('sprawy',EntityType::class,[
+                'required'=> false,
                 'multiple' => true,
                 'class'=>Sprawa::class,
                 'choice_label' => function(Sprawa $s){return $s->getNazwa();},

@@ -44,6 +44,10 @@ class PismoRepository extends ServiceEntityRepository
     public function WyszukajPoFragmentachOpisuKontrahIsprawy(string $pismo,string $sprawa,string $kontrahent)
     {
         $frArrP = explode(' ',$pismo);
+        $frArrS = ($sprawa != '') ? explode(' ',$sprawa):[];
+        $frArrK = ($kontrahent != '') ? explode(' ',$kontrahent): [];
+        
+
         $result = $this->createQueryBuilder('p')
         ->setParameter('frag', array_shift($frArrP).'%')
         ->join("p.opis",'opis')
@@ -60,6 +64,40 @@ class PismoRepository extends ServiceEntityRepository
             ->andWhere("$op.wartosc LIKE :$par")
             ;
         }
+        $n = 1;
+        if(count($frArrS))
+        {
+            $result = $result
+            ->join("p.sprawy",'sprawa');
+            while($fr = array_shift($frArrS))
+            {
+                $fr .='%';
+                $par = "fragS".$n++;
+                $op = "opisS".$n;
+                $result = $result->setParameter("$par",$fr)
+                ->join("sprawa.opis",$op)//bez tego poniższe wyklucza wszystko
+                ->andWhere("$op.wartosc LIKE :$par")
+                ;
+            }
+        }
+        $n = 1;
+        if(count($frArrK))
+        {
+            $result = $result
+            // ->join("p.odbiorca",'odbiorca')
+            ->leftJoin("p.nadawca",'nadawca')
+            ->leftjoin("p.odbiorca",'odbiorca')
+            ;
+            while($fr = array_shift($frArrK))
+            {
+                $fr ='%'.$fr.'%';
+                $par = "fragK".$n++;
+                $result = $result->setParameter("$par",$fr)
+                ->andWhere("nadawca.nazwa LIKE :$par or odbiorca.nazwa LIKE :$par")//
+                
+                ;
+            }
+        }
         $result = $result
         ->getQuery()
         ->getResult();
@@ -67,6 +105,7 @@ class PismoRepository extends ServiceEntityRepository
 
          return $result;
     }
+
 
     // /**
     //  * @return Pismo[] Returns an array of Pismo objects

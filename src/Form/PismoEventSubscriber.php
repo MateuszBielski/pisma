@@ -43,16 +43,18 @@ class PismoEventSubscriber implements EventSubscriberInterface
     {
         //nowe dane z formularza są już dostępne, nie ma dostępu do aktulanego obiektu
         $form = $event->getData();
-        $sprawy = $form['sprawy'];
+
         $this->przechwytywanie = new PrzechwytywanieZselect2;
-        $this->przechwytywanie->PrzechwycOpisyNowychSprawDlaPisma($sprawy);
+        if(array_key_exists('sprawy',$form ))
+        {
+            $sprawy = $form['sprawy'];
+            $this->przechwytywanie->PrzechwycOpisyNowychSprawDlaPisma($sprawy);
+            $form['sprawy'] = $sprawy;
+        }
 
         $this->opisStr = $form['opis'];
-        // $this->pismo->setOpisJesliZmieniony($this->opisStr);
-        // $this->pismo->UtworzIdodajNoweSprawyWgOpisow($this->przechwytywanie->PrzechwyconeOpisySpraw());
-        
         $form['opis'] = $this->staryOpisStr;//udajemy, że opis został nie zmieniony
-        $form['sprawy'] = $sprawy;
+        
         $event->setData($form);
         
 
