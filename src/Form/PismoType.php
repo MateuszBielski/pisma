@@ -26,18 +26,18 @@ class PismoType extends AbstractType
 
         $builder
             // ->add('nazwaPliku',TextType::class,[/*'attr' => ['size'=>"40"]*/])
-            ->add('opis',TextareaType::class)
+            ->add('opis',TextareaType::class,['attr' => ["rows"=>"2", "cols"=>"50"]])
             ->add('dataDokumentu', DateType::class, [
                 'widget' => 'choice',
                 'years' => range(2001,$endYear+1),
                 'format' => 'dd MM yyyy',
             ])
             
-            ->add('oznaczenie')
+            // ->add('oznaczenie')
             ->add('rodzaj',EntityType::class,[
                 'class'=>RodzajDokumentu::class,
                 'choice_label' => 'nazwa',
-                'attr' => ['class' => 'dlaSelect2','style'=>"width: 85%",'adresAjax' => '/rodzaj/dokumentu/indexAjaxSelect2'],
+                'attr' => ['class' => 'dlaSelect2','style'=>"width: 100%",'adresAjax' => '/rodzaj/dokumentu/indexAjaxSelect2'],
                 'placeholder' => '...',//
                 ])
             ->add('kierunek',ChoiceType::class,[
@@ -53,7 +53,7 @@ class PismoType extends AbstractType
             ->add('strona',EntityType::class,[
                 'class'=>Kontrahent::class,
                 'choice_label' => 'nazwa',
-                'attr' => ['class' => 'dlaSelect2','style'=>"width: 85%", 'adresAjax' => '/kontrahent/indexAjaxSelect2'],
+                'attr' => ['class' => 'dlaSelect2','style'=>"width: 100%", 'adresAjax' => '/kontrahent/indexAjaxSelect2'],
                 'label' => false,
                 'query_builder' => function (KontrahentRepository $kr) {
                     return $kr->createQueryBuilder('k')
@@ -69,7 +69,7 @@ class PismoType extends AbstractType
                 'multiple' => true,
                 'class'=>Sprawa::class,
                 'choice_label' => function(Sprawa $s){return $s->getNazwa();},
-                'attr'=>['class' => 'dlaSelect2','style'=>"width:85%", 'adresAjax' => '/sprawa/indexAjaxSelect2'],
+                'attr'=>['class' => 'dlaSelect2','style'=>"width:100%", 'adresAjax' => '/sprawa/indexAjaxSelect2'],
                 'label'=>'dotyczy',
                 'query_builder' => function (SprawaRepository $sr){
                     return $sr->createQueryBuilder('s');

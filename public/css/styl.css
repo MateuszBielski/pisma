@@ -16,6 +16,10 @@ a{
     text-decoration: none;
     color: rgb(229,178,128);
 }
+select,textarea,
+{
+    background-color: #b5ccc3;
+}
 a:hover{
     /* czerwony ceglasty */
     /* color: rgb(238, 115, 66); */
@@ -105,9 +109,9 @@ table{
 
 #div_2_lewy{
     float: left;
-    width: 60%;
+    width: 42%;
 }
 #div_2_prawy{
     float: left;
-    width: 39%;
+    width: 57%;
 }

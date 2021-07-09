@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'dwieKolumny.html.twig' %}
 {% block b_dodatkoweArkuszeIskrypty %}
 <script type="text/javascript" src="/js/jquery.min.js"></script>
 <script type="text/javascript" src="/js/select2.min.js"></script>
@@ -10,11 +10,11 @@
     <h3>Edycja danych dokumentu</h3>
     {{pismo.nazwaPliku}}
 {% endblock %}
-{% block b_div_centr %}
+{% block b_div_2_lewy %}
 
 {% include "pismo/_form.html.twig" %}
 {% endblock %}
-{% block b_div_prawy %}
+{% block b_div_2_prawy %}
 {% include "pismo/_podglad.html.twig" %}
 
 {% endblock %}

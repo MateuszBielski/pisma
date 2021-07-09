@@ -1,26 +1,16 @@
-{% extends 'base.html.twig' %}
+{% extends 'dwieKolumny.html.twig' %}
 
 {% block title %}{{ pismo.nazwaPliku }}{% endblock %}
 
 {% block b_div_pod_belka %}
     <h3>{{ pismo.nazwaPliku }}</h3>
 {% endblock %}
-{% block b_div_lewy %}
-Wszystkie pisma zarejestrowane:<br>
-{% set pismo_id = pismo.id %}
-{# {% set sciezka = 'pismo_show' %} #}
-{% include "pismo/_wyszukajAjax.html.twig" %}
-    <div id="div_lista_rej">
-        {{ include('pismo/listaRej.html.twig') }}
-    </div>
-{# {{ include('pismo/listaRej.html.twig') }} #}
 
-{% endblock %}
-{% block b_div_centr %}
+{% block b_div_2_lewy %}
 {% include "pismo/_szczegoly.html.twig" %}
 <br>
 <a href="{{path('pismo_edit', {'id' : pismo.id, 'numerStrony': numerStrony })}}">edytuj dane dokumentu</a>
 {% endblock %}
-{% block b_div_prawy %}
+{% block b_div_2_prawy %}
 {% include "pismo/_podglad.html.twig" %}
 {% endblock %}
