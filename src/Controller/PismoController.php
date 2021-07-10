@@ -9,6 +9,7 @@ use App\Form\PismoLadowaniePdfType;
 use App\Form\PismoType;
 use App\Repository\KontrahentRepository;
 use App\Repository\PismoRepository;
+use App\Repository\SprawaRepository;
 use App\Service\PracaNaPlikach;
 use App\Service\PrzechwytywanieZselect2;
 use App\Service\UruchomienieProcesu;
@@ -127,12 +128,21 @@ class PismoController extends AbstractController
     /**
      * @Route("/indexAjaxWgOpisuKontrahIstrony", name="pismo_indexAjax_WgOpisuKontrahIstrony", methods={"GET","POST"})
      */
-    public function indexAjaxWgOpisuKontrahIstrony(PismoRepository $pr, Request $request): ?Response
+    public function indexAjaxWgOpisuKontrahIstrony(PismoRepository $pr,SprawaRepository $sr,KontrahentRepository $kr, Request $request): ?Response
     {
         $opisPisma = $request->query->get("opisPisma");
         $opisSprawy = $request->query->get("opisSprawy");
         $nazwaKontrahenta = $request->query->get("nazwaKontrahenta");
         $pisma = $pr->WyszukajPoFragmentachOpisuKontrahIsprawy($opisPisma,$opisSprawy,$nazwaKontrahenta);
+        
+        $sprawy = [];
+        if (strlen($opisSprawy))
+        $sprawy = $sr->wyszukajPoFragmentachWyrazuOpisu($opisSprawy);
+
+        $kontrahenci = [];
+        if (strlen($nazwaKontrahenta))
+        $kontrahenci = $kr->WyszukajPoFragmencieNazwy($nazwaKontrahenta);
+        
         foreach($pisma as $p)
         {
             $p->UstalStroneIKierunek();
@@ -142,9 +152,14 @@ class PismoController extends AbstractController
             //poniższe na okoliczność jednorazowego zapisu daty jeśli brakowało
             // $entityManager->persist($p);
         }
-        $response = $this->render('pismo/listaRej.html.twig',[
+        // $response = $this->render('pismo/listaRej.html.twig',[
+        $response = $this->render('pismo/w3KolPismaSprawyKontr.html.twig',[
             'pisma' => $pisma,
             'pismo_id' => -1,
+            'sprawy' => $sprawy,
+            'kontrahents' => $kontrahenci,
+            'kontrahent_id' => -1,
+            // 'bazyNieRozszerzaj' => '',
             ]);
         $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
         return  $response; 

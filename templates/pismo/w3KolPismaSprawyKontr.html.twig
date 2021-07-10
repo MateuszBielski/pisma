@@ -1,0 +1,12 @@
+{% set bazyNieRozszerzaj = true %}
+{% extends "trzyKolumny.html.twig" %}
+{% block b_div_lewy %}
+    {% include "pismo/listaRej.html.twig" %}
+{% endblock %}
+{% block b_div_centr %}
+    {% include "sprawa/listaSpraw.html.twig" %}
+{% endblock %}
+{% block b_div_prawy %}
+    {% include "kontrahent/listaKontrahentow.html.twig" %}
+{% endblock %}
+

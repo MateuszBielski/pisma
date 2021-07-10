@@ -16,14 +16,12 @@ jQuery(document).ready(function() {
                     nazwaKontrahenta: input_nazwaKontrahenta.val(),
                 },
                 success: function (msg) {
-                    // console.log('sukces'); 
-                    // $("#kontener").text(tekst);
-                    $('#div_lista_rej').html(msg);
-                     //var users_list = $("#users_list");
-                     //users_list.replaceWith(response.find('#users_list'));
+                    $('#div_kolumny').html(msg);
+                    // $('#div_lista_rej').html(msg);
                 }
                 ,error: function (err) {
-                    $("#div_lista_rej").text(err.Message);
+                    $("#div_kolumny").text(err.Message);
+                    // $("#div_lista_rej").text(err.Message);
                 }
         });
     });
