@@ -149,6 +149,22 @@ class PismoController extends AbstractController
         $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
         return  $response; 
     }
+    
+    /**
+     * @Route("/indexAjaxOznaczenie", name="pismo_indexAjax_oznaczenie", methods={"GET","POST"})
+     */
+    public function indexAjaxOznaczenie(PismoRepository $pr, Request $request): ?Response//
+    {
+        $kierunekNum = $request->query->get("kierunek");
+        // $response = $this->render('pismo/listaRej.html.twig',[
+        //     'pisma' => $pisma,
+        //     'pismo_id' => -1,
+        //     ]);
+        // $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
+        $response = $this->json(['odp'=> 'oznaczenie odpowiedź']);
+        $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
+        return  $response; 
+    }
 
     /**
      * @Route("/new", name="pismo_new", methods={"GET","POST"})

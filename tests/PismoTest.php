@@ -416,6 +416,20 @@ class PismoTest extends TestCase
         $p->OpisZnazwyPliku();
         $this->assertEquals('opis1 pliku',$p->getOpisCiag());
     }
+    public function testKonwersjaOznaczenia_dlaUzytkownika()
+    {
+        $pismo = new Pismo;
+        $oznaczenieZbazy = '2021_00017';
+        $oznaczenieUzytkownika = 'L.dz. 17/2021';
+        $this->assertEquals($oznaczenieUzytkownika,$pismo->OznaczenieKonwertujDlaUzytkownika($oznaczenieZbazy));
+    }
+    public function testKonwersjaOznaczenia_dlaBazy()
+    {
+        $pismo = new Pismo;
+        $oznaczenieUzytkownika = 'L.dz. 17/2021';
+        $oznaczenieDlabazy = '2021_00017';
+        $this->assertEquals($oznaczenieDlabazy,$pismo->OznaczenieKonwertujDlaBazy($oznaczenieUzytkownika));
+    }
     /*
     public function testBrakPodgladuZarejestrowanego_GenerujePodglad()
     {

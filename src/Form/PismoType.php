@@ -33,7 +33,7 @@ class PismoType extends AbstractType
                 'format' => 'dd MM yyyy',
             ])
             
-            // ->add('oznaczenie')
+            ->add('oznaczenie',null,['attr'=>["url"=>'pismo/indexAjaxOznaczenie']])
             ->add('rodzaj',EntityType::class,[
                 'class'=>RodzajDokumentu::class,
                 'choice_label' => 'nazwa',

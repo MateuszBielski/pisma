@@ -556,4 +556,19 @@ class Pismo
         $nazwa = str_replace("_"," ",$nazwa);
         $this->setOpis($nazwa); 
     }
+    public function OznaczenieKonwertujDlaUzytkownika(string $oznBazy): string
+    {
+        $res = 'L.dz. ';
+        $arr = explode('_',$oznBazy);
+        if(count($arr) != 2)return 'zły format';
+        return 'L.dz. '.ltrim($arr[1],'0').'/'.$arr[0];
+    }
+    public function OznaczenieKonwertujDlaBazy(string $ozUzytk): string
+    {
+        // $ozUzytk = 'litery394znowu';
+        $arr = array();
+        preg_match('/L\.dz\. ([\d]+)\/([\d]{4})/',$ozUzytk,$arr);
+        if(!$arr || count($arr) != 3) return '';
+        return $arr[2].'_'.sprintf('%05s', $arr[1]);
+    }
 }
