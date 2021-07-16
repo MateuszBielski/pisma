@@ -584,7 +584,7 @@ class Pismo
         $ozn = $this->OznaczenieKonwertujDlaUzytkownika($this->oznaczenie);
         $this->oznaczenie = $this->ZwiekszNumeracjeOznaczeniaUzytkownika($ozn);
     }
-    public function NaPodstawieOstatniegoZaproponujOznaczenieZaktualnymRokiem()
+    public function NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem()
     {
         
         $ozn = $this->OznaczenieKonwertujDlaUzytkownika($this->oznaczenie);
@@ -602,5 +602,11 @@ class Pismo
                 return $numer.$matches[2].$rok;
             }
         ,$ozn);
+    }
+    public function getOznaczenieUzytkownika(): string
+    {
+        $ozn = $this->oznaczenie;
+        $czyFormatBazy = preg_match('|[\d]{4}_[\d]{5}|',$ozn);
+        return $czyFormatBazy ? $this->OznaczenieKonwertujDlaUzytkownika($ozn):$ozn;
     }
 }

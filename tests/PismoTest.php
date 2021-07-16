@@ -456,7 +456,7 @@ class PismoTest extends TestCase
         $dataTeraz = new DateTime('now');
         $aktualnyRok = $dataTeraz->format('Y');
         $oznaczenieZaktualnymRokiem = 'L.dz. 1/'.$aktualnyRok;
-        $this->assertEquals($oznaczenieZaktualnymRokiem,$pismo->NaPodstawieOstatniegoZaproponujOznaczenieZaktualnymRokiem());
+        $this->assertEquals($oznaczenieZaktualnymRokiem,$pismo->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem());
     }
     public function testNaPodstawieOstatniegoZaproponujOznaczenieZaktualnymRokiem_aktualny()
     {
@@ -466,7 +466,15 @@ class PismoTest extends TestCase
         $pismo = new Pismo;
         $pismo->setOznaczenie($aktualnyRok.'_00078');
         $oznaczenieZaktualnymRokiem = 'L.dz. 79/'.$aktualnyRok;
-        $this->assertEquals($oznaczenieZaktualnymRokiem,$pismo->NaPodstawieOstatniegoZaproponujOznaczenieZaktualnymRokiem());
+        $this->assertEquals($oznaczenieZaktualnymRokiem,$pismo->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem());
+    }
+    public function testGetOznaczenieUzytkownika()
+    {
+        $pismo = new Pismo;
+        $pismo->setOznaczenie('2006_00078');
+        $this->assertEquals('L.dz. 78/2006',$pismo->getOznaczenieUzytkownika());
+        $pismo->setOznaczenie('L.dz. 62/2011');
+        $this->assertEquals('L.dz. 62/2011',$pismo->getOznaczenieUzytkownika());
     }
     /*
     public function testBrakPodgladuZarejestrowanego_GenerujePodglad()

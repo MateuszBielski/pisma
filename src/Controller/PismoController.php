@@ -181,7 +181,7 @@ class PismoController extends AbstractController
             $pismo  = $pr->OstatniNumerWychodzacych();
             break;
         }
-        $response = $this->json(['odp'=> $pismo->NaPodstawieOstatniegoZaproponujOznaczenieZaktualnymRokiem()]);
+        $response = $this->json(['odp'=> $pismo->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem()]);
         $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
         return  $response; 
     }
@@ -211,11 +211,12 @@ class PismoController extends AbstractController
     /**
      * @Route("/noweZeSkanu/{nazwa}/{numerStrony}", name="pismo_nowe_ze_skanu", methods={"GET","POST"})
      */
-    public function noweZeSkanu(Request $request, string $nazwa, $numerStrony = 1, KontrahentRepository $kr): Response
+    public function noweZeSkanu(Request $request, string $nazwa, $numerStrony = 1, KontrahentRepository $kr, PismoRepository $pr): Response
     {
         $pnp = new PracaNaPlikach;
         // $pnp->PobierzWszystkieNazwyPlikowZfolderu($this->getParameter('sciezka_do_skanow'));
         $pismo = $pnp->UtworzPismoNaPodstawie($this->getParameter('sciezka_do_skanow'),$nazwa);
+        $pismo->setOznaczenie($pr->OstatniNumerPrzychodzacych()->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem());
         $pnp->setUruchomienieProcesu(new UruchomienieProcesu);
         $pnp->GenerujPodgladJesliNieMaDlaPisma($this->getParameter('sciezka_do_png'),$pismo);
 
@@ -323,7 +324,7 @@ class PismoController extends AbstractController
                 $em->remove($n);
             }
             
-            // $em->flush();
+            $em->flush();
             $pnp = new PracaNaPlikach;
             $pnp->UaktualnijNazwyPlikowPodgladu($pismo);
             $pnp->UaktualnijNazwePlikuPdf($this->getParameter('sciezka_do_zarejestrowanych'),$pismo);

@@ -27,7 +27,10 @@ class PismoEventSubscriber implements EventSubscriberInterface
     public function onPreSetData(FormEvent $event): void
     {
         //odczytuje zawsze w przed handle request
-        $this->staryOpisStr = $event->getData()->getOpis();
+        $p = $event->getData();
+        $this->staryOpisStr = $p->getOpis();
+        // $oznaczenieZbazy = $p->getOznaczenie();
+        $p->setOznaczenie($p->getOznaczenieUzytkownika());
         // $form = $event->getForm();
        
         
@@ -69,6 +72,10 @@ class PismoEventSubscriber implements EventSubscriberInterface
         // $pismo->setOpis($this->staryOpisStr);
         $pismo->setOpisJesliZmieniony($this->opisStr);
         $pismo->UtworzIdodajNoweSprawyWgOpisow($this->przechwytywanie->PrzechwyconeOpisySpraw());
+        
+        $oznaczenieUzytkownika = $pismo->getOznaczenie();
+        $pismo->setOznaczenie($pismo->OznaczenieKonwertujDlaBazy($oznaczenieUzytkownika));
+
         $event->setData($pismo);
         // $em = $event->getDoctrine()->getEntityManager();
 
