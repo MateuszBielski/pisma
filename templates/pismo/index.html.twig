@@ -3,14 +3,14 @@
 {% block title %}Zarejestrowane{% endblock %}
 
 {% block b_div_pod_belka %}
-    <h3>Pisma zarejestrowane</h3>
+<h3>Pisma zarejestrowane</h3>
+{% include "pismo/_wyszukajAjaxWgOpisuKontrahIstrony.html.twig" %}
 {% endblock %}
-{% block b_div_centr %}
+{% block b_div_lewy %}
     {% set pokazDate = "tak" %}
     {% set pismo_id = -1 %}
     {# {% set sciezka = 'pismo_show' %} #}
     {# {% include "pismo/_wyszukajAjax.html.twig" %} #}
-    {% include "pismo/_wyszukajAjaxWgOpisuKontrahIstrony.html.twig" %}
     <div id="div_lista_rej">
         {{ include('pismo/listaRej.html.twig') }}
     </div>

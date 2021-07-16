@@ -1,16 +1,14 @@
-{% extends 'trzyKolumny.html.twig' %}
+{% extends 'base.html.twig' %}
 {% block b_domyslnie_kolumny %}
-<div class="pion_zwezony" id="div_kolumny">{#  #}
-    <div id="div_2_lewy">
-        {% block b_div_2_lewy %}
-        <br>
-        {% endblock %}
-    </div>
-    <div id="div_2_prawy">
-        {% block b_div_2_prawy %}
-        <br>
-        {% endblock %}
-    </div>
+<div id="div_2_lewy">
+    {% block b_div_2_lewy %}
+    <br>
+    {% endblock %}
+</div>
+<div id="div_2_prawy">
+    {% block b_div_2_prawy %}
+    <br>
+    {% endblock %}
 </div>
 {% endblock %}
             

@@ -26,7 +26,8 @@ class PismoType extends AbstractType
 
         $builder
             // ->add('nazwaPliku',TextType::class,[/*'attr' => ['size'=>"40"]*/])
-            ->add('opis',TextareaType::class,['attr' => ["rows"=>"2", "cols"=>"50"]])
+            // ->add('opis',TextareaType::class,['attr' => ["rows"=>"2", "cols"=>"50"]])
+            ->add('opis',TextareaType::class,['attr' => ["style"=>"width: 95%;", "rows"=>"3"]])
             ->add('dataDokumentu', DateType::class, [
                 'widget' => 'choice',
                 'years' => range(2001,$endYear+1),
