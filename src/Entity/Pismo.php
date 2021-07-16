@@ -558,7 +558,6 @@ class Pismo
     }
     public function OznaczenieKonwertujDlaUzytkownika(string $oznBazy): string
     {
-        $res = 'L.dz. ';
         $arr = explode('_',$oznBazy);
         if(count($arr) != 2)return 'zły format';
         return 'L.dz. '.ltrim($arr[1],'0').'/'.$arr[0];
@@ -567,8 +566,41 @@ class Pismo
     {
         // $ozUzytk = 'litery394znowu';
         $arr = array();
-        preg_match('/L\.dz\. ([\d]+)\/([\d]{4})/',$ozUzytk,$arr);
+        // preg_match('/L\.dz\. ([\d]+)\/([\d]{4})/',$ozUzytk,$arr);
+        preg_match('|([\d]+)\/([\d]{4})|',$ozUzytk,$arr);//wersja zamienna, krótsza
         if(!$arr || count($arr) != 3) return '';
         return $arr[2].'_'.sprintf('%05s', $arr[1]);
+    }
+    public function ZwiekszNumeracjeOznaczeniaUzytkownika(string $ozn,int $num = 1): string
+    {
+        return preg_replace_callback('/([\d]+)(\/)([\d]{4})/',
+            function ($matches) use ($num) {
+
+            return strval(intval($matches[1])+$num).$matches[2].$matches[3];
+        },$ozn);
+    }
+    public function WewnetrznieKonwertujDlaUzytkownikaIzwiekszOjeden()
+    {
+        $ozn = $this->OznaczenieKonwertujDlaUzytkownika($this->oznaczenie);
+        $this->oznaczenie = $this->ZwiekszNumeracjeOznaczeniaUzytkownika($ozn);
+    }
+    public function NaPodstawieOstatniegoZaproponujOznaczenieZaktualnymRokiem()
+    {
+        
+        $ozn = $this->OznaczenieKonwertujDlaUzytkownika($this->oznaczenie);
+        return preg_replace_callback('/([\d]+)(\/)([\d]{4})/',
+            function($matches) {
+                $data = new DateTime('now');
+                $rokTeraz = $data->format('Y');
+                // $rokTeraz = intval($data->format('Y'));
+                $numer = strval(1+intval($matches[1]));
+                $rok = $matches[3];
+                if($rok != $rokTeraz){
+                    $numer = "1";
+                    $rok = $rokTeraz; 
+                }
+                return $numer.$matches[2].$rok;
+            }
+        ,$ozn);
     }
 }

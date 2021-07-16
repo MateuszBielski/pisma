@@ -156,12 +156,17 @@ class PismoController extends AbstractController
     public function indexAjaxOznaczenie(PismoRepository $pr, Request $request): ?Response//
     {
         $kierunekNum = $request->query->get("kierunek");
-        // $response = $this->render('pismo/listaRej.html.twig',[
-        //     'pisma' => $pisma,
-        //     'pismo_id' => -1,
-        //     ]);
-        // $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
-        $response = $this->json(['odp'=> 'oznaczenie odpowiedź']);
+        $pismo = null;
+        switch($kierunekNum)
+        {
+            case 1 : //przychodzące
+            $pismo  = $pr->OstatniNumerPrzychodzacych();
+            break;
+            case 2 : //wychodzące
+            $pismo  = $pr->OstatniNumerWychodzacych();
+            break;
+        }
+        $response = $this->json(['odp'=> $pismo->NaPodstawieOstatniegoZaproponujOznaczenieZaktualnymRokiem()]);
         $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
         return  $response; 
     }
@@ -303,7 +308,7 @@ class PismoController extends AbstractController
                 $em->remove($n);
             }
             
-            $em->flush();
+            // $em->flush();
             $pnp = new PracaNaPlikach;
             $pnp->UaktualnijNazwyPlikowPodgladu($pismo);
             $pnp->UaktualnijNazwePlikuPdf($this->getParameter('sciezka_do_zarejestrowanych'),$pismo);

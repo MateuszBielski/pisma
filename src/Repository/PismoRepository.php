@@ -105,6 +105,26 @@ class PismoRepository extends ServiceEntityRepository
 
          return $result;
     }
+    public function OstatniNumerPrzychodzacych()
+    {
+        return $this->createQueryBuilder('p')
+        ->where('p.oznaczenie IS NOT NULL')
+        ->andWhere('p.nadawca IS NOT NULL')
+        ->orderBy('p.oznaczenie', 'DESC')
+        ->setMaxResults(1)
+        ->getQuery()
+        ->getOneOrNullResult();
+    }
+    public function OstatniNumerWychodzacych()
+    {
+        return $this->createQueryBuilder('p')
+        ->where('p.oznaczenie IS NOT NULL')
+        ->andWhere('p.odbiorca IS NOT NULL')
+        ->orderBy('p.oznaczenie', 'DESC')
+        ->setMaxResults(1)
+        ->getQuery()
+        ->getOneOrNullResult();
+    }
 
 
     // /**

@@ -430,6 +430,44 @@ class PismoTest extends TestCase
         $oznaczenieDlabazy = '2021_00017';
         $this->assertEquals($oznaczenieDlabazy,$pismo->OznaczenieKonwertujDlaBazy($oznaczenieUzytkownika));
     }
+    public function testZwiekszNumeracjeOznaczeniaUzytkownika()
+    {
+        $pismo = new Pismo;
+        $oznaczenieUzytkownika = 'L.dz. 245/2023';
+        $this->assertEquals('L.dz. 246/2023',$pismo->ZwiekszNumeracjeOznaczeniaUzytkownika($oznaczenieUzytkownika));
+    }
+    public function testZwiekszNumeracjeOznaczeniaUzytkownika_innaLiczba()
+    {
+        $pismo = new Pismo;
+        $oznaczenieUzytkownika = 'L.dz. 245/2023';
+        $this->assertEquals('L.dz. 249/2023',$pismo->ZwiekszNumeracjeOznaczeniaUzytkownika($oznaczenieUzytkownika,4));
+    }
+    public function testWewnetrznieKonwertujDlaUzytkownikaIzwiekszOjeden()
+    {
+        $pismo = new Pismo;
+        $pismo->setOznaczenie('2021_00017');
+        $pismo->WewnetrznieKonwertujDlaUzytkownikaIzwiekszOjeden();
+        $this->assertEquals('L.dz. 18/2021',$pismo->getOznaczenie());
+    }
+    public function testNaPodstawieOstatniegoZaproponujOznaczenieZaktualnymRokiem_2006()
+    {
+        $pismo = new Pismo;
+        $pismo->setOznaczenie('2006_00078');
+        $dataTeraz = new DateTime('now');
+        $aktualnyRok = $dataTeraz->format('Y');
+        $oznaczenieZaktualnymRokiem = 'L.dz. 1/'.$aktualnyRok;
+        $this->assertEquals($oznaczenieZaktualnymRokiem,$pismo->NaPodstawieOstatniegoZaproponujOznaczenieZaktualnymRokiem());
+    }
+    public function testNaPodstawieOstatniegoZaproponujOznaczenieZaktualnymRokiem_aktualny()
+    {
+        $dataTeraz = new DateTime('now');
+        $aktualnyRok = $dataTeraz->format('Y');
+        
+        $pismo = new Pismo;
+        $pismo->setOznaczenie($aktualnyRok.'_00078');
+        $oznaczenieZaktualnymRokiem = 'L.dz. 79/'.$aktualnyRok;
+        $this->assertEquals($oznaczenieZaktualnymRokiem,$pismo->NaPodstawieOstatniegoZaproponujOznaczenieZaktualnymRokiem());
+    }
     /*
     public function testBrakPodgladuZarejestrowanego_GenerujePodglad()
     {
