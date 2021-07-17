@@ -217,7 +217,9 @@ class PismoController extends AbstractController
         $pnp = new PracaNaPlikach;
         // $pnp->PobierzWszystkieNazwyPlikowZfolderu($this->getParameter('sciezka_do_skanow'));
         $pismo = $pnp->UtworzPismoNaPodstawie($this->getParameter('sciezka_do_skanow'),$nazwa);
-        $pismo->setOznaczenie($pr->OstatniNumerPrzychodzacych()->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem());
+        $ostatniePismo = $pr->OstatniNumerPrzychodzacych() ;
+        if(!$ostatniePismo)$ostatniePismo = new Pismo;
+        $pismo->setOznaczenie($ostatniePismo->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem());
         $pnp->setUruchomienieProcesu(new UruchomienieProcesu);
         $pnp->GenerujPodgladJesliNieMaDlaPisma($this->getParameter('sciezka_do_png'),$pismo);
 
