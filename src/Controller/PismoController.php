@@ -181,6 +181,7 @@ class PismoController extends AbstractController
             $pismo  = $pr->OstatniNumerWychodzacych();
             break;
         }
+        if(!$pismo)$pismo = new Pismo;
         $response = $this->json(['odp'=> $pismo->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem()]);
         $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
         return  $response; 

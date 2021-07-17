@@ -36,7 +36,7 @@ class Pismo
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $oznaczenie;
+    private $oznaczenie = '';
 
     private $adresZrodlaPrzedZarejestrowaniem;
     private $dataModyfikacji;
@@ -130,6 +130,7 @@ class Pismo
 
     public function setOznaczenie(?string $oznaczenie): self
     {
+        if($oznaczenie == null)$oznaczenie = '';
         $this->oznaczenie = $oznaczenie;
 
         return $this;
@@ -586,7 +587,9 @@ class Pismo
     }
     public function NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem()
     {
-        
+        if($this->oznaczenie === '' || $this->oznaczenie === null){
+            $this->oznaczenie = '2001_00005';//bez znaczenia
+        }
         $ozn = $this->OznaczenieKonwertujDlaUzytkownika($this->oznaczenie);
         return preg_replace_callback('/([\d]+)(\/)([\d]{4})/',
             function($matches) {
@@ -607,6 +610,7 @@ class Pismo
     {
         $ozn = $this->oznaczenie;
         $czyFormatBazy = preg_match('|[\d]{4}_[\d]{5}|',$ozn);
-        return $czyFormatBazy ? $this->OznaczenieKonwertujDlaUzytkownika($ozn):$ozn;
+        $res = $czyFormatBazy ? $this->OznaczenieKonwertujDlaUzytkownika($ozn):$ozn;
+        return ($res == null) ? '':$res;
     }
 }

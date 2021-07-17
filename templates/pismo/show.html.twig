@@ -9,6 +9,7 @@
 {% block b_div_2_lewy %}
 {% include "pismo/_szczegoly.html.twig" %}
 <br>
+<a href="{{path('pismo_pobieranie',{'id' : pismo.id})}}">pobierz plik</a><br>
 <a href="{{path('pismo_edit', {'id' : pismo.id, 'numerStrony': numerStrony })}}">edytuj dane dokumentu</a>
 {% endblock %}
 {% block b_div_2_prawy %}

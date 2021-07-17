@@ -476,6 +476,21 @@ class PismoTest extends TestCase
         $pismo->setOznaczenie('L.dz. 62/2011');
         $this->assertEquals('L.dz. 62/2011',$pismo->getOznaczenieUzytkownika());
     }
+    public function testSetOznaczenie_NullzamieniaNaZerowyString()
+    {
+        $p = new Pismo;
+        $p->setOznaczenie(null);
+        $this->assertEquals('',$p->getOznaczenieUzytkownika());
+    }
+    public function testNaPodstawieOstatniegoZaproponujOznaczenieZaktualnymRokiem_dlaNieUstawionegoPisma()
+    {
+        $dataTeraz = new DateTime('now');
+        $aktualnyRok = $dataTeraz->format('Y');
+        
+        $pismo = new Pismo;
+        $oznaczenieZaktualnymRokiem = 'L.dz. 1/'.$aktualnyRok;
+        $this->assertEquals($oznaczenieZaktualnymRokiem,$pismo->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem());
+    }
     /*
     public function testBrakPodgladuZarejestrowanego_GenerujePodglad()
     {
