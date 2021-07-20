@@ -19,6 +19,7 @@
         "symfony/validator": "5.2.*",
         "symfony/web-link": "5.2.*",
         "symfony/yaml": "5.2.*",
+        "thiagoalessio/tesseract_ocr": "^2.12",
         "twig/intl-extra": "^3.3"
     },
     "require-dev": {
