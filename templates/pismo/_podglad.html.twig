@@ -11,6 +11,10 @@ strony:
     {% set indeks = indeks + 1 %}
 {% endfor %}
 {% if sciezka_png|length > 0 %}
-<img src="{{ sciezka_png }}" alt="nie mogę wyświetlić " width="100%">
+<img src="{{ sciezka_png }}" alt="nie mogę wyświetlić " width="100%" 
+{% if sciezka_png_bez_fg is defined %}
+ src_bez_fg ="{{ sciezka_png_bez_fg }}" 
+{% endif %}
+>
 
 {% endif %}

@@ -17,7 +17,7 @@ class RozpoznawanieTekstu
     public function RozpoznajTekstZpng(string $sciezkaPng)
     {
         $tesseract = new TesseractOCR($sciezkaPng);
-        return $tesseract->run();
+        return $tesseract->lang('pol')->run();
     }
     public function FolderDlaWydzielonychFragmentow(?string $sciezka)
     {
@@ -33,10 +33,10 @@ class RozpoznawanieTekstu
         $szer = $w[0];
         $wys = $w[1];
         $fragmentWpikselach = [];
-        $fragmentWpikselach['x0'] = round($fragmentWyrazonyUlamkami['x0']*$szer,0);
-        $fragmentWpikselach['x1'] = round($fragmentWyrazonyUlamkami['x1']*$szer,0);
-        $fragmentWpikselach['y0'] = round($fragmentWyrazonyUlamkami['y0']*$wys,0);
-        $fragmentWpikselach['y1'] = round($fragmentWyrazonyUlamkami['y1']*$wys,0);
+        $fragmentWpikselach['x0'] = round($fragmentWyrazonyUlamkami['xl']*$szer,0);
+        $fragmentWpikselach['x1'] = round($fragmentWyrazonyUlamkami['xp']*$szer,0);
+        $fragmentWpikselach['y0'] = round($fragmentWyrazonyUlamkami['yg']*$wys,0);
+        $fragmentWpikselach['y1'] = round($fragmentWyrazonyUlamkami['yd']*$wys,0);
         
         $tymczasowyFragment = $this->folderNaWydzieloneFragmenty.
         $fragmentWpikselach['x0']."_".

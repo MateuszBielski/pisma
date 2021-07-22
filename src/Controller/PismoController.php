@@ -192,11 +192,17 @@ class PismoController extends AbstractController
      */
     public function RozpoznawanieAjax(Request $request): ?Response//
     {
-        $fragmentWyrazonyUlamkami = [];
-        $polozenieObrazu = '';
+        // $fragmentWyrazonyUlamkami = [];
+        $fragmentWyrazonyUlamkami = $request->query->get("wycinekUlamkowo");
+        $polozenieObrazu = $this->getParameter('sciezka_do_png').$request->query->get('adresObrazu');
         $rt = new RozpoznawanieTekstu;
+        $rt->FolderDlaWydzielonychFragmentow($this->getParameter('sciezka_do_png'));
         $rozpoznanyTekst = $rt->RozpoznajObrazPoWspolrzUlamkowych($polozenieObrazu,$fragmentWyrazonyUlamkami);
-        $response = $this->json(['odp'=> $rozpoznanyTekst]);
+        // $rozpoznanyTekst = $fragmentWyrazonyUlamkami;
+        $response = $this->json(['odp'=> $rozpoznanyTekst,
+        'folder' => $this->getParameter('sciezka_do_png'),
+        'obraz' => $polozenieObrazu,
+        ]);
         $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
         return  $response; 
     }
@@ -349,10 +355,9 @@ class PismoController extends AbstractController
             // return $this->redirectToRoute('kontrahent_show',['id'=> $pismo->getStrona()->getId(),'pismo_id'=> $id,'numerStrony' => $numerStrony]);
         
         }
-        
-        // $numerStrony = 1;
-        // $pismo->
         $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
+        //ponizsze poprawić bo dwa razy czyta folder z podglądem
+        $sciezkiDoPodgladowBezFolderuGlownego = $pismo->SciezkiDoPlikuPodgladowZarejestrowanychBezFolderuGlownego();
         $sciezkiDlaStron = [];
         $num = 0;
         foreach($sciezkiDoPodgladow as $sc)$sciezkiDlaStron[] = $this->generateUrl('pismo_edit',['id'=> $id, 'numerStrony' => ++$num ]);
@@ -361,6 +366,7 @@ class PismoController extends AbstractController
             'form' => $form->createView(),
             'sciezki_dla_stron' => $sciezkiDlaStron,
             'sciezka_png' => $sciezkiDoPodgladow[$numerStrony - 1],
+            'sciezka_png_bez_fg' => $sciezkiDoPodgladowBezFolderuGlownego[$numerStrony - 1],
             'numerStrony' => $numerStrony,
         ]);
     }

@@ -98,6 +98,14 @@ class PismoTest extends TestCase
         
         $this->assertEquals('/tests/png/maPodglad/maPodglad-000002.png',$sciezkiDoPodgladu[1]);
     }
+    public function testSciezkiDoPodgladowZarejestrowanychBezFolderuGlownego()
+    {
+        $pismo = new Pismo("/var/jakas/sciezka/skany/zrodlo.pdf");
+        $pismo->setNazwaPliku("maPodglad.pdf");//nie ma znaczenia że folder ten sam jak dla testów podglądu dla źródła
+        $pismo->setFolderPodgladu("tests/png/");
+        $sciezkiDoPodgladu = $pismo->SciezkiDoPlikuPodgladowZarejestrowanychBezFolderuGlownego();
+        $this->assertEquals('maPodglad/maPodglad-000002.png',$sciezkiDoPodgladu[1]);
+    }
 
     public function testNazwaSkroconaZrodla()
     {
