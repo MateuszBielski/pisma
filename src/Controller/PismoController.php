@@ -12,6 +12,7 @@ use App\Repository\PismoRepository;
 use App\Repository\SprawaRepository;
 use App\Service\PracaNaPlikach;
 use App\Service\PrzechwytywanieZselect2;
+use App\Service\RozpoznawanieTekstu;
 use App\Service\UruchomienieProcesu;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -183,6 +184,19 @@ class PismoController extends AbstractController
         }
         if(!$pismo)$pismo = new Pismo;
         $response = $this->json(['odp'=> $pismo->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem()]);
+        $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
+        return  $response; 
+    }
+    /**
+     * @Route("/rozpoznawanieAjax", name="pismo_rozpoznawanie_ajax", methods={"GET","POST"})
+     */
+    public function RozpoznawanieAjax(Request $request): ?Response//
+    {
+        $fragmentWyrazonyUlamkami = [];
+        $polozenieObrazu = '';
+        $rt = new RozpoznawanieTekstu;
+        $rozpoznanyTekst = $rt->RozpoznajObrazPoWspolrzUlamkowych($polozenieObrazu,$fragmentWyrazonyUlamkami);
+        $response = $this->json(['odp'=> $rozpoznanyTekst]);
         $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
         return  $response; 
     }

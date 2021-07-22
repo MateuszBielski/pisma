@@ -7,22 +7,9 @@ use thiagoalessio\TesseractOCR\TesseractOCR;
 
 class RozpoznawanieTekstu
 {
+    private $folderNaWydzieloneFragmenty;
     public function WydzielFragment(string $orig,string $nowy, array $wydzielenie)
     {
-        // $plikWydzielony = fopen($nowy,'w');
-        // fclose($plikWydzielony );
-        /*
-        $im = imagecreatefrompng($orig);
-        // $size = min(imagesx($im), imagesy($im));
-        $im2 = imagecrop($im, ['x' => $wydzielenie['x0'], 'y' => $wydzielenie['y0'], 
-            'width' => $wydzielenie['x1'] - $wydzielenie['x0'], 
-            'height' => $wydzielenie['y1'] - $wydzielenie['y0']]);
-        if ($im2 !== FALSE) {
-            imagepng($im2, $nowy);
-            imagedestroy($im2);
-        }
-        imagedestroy($im);
-        */
         $imagick = new \Imagick($orig);
         $imagick->cropImage($wydzielenie['x1'] - $wydzielenie['x0'], $wydzielenie['y1'] - $wydzielenie['y0'], $wydzielenie['x0'], $wydzielenie['y0']);
         $imagick->writeImage($nowy);
@@ -31,5 +18,35 @@ class RozpoznawanieTekstu
     {
         $tesseract = new TesseractOCR($sciezkaPng);
         return $tesseract->run();
+    }
+    public function FolderDlaWydzielonychFragmentow(?string $sciezka)
+    {
+        $this->folderNaWydzieloneFragmenty = $sciezka;
+    }
+    public function RozpoznajObrazPoWspolrzUlamkowych($polozenieObrazu,$fragmentWyrazonyUlamkami)
+    {
+        if(!$this->folderNaWydzieloneFragmenty || $this->folderNaWydzieloneFragmenty== '')
+        return 'brak folderu na fragmenty obrazu';
+        if(!file_exists($polozenieObrazu))
+        return 'brak pliku obrazu: '.$polozenieObrazu;
+        $w = getimagesize($polozenieObrazu);
+        $szer = $w[0];
+        $wys = $w[1];
+        $fragmentWpikselach = [];
+        $fragmentWpikselach['x0'] = round($fragmentWyrazonyUlamkami['x0']*$szer,0);
+        $fragmentWpikselach['x1'] = round($fragmentWyrazonyUlamkami['x1']*$szer,0);
+        $fragmentWpikselach['y0'] = round($fragmentWyrazonyUlamkami['y0']*$wys,0);
+        $fragmentWpikselach['y1'] = round($fragmentWyrazonyUlamkami['y1']*$wys,0);
+        
+        $tymczasowyFragment = $this->folderNaWydzieloneFragmenty.
+        $fragmentWpikselach['x0']."_".
+        $fragmentWpikselach['x1']."_".
+        $fragmentWpikselach['y0']."_".
+        $fragmentWpikselach['y1']."_".
+        uniqid().".png";
+        $this->WydzielFragment($polozenieObrazu,$tymczasowyFragment,$fragmentWpikselach);
+        $res = $this->RozpoznajTekstZpng($tymczasowyFragment);
+        @unlink($tymczasowyFragment);
+        return $res;
     }
 }
