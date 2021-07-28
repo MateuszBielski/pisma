@@ -9,11 +9,14 @@ jQuery(document).ready(function() {
    var x0,x1,y0,y1;
    var img_szerokosc = obrazPng.width();
    var img_wysokosc = obrazPng.height();
+   var rozpoznanyTekst = '';
 
    
    obrazPng.on('mousedown',function(e){
        x0 = e.pageX - this.offsetLeft;
        y0 = e.pageY - this.offsetTop;
+       rozpoznanyTekst = '';
+       polaDoUzupelnienia.off('click');
        //    polaDoUzupelnienia.off('click'); uruchomić
     // console.log("adres"+adresObrazu);
     });
@@ -46,12 +49,15 @@ jQuery(document).ready(function() {
             },
             success: function(jsonResp) {
                 // $('#pismo_oznaczenie').val(jsonResp.odp);
-                
+                rozpoznanyTekst = jsonResp.odp;
+                console.log(rozpoznanyTekst);
                 polaDoUzupelnienia.on('click',function(){
                     // console.log(jsonResp.odp);
                     polaDoUzupelnienia.val(function() {
-                        return this.value + jsonResp.odp;
+                        // console.log(this.value)
+                        return this.value + rozpoznanyTekst;
                     });
+                    polaDoUzupelnienia.off('click');
                 });
 
                     

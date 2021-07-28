@@ -42,10 +42,10 @@ class RozpoznawanieTekstuTest extends TestCase
     public function testRozpoznajObrazPoWspolrzUlamkowych_niePozostawiaObrazuTymczasowego()
     {
         $fragmentWyrazonyUlamkami = [
-            'x0' => 0.1,
-            'y0' => 0.2,
-            'x1' => 0.3,
-            'y1' => 0.4,
+            'xl' => 0.1,
+            'yg' => 0.2,
+            'xp' => 0.3,
+            'yd' => 0.4,
         ];
         $polozenieObrazu = $this->folderPng."oryg.png";
         $foderNaFragmenty = $this->folderPng;
@@ -58,14 +58,50 @@ class RozpoznawanieTekstuTest extends TestCase
     public function testRozpoznajObrazPoWspolrzUlamkowych_rozpoznanie()
     {
         $fragmentWyrazonyUlamkami = [
-            'x0' => 41/640,
-            'y0' => 98/400,
-            'x1' => 227/640,
-            'y1' => 119/400,
+            'xl' => 41/640,
+            'yg' => 98/400,
+            'xp' => 227/640,
+            'yd' => 119/400,
         ];
         $polozenieObrazu = $this->folderPng."oryg.png";;
         $rt = new RozpoznawanieTekstu;
         $rt->FolderDlaWydzielonychFragmentow($this->folderPng);
         $this->assertEquals('tekst do rozpoznania',$rt->RozpoznajObrazPoWspolrzUlamkowych($polozenieObrazu,$fragmentWyrazonyUlamkami));
+    }
+    public function testWydzielFragment_nieWydzielaJesliNieprawidloweWartosci_Xzerowy()
+    {
+        $sciezkaObrazOryg = $this->folderPng."oryg.png";
+        $rt = new RozpoznawanieTekstu;
+        $sciezkaObrazWydzielony = $this->folderPng."wydzielony.png";
+        $wyciecie = [
+            'x0' => 41,
+            'y0' => 98,
+            'x1' => 41,
+            'y1' => 119,
+        ];
+        $rt->WydzielFragment($sciezkaObrazOryg,$sciezkaObrazWydzielony,$wyciecie);
+        $this->assertFalse(file_exists($sciezkaObrazWydzielony));
+        @unlink($sciezkaObrazWydzielony);
+    }
+    public function testWydzielFragment_nieWydzielaJesliNieprawidloweWartosci_Yzerowy_Xujemny()
+    {
+        $sciezkaObrazOryg = $this->folderPng."oryg.png";
+        $rt = new RozpoznawanieTekstu;
+        $sciezkaObrazWydzielony = $this->folderPng."wydzielony.png";
+        $wyciecie = [
+            'x0' => 41,
+            'y0' => 119,
+            'x1' => 27,
+            'y1' => 119,
+        ];
+        $rt->WydzielFragment($sciezkaObrazOryg,$sciezkaObrazWydzielony,$wyciecie);
+        $this->assertFalse(file_exists($sciezkaObrazWydzielony));
+        @unlink($sciezkaObrazWydzielony);
+    }
+    public function testRozpoznaj_KomunikatJesliBrakPlikuFragmentu()
+    {
+        $tr = new RozpoznawanieTekstu;
+        $this->assertEquals('nie rozpoznano bo brak pliku fragmentu obrazu',
+        $tr->RozpoznajTekstZpng('nieistniejacyPlik'));
     }
 }
