@@ -44,6 +44,7 @@ class Pismo
     private $nazwaPlikuPrzedZmiana = '';
     private $sciezkaDoFolderuPdf = "";
     private $sciezkaGenerUrl;
+    private $nazwyOdczytaneZfolderu = null;
 
     /**
      * @ORM\ManyToMany(targetEntity=Sprawa::class, inversedBy="dokumenty", cascade={"persist","remove"})
@@ -167,13 +168,18 @@ class Pismo
         $sciezki = [];
         // $nazwaBezRozszerzenia = $this->NazwaZrodlaBezRozszerzenia();
         $path = $this->folderPodgladu.$nazwa;
-        $nazwy = @array_diff(@scandir($path), array('..', '.'));
-        if(!$nazwy || !count($nazwy)){
+        if($this->nazwyOdczytaneZfolderu === null)
+        {
+            $this->nazwyOdczytaneZfolderu = @array_diff(@scandir($path), array('..', '.'));
+
+        }
+        if(!$this->nazwyOdczytaneZfolderu || !count($this->nazwyOdczytaneZfolderu)){
             $sciezki[] = "folder $path jest pusty";
+            $this->nazwyOdczytaneZfolderu = [];
             return $sciezki;
         }
         if(!$zFoldermGlownym)$path = $nazwa;
-        foreach($nazwy as $n)
+        foreach($this->nazwyOdczytaneZfolderu as $n)
         {
             $arr = explode('.',$n);
             $extension = end($arr);
