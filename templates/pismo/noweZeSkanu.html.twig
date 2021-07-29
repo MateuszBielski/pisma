@@ -20,6 +20,7 @@
 {% include "kontrahent/_form.html.twig" %} #}
 {% endblock %}
 {% block b_div_2_prawy %}
+{#
 {% set nazwa = pismo.nazwaZrodlaPrzedZarejestrowaniem %}
 strony: 
 {% set indeks = 1 %}
@@ -34,6 +35,8 @@ strony:
     {% set indeks = indeks + 1 %}
 {% endfor %}
 <img src="{{ sciezka_png }}" alt="nie mogę wyświetlić " width="100%">
+#}
+{% include "pismo/_podglad.html.twig" %}
 {% endblock %}
 {% block belka_dol %}
 

@@ -195,6 +195,10 @@ class Pismo
     {
        return $this->SciezkiPodgladowDlaNazwy($this->NazwaZrodlaBezRozszerzenia(),$slashWiodacy); 
     }
+    public function SciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego()
+    {
+        return $this->SciezkiDoPlikuPodgladowZarejestrowanychBezFolderuGlownego();
+    }
     public function SciezkiDoPlikuPodgladowDlaNazwyPrzedZmiana($slashWiodacy = true): array
     {
         $nazwaPlikuBezRozszerzenia = substr($this->nazwaPlikuPrzedZmiana,0,strrpos($this->nazwaPlikuPrzedZmiana,'.'));

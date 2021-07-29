@@ -39,6 +39,15 @@ class RozpoznawanieTekstuTest extends TestCase
         $this->assertEquals('brak pliku obrazu: '.$this->folderPng."obrazJakiś.png",
         $rt->RozpoznajObrazPoWspolrzUlamkowych($this->folderPng."obrazJakiś.png",[]));
     }
+    public function testRozpoznajObrazPoWspolrzUlamkowych_komunikatJesliPodanaSciezkaNieProwadziDoPliku()
+    {
+        $rt = new RozpoznawanieTekstu;
+        $foderNaFragmenty = $this->folderPng;
+        $polozenieObrazu = $this->folderPng;//nie ma nazwy pliku, chociaż folder istnieje
+        $rt->FolderDlaWydzielonychFragmentow($foderNaFragmenty);
+        $this->assertEquals('brak pliku obrazu: '.$this->folderPng,
+        $rt->RozpoznajObrazPoWspolrzUlamkowych($polozenieObrazu,[]));
+    }
     public function testRozpoznajObrazPoWspolrzUlamkowych_niePozostawiaObrazuTymczasowego()
     {
         $fragmentWyrazonyUlamkami = [

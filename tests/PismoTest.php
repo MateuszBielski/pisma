@@ -70,7 +70,13 @@ class PismoTest extends TestCase
         $sciezkiDoPodgladu = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem(false);
         $this->assertEquals('tests/png/maPodglad/maPodglad-000002.png',$sciezkiDoPodgladu[1]);
     }
-
+    public function testSciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego()
+    {
+        $pismo = new Pismo("/var/jakas/sciezka/skany/maPodglad.pdf");
+        $pismo->setFolderPodgladu("tests/png/");
+        $sciezkiDoPodgladu = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego();
+        $this->assertEquals('maPodglad/maPodglad-000002.png',$sciezkiDoPodgladu[1]);
+    }
     public function testGenerujNazwyZeSciezkamiDlaDocelowychPodgladow()
     {
         $pismo = new Pismo("/var/jakas/sciezka/skany/maPodglad.pdf");

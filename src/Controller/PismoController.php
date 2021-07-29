@@ -264,14 +264,19 @@ class PismoController extends AbstractController
 
             return $this->redirectToRoute('pismo_index');
         }
-        $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem();
+        $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem(); 
+        $sciezkiDlaStron = [];
+        $num = 0;
+        foreach($sciezkiDoPodgladow as $sc)$sciezkiDlaStron[] = $this->generateUrl('pismo_nowe_ze_skanu',['nazwa'=> $nazwa, 'numerStrony' => ++$num ]);
+        $sciezkiDoPodgladowBezFolderuGlownego = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego();
         return $this->render('pismo/noweZeSkanu.html.twig', [
             // 'skany' => $pnp->NazwyBezSciezkiZrozszerzeniem('pdf'),
             'pisma' => $pnp->UtworzPismaZfolderu($this->getParameter('sciezka_do_skanow'),'pdf'),
             'pismo' => $pismo,
             'form' => $form->createView(),
-            'sciezki_png_dla_stron' => $sciezkiDoPodgladow,
+            'sciezki_dla_stron' => $sciezkiDlaStron,
             'sciezka_png' => $sciezkiDoPodgladow[$numerStrony - 1],
+            'sciezka_png_bez_fg' => $sciezkiDoPodgladowBezFolderuGlownego[$numerStrony - 1],
             'numerStrony' => $numerStrony,
             // 'kontrahentForm' => $kontrahentForm->createView(),
         ]);

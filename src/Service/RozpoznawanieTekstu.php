@@ -47,7 +47,7 @@ class RozpoznawanieTekstu
     {
         if(!$this->folderNaWydzieloneFragmenty || $this->folderNaWydzieloneFragmenty== '')
         return 'brak folderu na fragmenty obrazu';
-        if(!file_exists($polozenieObrazu))
+        if(!file_exists($polozenieObrazu) || is_dir($polozenieObrazu) )
         return 'brak pliku obrazu: '.$polozenieObrazu;
         $w = getimagesize($polozenieObrazu);
         $szer = $w[0];
