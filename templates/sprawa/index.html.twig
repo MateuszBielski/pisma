@@ -3,12 +3,14 @@
 {% block title %}Sprawy{% endblock %}
 {% block b_div_pod_belka %}
     <h3>Lista spraw</h3>
+{% endblock %}
+{% block b_div_centr %}
     {% include "sprawa/_wyszukajAjax.html.twig" %}
+    <br>
+    <a href="{{ path('sprawa_new') }}">Utwórz nową sprawę</a>
+    <br><br>
     <div id="div_lista_spraw">
         {{ include('sprawa/listaSpraw.html.twig') }}
     </div>
-{% endblock %}
     
-{% block b_div_centr %}
-    <a href="{{ path('sprawa_new') }}">Utwórz nową sprawę</a>
 {% endblock %}

@@ -20,7 +20,7 @@ class SprawaController extends AbstractController
      */
     public function index(SprawaRepository $sprawaRepository): Response
     {
-        $sprawy = $sprawaRepository->findAll();
+        $sprawy = $sprawaRepository->findBy([], ['nazwa' => 'ASC']);
         // foreach($sprawy as $s){
         //     $s->NazwePobierzZopisu();
         // }
@@ -122,6 +122,8 @@ class SprawaController extends AbstractController
 
         return $this->render('sprawa/edit.html.twig', [
             'sprawa' => $sprawa,
+            'pisma' => $sprawa->getDokumenty(),
+            'pismo_id' => -1,
             'form' => $form->createView(),
         ]);
     }

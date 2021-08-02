@@ -16,14 +16,16 @@ a{
     text-decoration: none;
     color: rgb(229,178,128);
 }
-select,textarea,
+select,textarea
 {
     background-color: #b5ccc3;
 }
-a:hover{
+a:hover, .submit_label:hover
+{
     /* czerwony ceglasty */
     /* color: rgb(238, 115, 66); */
     color: rgb(122,228,226)
+
 }
 nav{
     margin-left: auto;
@@ -80,6 +82,17 @@ table{
       /*where to replace the icon */
     top: 0px;
     background: url(wych2.gif) no-repeat;
+}
+.submit_label
+{
+    cursor: pointer;
+    text-align: center;
+    
+}
+
+.hidden
+{
+    visibility: hidden;
 }
 #belka_gora{
     background: rgb(42, 71, 75);

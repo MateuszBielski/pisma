@@ -1,4 +1,8 @@
-<form method="post" action="{{ path('sprawa_delete', {'id': sprawa.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+{% set potwierdzenie = "Czy na pewno usunąć sprawę: "~sprawa.nazwa %}
+<form method="post" action="{{ path('sprawa_delete', {'id': sprawa.id}) }}" onsubmit="return confirm('{{ potwierdzenie }}');">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sprawa.id) }}">
-    <button class="btn">Delete</button>
+    <input type="submit" id="submit-delete" class="hidden" />
+    {# 
+        <button class="btn">Usuń sprawę</button> 
+        #}
 </form>

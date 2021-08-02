@@ -2,17 +2,16 @@
 
 {% block title %}Sprawa{% endblock %}
 
-{% block body %}
 {% block b_div_pod_belka %}
 
-    <h3>{{ sprawa.id }} {{ sprawa.opis }}</h3>
-   {% include "pismo/listaRej.html.twig" %} 
+    <h3>{{ sprawa.opis }}</h3>
 {% endblock %}
 
+{% block b_div_centr%}
+<a href="{{ path('sprawa_edit', {'id': sprawa.id}) }}">edycja</a>
 
-    <a href="{{ path('sprawa_index') }}">back to list</a>
+<label for="submit-delete" class="submit_label">usuń sprawę</label>
+{{ include('sprawa/_delete_form.html.twig') }}
 
-    <a href="{{ path('sprawa_edit', {'id': sprawa.id}) }}">edit</a>
-
-    {{ include('sprawa/_delete_form.html.twig') }}
+{% include "pismo/listaRej.html.twig" %} 
 {% endblock %}
