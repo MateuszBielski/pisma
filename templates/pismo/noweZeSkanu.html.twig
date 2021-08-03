@@ -5,7 +5,7 @@
 <script type="text/javascript" src="/js/jquery.min.js"></script>
 <script type="text/javascript" src="/js/select2.min.js"></script>
 <script type="text/javascript" src="/js/zmianaSelect.js"></script>
-<script type="text/javascript" src="/js/odczytOCRfragmentuObrazu.js"></script>
+<!-- <script type="text/javascript" src="/js/odczytOCRfragmentuObrazu.js"></script> -->
 <link href="/css/select2.min.css" rel="stylesheet"/>
 {% endblock %}
 
@@ -20,22 +20,7 @@
 {% include "kontrahent/_form.html.twig" %} #}
 {% endblock %}
 {% block b_div_2_prawy %}
-{#
-{% set nazwa = pismo.nazwaZrodlaPrzedZarejestrowaniem %}
-strony: 
-{% set indeks = 1 %}
-{% for sciezka_png in sciezki_png_dla_stron %}
-    <a href="{{ path('pismo_nowe_ze_skanu', {'nazwa': nazwa, 'numerStrony': indeks}) }}" >
-    {% if numerStrony == indeks %}
-    <{{ indeks }}> </b>
-    {% else %}
-        {{ indeks }}  
-    {% endif %}
-    </a>
-    {% set indeks = indeks + 1 %}
-{% endfor %}
-<img src="{{ sciezka_png }}" alt="nie mogę wyświetlić " width="100%">
-#}
+
 {% include "pismo/_podglad.html.twig" %}
 {% endblock %}
 {% block belka_dol %}

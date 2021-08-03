@@ -50,12 +50,15 @@ jQuery(document).ready(function() {
             success: function(jsonResp) {
                 // $('#pismo_oznaczenie').val(jsonResp.odp);
                 rozpoznanyTekst = jsonResp.odp;
-                console.log(rozpoznanyTekst);
+                // console.log(rozpoznanyTekst);
                 polaDoUzupelnienia.on('click',function(){
                     // console.log(jsonResp.odp);
                     polaDoUzupelnienia.val(function() {
                         // console.log(this.value)
-                        return this.value + rozpoznanyTekst;
+                        //czy spacja bo to kolejny dodawany fragment
+                        var istniejacyTekst = this.value;
+                        
+                        return istniejacyTekst.length ? istniejacyTekst + " " + rozpoznanyTekst : istniejacyTekst + rozpoznanyTekst;
                     });
                     polaDoUzupelnienia.off('click');
                 });

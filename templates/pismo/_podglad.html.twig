@@ -1,20 +1,27 @@
-strony: 
-{% set indeks = 1 %}
-{% for sciezka in sciezki_dla_stron %}
-            <a href="{{ sciezka }}">
+<div id="div_podglad">
+
+    {# skrypt w tym miejscu po to by funkcjonalności nadal działały#}
+    <script type="text/javascript" src="/js/odczytOCRfragmentuObrazu.js"></script>
+    <script type="text/javascript" src="/js/podmianaObrazowDlaStron.js"></script>
+
+    strony: 
+    {% set indeks = 1 %}
+    {% for sciezka in sciezki_dla_stron %}
+    <a href="{{ sciezka }}" name="numery_stron">
         {% if numerStrony == indeks %}
         <<b>{{ indeks }}</b>>
         {% else %}
-            {{ indeks }}  
+        {{ indeks }}  
         {% endif %}
     </a>
     {% set indeks = indeks + 1 %}
-{% endfor %}
-{% if sciezka_png|length > 0 %}
-<img src="{{ sciezka_png }}" alt="nie mogę wyświetlić " width="100%" 
-{% if sciezka_png_bez_fg is defined %}
- src_bez_fg ="{{ sciezka_png_bez_fg }}" 
-{% endif %}
->
-
-{% endif %}
+    {% endfor %}
+    {% if sciezka_png|length > 0 %}
+    <img src="{{ sciezka_png }}" alt="nie mogę wyświetlić " width="100%" 
+    {% if sciezka_png_bez_fg is defined %}
+    src_bez_fg ="{{ sciezka_png_bez_fg }}" 
+    {% endif %}
+    >
+    
+    {% endif %}
+</div>
