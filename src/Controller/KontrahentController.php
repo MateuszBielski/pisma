@@ -133,7 +133,7 @@ class KontrahentController extends AbstractController
     /**
      * @Route("/{id}/edit", name="kontrahent_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Kontrahent $kontrahent): Response
+    public function edit(Request $request, Kontrahent $kontrahent, PismoRepository $pr): Response
     {
         $form = $this->createForm(KontrahentType::class, $kontrahent);
         $form->handleRequest($request);
@@ -147,6 +147,8 @@ class KontrahentController extends AbstractController
         return $this->render('kontrahent/edit.html.twig', [
             'kontrahent' => $kontrahent,
             'form' => $form->createView(),
+            'pisma' => $pr->findWszystkiePismaKontrahenta($kontrahent),
+            'pismo_id' => -1,
         ]);
     }
 

@@ -8,11 +8,14 @@
 {% block b_div_centr %}
 {% set kontrahent_id = -1 %}
 {% include "kontrahent/_wyszukajAjax.html.twig" %}
+<br>
+<a href="{{ path('kontrahent_new') }}">Utwórz nowy</a>
+<br><br>
 <div id="div_lista_kontrahentow">
     {% include "kontrahent/listaKontrahentow.html.twig" %}
 </div>
 {% endblock %}
 {% block b_div_prawy %}
-<a href="{{ path('kontrahent_new') }}">Utwórz nowy</a>
+
 {% endblock %}
 

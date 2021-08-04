@@ -1,4 +1,13 @@
-<form method="post" action="{{ path('kontrahent_delete', {'id': kontrahent.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+{# <form method="post" action="{{ path('kontrahent_delete', {'id': kontrahent.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ kontrahent.id) }}">
     <button class="btn">Delete</button>
+</form> #}
+
+{% set potwierdzenie = "Czy na pewno usunąć : "~kontrahent.nazwa %}
+<form method="post" action="{{ path('kontrahent_delete', {'id': kontrahent.id}) }}" onsubmit="return confirm('{{ potwierdzenie }}?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ kontrahent.id) }}">
+    <input type="submit" id="submit-delete" class="hidden" />
+    {# 
+        <button class="btn">Usuń sprawę</button> 
+        #}
 </form>

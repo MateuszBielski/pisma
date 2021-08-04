@@ -1,4 +1,4 @@
-{% extends 'trzyKolumny.html.twig' %}
+{#{% extends 'trzyKolumny.html.twig' %} 
 
 {% block title %}Edit Kontrahent{% endblock %}
 
@@ -10,4 +10,21 @@
     <a href="{{ path('kontrahent_index') }}">back to list</a>
 
     {{ include('kontrahent/_delete_form.html.twig') }}
+{% endblock %}
+#}
+{% extends 'trzyKolumny.html.twig' %}
+
+{% block title %}nadawca odbiorca{% endblock %}
+
+{% block b_div_pod_belka %}
+    <h3>edycja {{ kontrahent.nazwa }}</h3>
+    {% endblock %}
+    
+{% block b_div_centr%}
+
+    {{ include('kontrahent/_form.html.twig') }}
+
+    {% include "pismo/listaRej.html.twig" %} 
+    {#<a href="{{ path('sprawa_index') }}">powrót do listy</a>#}
+    
 {% endblock %}

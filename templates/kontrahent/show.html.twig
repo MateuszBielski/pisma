@@ -15,6 +15,10 @@
 {% block b_div_centr %}
 {# {% set pismo_id =  %} #}
 {# {% set pisma = kontrahent.odeMnie %} #}
+<a href="{{ path('kontrahent_edit', {'id': kontrahent.id}) }}">edycja</a>
+
+<label for="submit-delete" class="submit_label">usuń</label>
+{{ include('kontrahent/_delete_form.html.twig') }}
 {% set pokazDate = "tak" %}
 {# {% set sciezka = 'kontrahent_show' %} #}
 {{ include('pismo/listaRej.html.twig') }}
