@@ -1,12 +1,15 @@
 {% set bazyNieRozszerzaj = true %}
 {% extends "trzyKolumny.html.twig" %}
 {% block b_div_lewy %}
+    pisma:
     {% include "pismo/listaRej.html.twig" %}
 {% endblock %}
 {% block b_div_centr %}
+    sprawy:
     {% include "sprawa/listaSpraw.html.twig" %}
 {% endblock %}
 {% block b_div_prawy %}
+    nadawca / odbiorca:
     {% include "kontrahent/listaKontrahentow.html.twig" %}
 {% endblock %}
 

@@ -107,6 +107,10 @@ canvas
 {
     visibility: hidden;
 }
+.obszar_do_rozpoznania {
+    border: 1px solid #e07667;
+    position: absolute;
+}
 #belka_gora{
     background: rgb(42, 71, 75);
     /* align-self: center; */

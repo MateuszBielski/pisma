@@ -1,7 +1,7 @@
 <div id="div_podglad">
 
     {# skrypt w tym miejscu po to by funkcjonalności nadal działały#}
-    <script type="text/javascript" src="/js/odczytOCRfragmentuObrazu.js"></script>
+    {# <script type="text/javascript" src="/js/odczytOCRfragmentuObrazu.js"></script> #}
     <script type="text/javascript" src="/js/podmianaObrazowDlaStron.js"></script>
 
     strony: 
@@ -17,7 +17,7 @@
     {% set indeks = indeks + 1 %}
     {% endfor %}
     {% if sciezka_png|length > 0 %}
-    <div>
+    <div id="div_img">
         <img src="{{ sciezka_png }}" alt="nie mogę wyświetlić " width="100%" 
         {% if sciezka_png_bez_fg is defined %}
         src_bez_fg ="{{ sciezka_png_bez_fg }}" 
@@ -26,7 +26,6 @@
         
         {% endif %}
     
-        <canvas id="myCanvas" ></canvas>
     </div>
-
+    <script type="text/javascript" src="/js/odczytOCRfragmentuObrazuZrysowaniem.js"></script>
 </div>
