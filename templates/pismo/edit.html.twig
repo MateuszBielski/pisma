@@ -16,6 +16,7 @@
 {% block b_div_2_lewy %}
 
 {% include "pismo/_form.html.twig" %}
+<a href="{{ path('pismo_show', {'id': pismo.id, 'numerStrony': numerStrony }) }}">rezygnuj ze zmiany</a>
 {% endblock %}
 {% block b_div_2_prawy %}
 {% include "pismo/_podglad.html.twig" %}
