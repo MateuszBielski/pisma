@@ -34,7 +34,8 @@ class PismoController extends AbstractController
      */
     public function index(PismoRepository $pismoRepository): ?Response
     {
-        $pisma = $pismoRepository->findBy([], ['oznaczenie'=> 'DESC','dataDokumentu' => 'DESC']);//findAll();
+        // $pisma = $pismoRepository->findBy([], ['oznaczenie'=> 'DESC','dataDokumentu' => 'DESC']);
+        $pisma = [];//od razu podmieniane ajaxem
         $foldPdf = $this->getParameter('sciezka_do_zarejestrowanych');
         $entityManager = $this->getDoctrine()->getManager();
         foreach($pisma as $p)
