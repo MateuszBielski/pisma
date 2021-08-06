@@ -3,7 +3,7 @@
 <script type="text/javascript" src="/js/findPismaWgOpisuKontrahIstrony.js"></script>
 {% endblock %}
 <div id="div_wyszukaj">
-    <table>
+    {# <table>
         <tr>
             <td>Wyszukaj wg:</td>
             <td></td>
@@ -20,12 +20,8 @@
             <td>nadawcy/odbiorcy</td>
             <td> <input id="input_find_pismo_wgKontrahenta" type="tekst" placeholder="nazwa..." style="width:100%"></td>
         </tr>
-    </table>
-    
-    
-    
-    
-   
+    </table> #}
+    {% include "pismo/_formWyszukiwanieDokumentow.html.twig" %}
 </div>
 {# <div id="kontener">kontener</div>
 {{ include('catalog/indexAjax.html.twig') }} #}

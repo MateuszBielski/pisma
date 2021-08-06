@@ -7,6 +7,7 @@ use App\Entity\Pismo;
 use App\Form\KontrahentType;
 use App\Form\PismoLadowaniePdfType;
 use App\Form\PismoType;
+use App\Form\WyszukiwanieDokumentowType;
 use App\Repository\KontrahentRepository;
 use App\Repository\PismoRepository;
 use App\Repository\SprawaRepository;
@@ -14,6 +15,7 @@ use App\Service\PracaNaPlikach;
 use App\Service\PrzechwytywanieZselect2;
 use App\Service\RozpoznawanieTekstu;
 use App\Service\UruchomienieProcesu;
+use App\Service\WyszukiwanieDokumentow;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -50,10 +52,14 @@ class PismoController extends AbstractController
         }
         //jeśli data jest w bazie, to nic nie robi
         // $entityManager->flush();
+        $wd = new WyszukiwanieDokumentow;
+        // WyszukiwanieDokumentowType
+        $form = $this->createForm(WyszukiwanieDokumentowType::class, $wd);
             
         return $this->render('pismo/index.html.twig', [
             'pisma' => $pisma,
-        ]);;
+            'form' => $form->createView()
+        ]);
     }
     /**
      *@Route("/noweIndex", name="pismo_nowe_index", methods={"GET","POST"}) 
