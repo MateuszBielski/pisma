@@ -34,7 +34,7 @@ class PismoController extends AbstractController
      */
     public function index(PismoRepository $pismoRepository): ?Response
     {
-        $pisma = $pismoRepository->findBy([], ['dataDokumentu' => 'DESC']);//findAll();
+        $pisma = $pismoRepository->findBy([], ['oznaczenie'=> 'DESC','dataDokumentu' => 'DESC']);//findAll();
         $foldPdf = $this->getParameter('sciezka_do_zarejestrowanych');
         $entityManager = $this->getDoctrine()->getManager();
         foreach($pisma as $p)
@@ -262,7 +262,7 @@ class PismoController extends AbstractController
             $entityManager->persist($pismo);
             $entityManager->flush();
 
-            return $this->redirectToRoute('pismo_index');
+            return $this->redirectToRoute('pismo_show',['id'=> $pismo->getId(),'numerStrony' => $numerStrony]);
         }
         $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem(); 
         $sciezkiDlaStron = [];

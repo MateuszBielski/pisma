@@ -9,7 +9,9 @@
                 <td>
             {% endif %}
             </td>
-                
+            <td class="tekst_nie_lamany">
+                {{ pismo.oznaczenieUzytkownika }}
+            </td>
             <td>
                 <a href="{{ pismo.sciezkaGenerUrl }}">
                     {% set nazwa = (pismo.opisCiag != '') ? pismo.opisCiag : pismo.nazwaPliku %}

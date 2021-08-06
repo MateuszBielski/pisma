@@ -5,6 +5,7 @@
 <script type="text/javascript" src="/js/jquery.min.js"></script>
 <script type="text/javascript" src="/js/select2.min.js"></script>
 <script type="text/javascript" src="/js/zmianaSelect.js"></script>
+<script type="text/javascript" src="/js/pobierzNumerSprawy.js"></script>
 <link href="/css/select2.min.css" rel="stylesheet"/>
 {% endblock %}
 
@@ -14,9 +15,7 @@
 {% endblock %}
 {% block b_div_2_lewy %}
 {% include "pismo/_form.html.twig" %}
-{# dodaj odbiorce/nadawce jesli brak na liście:
-{% set form = kontrahentForm %}
-{% include "kontrahent/_form.html.twig" %} #}
+<a href="{{ path('pismo_nowe_index') }}">rezygnuj ze zmiany</a>
 {% endblock %}
 {% block b_div_2_prawy %}
 

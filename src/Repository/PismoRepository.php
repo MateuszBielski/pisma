@@ -99,6 +99,8 @@ class PismoRepository extends ServiceEntityRepository
             }
         }
         $result = $result
+        ->orderBy('p.oznaczenie', 'DESC')
+        ->addOrderBy('p.dataDokumentu', 'DESC')
         ->getQuery()
         ->getResult();
         ;
