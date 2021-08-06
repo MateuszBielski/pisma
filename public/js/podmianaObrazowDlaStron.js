@@ -7,6 +7,7 @@ jQuery(document).ready(function() {
             e.preventDefault();//wyłącza link
             var linkKlikniety = $(this);
             var adres = linkKlikniety.attr("href");
+            window.history.pushState('', 'New Page Title', adres);
             $.ajax({
                 url: adres,
                 type: "GET", 
