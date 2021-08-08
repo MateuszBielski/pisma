@@ -138,9 +138,14 @@ class PismoController extends AbstractController
      */
     public function indexAjaxWgOpisuKontrahIstrony(PismoRepository $pr,SprawaRepository $sr,KontrahentRepository $kr, Request $request): ?Response
     {
-        $opisPisma = $request->query->get("opisPisma");
-        $opisSprawy = $request->query->get("opisSprawy");
-        $nazwaKontrahenta = $request->query->get("nazwaKontrahenta");
+        $wd = new WyszukiwanieDokumentow;
+        $form = $this->createForm(WyszukiwanieDokumentowType::class, $wd);
+        $form->handleRequest($request);
+
+        $opisPisma = $wd->getDokument();
+        $opisSprawy = $wd->getSprawa();
+        $nazwaKontrahenta = $wd->getKontrahent();
+
         $pisma = $pr->WyszukajPoFragmentachOpisuKontrahIsprawy($opisPisma,$opisSprawy,$nazwaKontrahenta);
         
         $sprawy = [];

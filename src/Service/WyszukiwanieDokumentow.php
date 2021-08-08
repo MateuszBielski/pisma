@@ -7,9 +7,9 @@ use Symfony\Component\Process\Process;
 
 class WyszukiwanieDokumentow
 {
-   private $dokument;
-   private $sprawa;
-   private $kontrahent;
+   private $dokument = '';
+   private $sprawa = '';
+   private $kontrahent = '';
    
    public function getDokument()
    {
@@ -17,8 +17,9 @@ class WyszukiwanieDokumentow
    }
    public function setDokument($dokument)
    {
-       $this->dokument = $dokument;
-       return $this;
+        if(null !== $dokument)   
+        $this->dokument = $dokument;
+        return $this;
    }
    public function getSprawa()
    {
@@ -26,8 +27,9 @@ class WyszukiwanieDokumentow
    }
    public function setSprawa($sprawa)
    {
-       $this->sprawa = $sprawa;
-       return $this;
+        if(null !== $sprawa)
+        $this->sprawa = $sprawa;
+        return $this;
    }
    public function getKontrahent()
    {
@@ -35,7 +37,8 @@ class WyszukiwanieDokumentow
    }
    public function setKontrahent($kontrahent)
    {
-       $this->kontrahent;
+        if(null !== $kontrahent)
+        $this->kontrahent;
        return $this;
    }
 }
