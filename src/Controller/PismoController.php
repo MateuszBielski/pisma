@@ -138,39 +138,16 @@ class PismoController extends AbstractController
      */
     public function indexAjaxWgOpisuKontrahIstrony(PismoRepository $pr,SprawaRepository $sr,KontrahentRepository $kr, Request $request): ?Response
     {
-        $wd = new WyszukiwanieDokumentow;
+        $wd = new WyszukiwanieDokumentow();
         $form = $this->createForm(WyszukiwanieDokumentowType::class, $wd);
         $form->handleRequest($request);
 
-        $opisPisma = $wd->getDokument();
-        $opisSprawy = $wd->getSprawa();
-        $nazwaKontrahenta = $wd->getKontrahent();
-
-        $pisma = $pr->WyszukajPoFragmentachOpisuKontrahIsprawy($opisPisma,$opisSprawy,$nazwaKontrahenta);
-        
-        $sprawy = [];
-        if (strlen($opisSprawy))
-        $sprawy = $sr->wyszukajPoFragmentachWyrazuOpisu($opisSprawy);
-
-        $kontrahenci = [];
-        if (strlen($nazwaKontrahenta))
-        $kontrahenci = $kr->WyszukajPoFragmencieNazwy($nazwaKontrahenta);
-        
-        foreach($pisma as $p)
-        {
-            $p->UstalStroneIKierunek();
-            // $p->setSciezkaDoFolderuPdf($foldPdf);
-            $p->UstalJesliTrzebaDateDokumentuZdatyMod();
-            $p->setSciezkaGenerUrl($this->generateUrl('pismo_show',['id'=> $p->getId(), 'numerStrony' => 1 ]));
-            //poniższe na okoliczność jednorazowego zapisu daty jeśli brakowało
-            // $entityManager->persist($p);
-        }
-        // $response = $this->render('pismo/listaRej.html.twig',[
+        $wd->WyszukajUzywajac($pr,$sr,$kr,$this);
         $response = $this->render('pismo/w3KolPismaSprawyKontr.html.twig',[
-            'pisma' => $pisma,
+            'pisma' => $wd->WyszukaneDokumenty(),
             'pismo_id' => -1,
-            'sprawy' => $sprawy,
-            'kontrahents' => $kontrahenci,
+            'sprawy' => $wd->WyszukaneSprawy(),
+            'kontrahents' => $wd->WyszukaniKontrahenci(),
             'kontrahent_id' => -1,
             // 'bazyNieRozszerzaj' => '',
             ]);
@@ -402,6 +379,10 @@ class PismoController extends AbstractController
         }
 
         return $this->redirectToRoute('pismo_index');
+    }
+    public function GenerujUrlPismoShow_IdStrona($id,$nrStrony)
+    {
+        return $this->generateUrl('pismo_show',['id'=> $id, 'numerStrony' => $nrStrony ]);
     }
 }
 
