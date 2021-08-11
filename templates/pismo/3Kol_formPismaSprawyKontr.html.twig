@@ -1,0 +1,19 @@
+{% extends "trzyKolumny.html.twig" %}
+{% block b_div_pod_belka %}
+<div id="div_wyszukaj">
+    {% include "pismo/_formWyszukiwanieDokumentow.html.twig" %}
+</div>
+{% endblock %}
+{% block b_div_lewy %}
+    pisma:
+    {% include "pismo/listaRej.html.twig" %}
+{% endblock %}
+{% block b_div_centr %}
+    sprawy:
+    {% include "sprawa/listaSpraw.html.twig" %}
+{% endblock %}
+{% block b_div_prawy %}
+    nadawca / odbiorca:
+    {% include "kontrahent/listaKontrahentow.html.twig" %}
+{% endblock %}
+

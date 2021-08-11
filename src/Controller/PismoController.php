@@ -134,21 +134,22 @@ class PismoController extends AbstractController
         return  $response; 
     }
     /**
-     * @Route("/indexAjaxWgOpisuKontrahIstrony", name="pismo_indexAjax_WgOpisuKontrahIstrony", methods={"GET","POST"})
+     * @Route("/indexAjaxWgOpisuKontrahIsprawy", name="pismo_indexAjax_WgOpisuKontrahIsprawy", methods={"GET","POST"})
      */
-    public function indexAjaxWgOpisuKontrahIstrony(PismoRepository $pr,SprawaRepository $sr,KontrahentRepository $kr, Request $request): ?Response
+    public function indexAjaxWgOpisuKontrahIsprawy(PismoRepository $pr,SprawaRepository $sr,KontrahentRepository $kr, Request $request): ?Response
     {
         $wd = new WyszukiwanieDokumentow();
         $form = $this->createForm(WyszukiwanieDokumentowType::class, $wd);
         $form->handleRequest($request);
 
         $wd->WyszukajUzywajac($pr,$sr,$kr,$this);
-        $response = $this->render('pismo/w3KolPismaSprawyKontr.html.twig',[
+        $response = $this->render('pismo/3Kol_formPismaSprawyKontr.html.twig',[
             'pisma' => $wd->WyszukaneDokumenty(),
             'pismo_id' => -1,
             'sprawy' => $wd->WyszukaneSprawy(),
             'kontrahents' => $wd->WyszukaniKontrahenci(),
             'kontrahent_id' => -1,
+            'form' => $form->createView(),
             // 'bazyNieRozszerzaj' => '',
             ]);
         $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
@@ -385,4 +386,3 @@ class PismoController extends AbstractController
         return $this->generateUrl('pismo_show',['id'=> $id, 'numerStrony' => $nrStrony ]);
     }
 }
-

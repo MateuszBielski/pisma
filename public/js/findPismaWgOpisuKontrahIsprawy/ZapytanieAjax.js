@@ -16,13 +16,17 @@ function ZapytanieAjax()
     data[input_nazwaKontrahenta.attr('name')] = input_nazwaKontrahenta.val();
     data[token.attr('name')] = token.val();
     $.ajax({
-            url: "/pismo/indexAjaxWgOpisuKontrahIstrony",
+            url: "/pismo/indexAjaxWgOpisuKontrahIsprawy",
             type: "POST",
             data: data,
             
             success: function (msg) {
-                $('#div_kolumny').html(msg);
-                // $('#div_lista_rej').html(msg);
+               
+                var kolumnyDoWstawienia = $(msg).find('#div_kolumny');
+                var tokenDoWstawienia = $(msg).find("#wyszukiwanie_dokumentow__token").val();
+                $('#div_kolumny').replaceWith(kolumnyDoWstawienia);
+                $("#wyszukiwanie_dokumentow__token").val(tokenDoWstawienia);
+                
             }
             ,error: function (err) {
                 $("#div_kolumny").text(err.Message);
@@ -30,15 +34,3 @@ function ZapytanieAjax()
             }
     });
 }
-
-$(window).on('load',function(){
-    // console.log('przeładowanie');
-    ZapytanieAjax();
-});
-
-jQuery(document).ready(function() {
-    
-    // var inputs_Pisma_Sprawy_Kontrahent = $('#input_find_pismo_wgOpisu, #input_find_pismo_wgSprawy, #input_find_pismo_wgKontrahenta');
-    var inputs_Pisma_Sprawy_Kontrahent = $('#wyszukiwanie_dokumentow_dokument,#wyszukiwanie_dokumentow_sprawa, #wyszukiwanie_dokumentow_kontrahent');//
-    inputs_Pisma_Sprawy_Kontrahent.on('input',ZapytanieAjax);
-});

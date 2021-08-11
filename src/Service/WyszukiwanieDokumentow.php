@@ -46,15 +46,15 @@ class WyszukiwanieDokumentow
    public function setKontrahent($kontrahent)
    {
         if(null !== $kontrahent)
-        $this->kontrahent;
+        $this->kontrahent = $kontrahent;
        return $this;
    }
-   public function WyszukajUzywajac(PismoRepository &$pr, SprawaRepository &$sr, KontrahentRepository &$kr,PismoController &$pc)
+   public function WyszukajUzywajac(PismoRepository $pr, SprawaRepository $sr, KontrahentRepository $kr,PismoController $pc)
    {
     //    $this->pismoRepository = $pr;
-       $this->sprawaRepository = $sr;
-       $this->kontrahentRepository = $kr;
-       $this->pismoController = $pc;
+    //    $this->sprawaRepository = $sr;
+    //    $this->kontrahentRepository = $kr;
+    //    $this->pismoController = $pc;
 
        $pisma = $pr->WyszukajPoFragmentachOpisuKontrahIsprawy(
         $this->dokument,$this->sprawa,$this->kontrahent);
@@ -63,7 +63,7 @@ class WyszukiwanieDokumentow
             $p->UstalStroneIKierunek();
             // $p->setSciezkaDoFolderuPdf($foldPdf);
             $p->UstalJesliTrzebaDateDokumentuZdatyMod();
-            $p->setSciezkaGenerUrl($this->pismoController->GenerujUrlPismoShow_IdStrona($p->getId(),1));
+            $p->setSciezkaGenerUrl($pc->GenerujUrlPismoShow_IdStrona($p->getId(),1));
         }
 
         $sprawy = [];
