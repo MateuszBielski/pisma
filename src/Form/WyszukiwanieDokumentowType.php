@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Service\WyszukiwanieDokumentow;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -12,6 +13,8 @@ class WyszukiwanieDokumentowType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $date = new \DateTime();
+        $endYear = $date->format('Y');
         $builder
             ->add('dokument',TextType::class,['attr' => [
                 // 'id'=>"input_find_pismo_wgOpisu",
@@ -28,6 +31,15 @@ class WyszukiwanieDokumentowType extends AbstractType
                 'size'=>"30",
                 'placeholder' => 'nazwa...'
                 ]])
+            ->add('poczatekData',DateType::class,[
+                'widget' => 'choice',
+                'years' => range(2001,$endYear+1),
+                'format' => 'dd MM yyyy',])
+            ->add('koniecData',DateType::class,[
+                'widget' => 'choice',
+                'years' => range(2001,$endYear+1),
+                'format' => 'dd MM yyyy',])
+            ->addEventSubscriber(new WyszukiwanieDokumentowEventSubscriber)
         ;
         
     }

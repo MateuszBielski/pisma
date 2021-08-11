@@ -139,10 +139,12 @@ class PismoController extends AbstractController
     public function indexAjaxWgOpisuKontrahIsprawy(PismoRepository $pr,SprawaRepository $sr,KontrahentRepository $kr, Request $request): ?Response
     {
         $wd = new WyszukiwanieDokumentow();
+        $wd->UstawRepo($pr,$sr,$kr,$this);
+        
         $form = $this->createForm(WyszukiwanieDokumentowType::class, $wd);
         $form->handleRequest($request);
 
-        $wd->WyszukajUzywajac($pr,$sr,$kr,$this);
+        
         $response = $this->render('pismo/3Kol_formPismaSprawyKontr.html.twig',[
             'pisma' => $wd->WyszukaneDokumenty(),
             'pismo_id' => -1,
