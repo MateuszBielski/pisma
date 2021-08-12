@@ -39,7 +39,7 @@ class WyszukiwanieDokumentowType extends AbstractType
                 'widget' => 'choice',
                 'years' => range(2001,$endYear+1),
                 'format' => 'dd MM yyyy',])
-            ->addEventSubscriber(new WyszukiwanieDokumentowEventSubscriber)
+            ->addEventSubscriber(new WyszDokEventSubsc)
         ;
         
     }

@@ -24,9 +24,12 @@ function ZapytanieAjax()
                
                 var kolumnyDoWstawienia = $(msg).find('#div_kolumny');
                 var tokenDoWstawienia = $(msg).find("#wyszukiwanie_dokumentow__token").val();
+                
                 $('#div_kolumny').replaceWith(kolumnyDoWstawienia);
                 $("#wyszukiwanie_dokumentow__token").val(tokenDoWstawienia);
-                
+                $('#wyszukiwanie_dokumentow_poczatekData').replaceWith($(msg).find('#wyszukiwanie_dokumentow_poczatekData'));
+                $('#wyszukiwanie_dokumentow_koniecData').replaceWith($(msg).find('#wyszukiwanie_dokumentow_koniecData'));
+                // $('#div_kolumny').html(msg);
             }
             ,error: function (err) {
                 $("#div_kolumny").text(err.Message);

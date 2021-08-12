@@ -111,7 +111,7 @@ class WyszukiwanieDokumentow
         $this->wyszukaneDokumenty = $pisma;
         $this->wyszukaneSprawy = $sprawy;
         $this->wyszukaniKontrahenci = $kontrahenci;
-        $this->UstalZakresDatWyszukanychDokumentow($pisma);
+        // $this->UstalZakresDatWyszukanychDokumentow($pisma);
    }
    public function UstawRepo(PismoRepository $pr, SprawaRepository $sr, KontrahentRepository $kr,PismoController $pc)
    {
