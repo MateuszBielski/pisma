@@ -21,6 +21,7 @@ class WyszukiwanieDokumentow
    private $kontrahentRepository;
    private $pismoController;
    private $ustawioneRepo = false;
+   private $czyDatyDoWyszukiwania = false;
    
    public function getDokument()
    {
@@ -72,6 +73,16 @@ class WyszukiwanieDokumentow
         $this->koniecData= $koniecData;
        return $this;
    }
+   public function getCzyDatyDoWyszukiwania(): bool
+   {
+       return $this->czyDatyDoWyszukiwania;
+   }
+   public function setCzyDatyDoWyszukiwania(bool $czy)
+   {
+        $this->czyDatyDoWyszukiwania= $czy;
+       return $this;
+   }
+
    public function WyszukaneDokumenty()
    {
         return $this->wyszukaneDokumenty;
@@ -92,7 +103,8 @@ class WyszukiwanieDokumentow
     //    $this->pismoController = $pc;
 
        $pisma = $pr->WyszukajPoFragmentachOpisuKontrahIsprawy(
-        $this->dokument,$this->sprawa,$this->kontrahent);
+        $this->dokument,$this->sprawa,$this->kontrahent,
+        $this->poczatekDataDlaRepo(),$this->koniecDataDlaRepo());
         foreach($pisma as $p)
         {
             $p->UstalStroneIKierunek();
@@ -127,6 +139,7 @@ class WyszukiwanieDokumentow
    }
    public function UstalZakresDatWyszukanychDokumentow(array $odszukaneDokumenty)
    {
+       if (!count($odszukaneDokumenty))return;
         $daty = [];
         foreach($odszukaneDokumenty as $d)
         {
@@ -139,6 +152,31 @@ class WyszukiwanieDokumentow
    public function UstawioneRepo()
    {
        return $this->ustawioneRepo;
+   }
+   public function PobierzDatyZformularzaJesliSa(array $formularz)
+   {
+       if(array_key_exists('poczatekData',$formularz))
+       {
+           $y = $formularz['poczatekData']['year'];
+           $m = $formularz['poczatekData']['month'];
+           $d = $formularz['poczatekData']['day'];
+            $this->poczatekData = new \DateTime("$y-$m-$d");
+       }
+       if(array_key_exists('koniecData',$formularz))
+       {
+           $y = $formularz['koniecData']['year'];
+           $m = $formularz['koniecData']['month'];
+           $d = $formularz['koniecData']['day'];
+            $this->koniecData = new \DateTime("$y-$m-$d");
+       }
+   }
+   public function poczatekDataDlaRepo(): string
+   {
+        return ($this->poczatekData == null)?'':$this->poczatekData->format('Y-m-d');
+   }
+   public function koniecDataDlaRepo(): string
+   {
+        return ($this->koniecData == null)?'':$this->koniecData->format('Y-m-d');
    }
 }
 

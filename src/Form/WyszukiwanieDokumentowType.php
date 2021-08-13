@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Service\WyszukiwanieDokumentow;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -31,6 +32,11 @@ class WyszukiwanieDokumentowType extends AbstractType
                 'size'=>"30",
                 'placeholder' => 'nazwa...'
                 ]])
+            ->add('czyDatyDoWyszukiwania',CheckboxType::class,[
+                'label' => 'uwzględnij daty',
+                'required' => false,
+                'value' => false,
+                ])
             ->add('poczatekData',DateType::class,[
                 'widget' => 'choice',
                 'years' => range(2001,$endYear+1),

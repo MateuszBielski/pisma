@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Kontrahent;
 use App\Entity\Pismo;
+use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -41,7 +42,7 @@ class PismoRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    public function WyszukajPoFragmentachOpisuKontrahIsprawy(string $pismo,string $sprawa,string $kontrahent)
+    public function WyszukajPoFragmentachOpisuKontrahIsprawy(string $pismo,string $sprawa,string $kontrahent,string $pocz,string $kon)
     {
         $frArrP = explode(' ',$pismo);
         $frArrS = ($sprawa != '') ? explode(' ',$sprawa):[];
@@ -97,6 +98,13 @@ class PismoRepository extends ServiceEntityRepository
                 
                 ;
             }
+        }
+        if(strlen($pocz) && strlen($kon))
+        {
+            $result = $result
+            ->setParameter('pocz',$pocz)
+            ->setParameter('kon',$kon)
+            ->andWhere("p.dataDokumentu BETWEEN :pocz AND :kon");    
         }
         $result = $result
         ->orderBy('p.oznaczenie', 'DESC')

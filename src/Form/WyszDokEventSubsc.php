@@ -48,6 +48,7 @@ class WyszDokEventSubsc implements EventSubscriberInterface
         $this->wyszukiwanie->setDokument($this->formularz['dokument']);
         $this->wyszukiwanie->setSprawa($this->formularz['sprawa']);
         $this->wyszukiwanie->setKontrahent($this->formularz['kontrahent']);
+        $this->wyszukiwanie->PobierzDatyZformularzaJesliSa($this->formularz);
         $this->wyszukiwanie->WyszukajDokumenty();
         $this->wyszukiwanie->UstalZakresDatWyszukanychDokumentow($this->wyszukiwanie->WyszukaneDokumenty());
         
