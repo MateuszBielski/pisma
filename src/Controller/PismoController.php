@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 // use Imagick;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
@@ -39,7 +40,7 @@ class PismoController extends AbstractController
         // $pisma = $pismoRepository->findBy([], ['oznaczenie'=> 'DESC','dataDokumentu' => 'DESC']);
         $pisma = [];//od razu podmieniane ajaxem
         $foldPdf = $this->getParameter('sciezka_do_zarejestrowanych');
-        $entityManager = $this->getDoctrine()->getManager();
+        // $entityManager = $this->getDoctrine()->getManager();
         foreach($pisma as $p)
         {
             $p->UstalStroneIKierunek();
@@ -52,8 +53,8 @@ class PismoController extends AbstractController
         }
         //jeśli data jest w bazie, to nic nie robi
         // $entityManager->flush();
-        $wd = new WyszukiwanieDokumentow;
         // WyszukiwanieDokumentowType
+        $wd = new WyszukiwanieDokumentow();
         $form = $this->createForm(WyszukiwanieDokumentowType::class, $wd);
             
         return $this->render('pismo/index.html.twig', [
@@ -136,14 +137,18 @@ class PismoController extends AbstractController
     /**
      * @Route("/indexAjaxWgOpisuKontrahIsprawy", name="pismo_indexAjax_WgOpisuKontrahIsprawy", methods={"GET","POST"})
      */
-    public function indexAjaxWgOpisuKontrahIsprawy(PismoRepository $pr,SprawaRepository $sr,KontrahentRepository $kr, Request $request): ?Response
+    public function indexAjaxWgOpisuKontrahIsprawy(PismoRepository $pr,SprawaRepository $sr,KontrahentRepository $kr, Request $request,Stopwatch $sw): ?Response
     {
         $wd = new WyszukiwanieDokumentow();
+        $wd->UstawStopWatch($sw);
         $wd->UstawRepo($pr,$sr,$kr,$this);
         
+        $sw->start('iAxWgOpisuKontrahIsprawy_form');
         $form = $this->createForm(WyszukiwanieDokumentowType::class, $wd);
+        $sw->stop('iAxWgOpisuKontrahIsprawy_form');
+        $sw->start('iAxWgOpisuKontrahIsprawy_handle');
         $form->handleRequest($request);
-
+        $sw->stop('iAxWgOpisuKontrahIsprawy_handle');
         
         $response = $this->render('pismo/3Kol_formPismaSprawyKontr.html.twig',[
             'pisma' => $wd->WyszukaneDokumenty(),

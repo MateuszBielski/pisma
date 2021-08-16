@@ -16,6 +16,7 @@
         "symfony/orm-pack": "^1.0",
         "symfony/process": "5.3.*",
         "symfony/security-csrf": "5.3.*",
+        "symfony/stopwatch": "5.3.*",
         "symfony/validator": "5.3.*",
         "symfony/web-link": "5.3.*",
         "symfony/yaml": "5.3.*",
@@ -25,7 +26,6 @@
     "require-dev": {
         "symfony/maker-bundle": "^1.14",
         "symfony/phpunit-bridge": "^5.0",
-        "symfony/stopwatch": "^5.3",
         "symfony/twig-bundle": "^5.3",
         "symfony/web-profiler-bundle": "^5.3"
     },

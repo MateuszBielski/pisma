@@ -7,6 +7,7 @@ use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class WyszDokEventSubsc implements EventSubscriberInterface
 {
@@ -42,6 +43,7 @@ class WyszDokEventSubsc implements EventSubscriberInterface
     public function onPreSubmit(FormEvent $event): void
     {
         //nowe dane z formularza są już dostępne, nie ma dostępu do aktulanego obiektu
+        // $this->stopwatch->start('onPreSubmit');
         if(!$this->wyszukiwanie->UstawioneRepo())return;
 
         $this->formularz = $event->getData();
@@ -61,7 +63,7 @@ class WyszDokEventSubsc implements EventSubscriberInterface
         $this->formularz['koniecData']['month'] = $koniec[1];
         $this->formularz['koniecData']['day'] = $koniec[2];
         $event->setData($this->formularz);
-
+        // $this->stopwatch->stop('onPreSubmit');
     }
     public function onSubmit(FormEvent $event)
     {

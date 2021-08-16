@@ -8,6 +8,7 @@ use App\Repository\KontrahentRepository;
 use App\Repository\PismoRepository;
 use App\Repository\SprawaRepository;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class WyszukiwanieDokumentow
 {
@@ -22,6 +23,12 @@ class WyszukiwanieDokumentow
    private $pismoController;
    private $ustawioneRepo = false;
    private $czyDatyDoWyszukiwania = false;
+   private $stopwatch;
+
+    public function UstawStopWatch(Stopwatch $stopwatch)
+    {
+        $this->stopwatch = $stopwatch;
+    }
    
    public function getDokument()
    {
@@ -101,17 +108,13 @@ class WyszukiwanieDokumentow
     //    $this->sprawaRepository = $sr;
     //    $this->kontrahentRepository = $kr;
     //    $this->pismoController = $pc;
+    $this->stopwatch->start('WyszukajUzywajac');
 
+    
        $pisma = $pr->WyszukajPoFragmentachOpisuKontrahIsprawy(
         $this->dokument,$this->sprawa,$this->kontrahent,
         $this->poczatekDataDlaRepo(),$this->koniecDataDlaRepo());
-        foreach($pisma as $p)
-        {
-            $p->UstalStroneIKierunek();
-            // $p->setSciezkaDoFolderuPdf($foldPdf);
-            $p->UstalJesliTrzebaDateDokumentuZdatyMod();
-            $p->setSciezkaGenerUrl($pc->GenerujUrlPismoShow_IdStrona($p->getId(),1));
-        }
+       
 
         $sprawy = [];
         if (strlen($this->sprawa))
@@ -120,9 +123,21 @@ class WyszukiwanieDokumentow
         $kontrahenci = [];
         if (strlen($this->kontrahent))
         $kontrahenci = $kr->WyszukajPoFragmencieNazwy($this->kontrahent);
+        foreach($pisma as $p)
+        {
+            
+            $p->UstalStroneIKierunek();
+            // $p->setSciezkaDoFolderuPdf($foldPdf);
+            $p->UstalJesliTrzebaDateDokumentuZdatyMod();
+            $p->setSciezkaGenerUrl($pc->GenerujUrlPismoShow_IdStrona($p->getId(),1));
+            $this->stopwatch->lap('WyszukajUzywajac');
+        }
         $this->wyszukaneDokumenty = $pisma;
         $this->wyszukaneSprawy = $sprawy;
         $this->wyszukaniKontrahenci = $kontrahenci;
+
+        $this->stopwatch->stop('WyszukajUzywajac');
+
         // $this->UstalZakresDatWyszukanychDokumentow($pisma);
    }
    public function UstawRepo(PismoRepository $pr, SprawaRepository $sr, KontrahentRepository $kr,PismoController $pc)
@@ -139,7 +154,10 @@ class WyszukiwanieDokumentow
    }
    public function UstalZakresDatWyszukanychDokumentow(array $odszukaneDokumenty)
    {
-       if (!count($odszukaneDokumenty))return;
+        
+        
+        $this->stopwatch->start('UstalZakresDat');
+        if (!count($odszukaneDokumenty))return;
         $daty = [];
         foreach($odszukaneDokumenty as $d)
         {
@@ -147,7 +165,7 @@ class WyszukiwanieDokumentow
         }
         $this->poczatekData=min($daty);
         $this->koniecData=max($daty);
-
+        $this->stopwatch->stop('UstalZakresDat');
    }
    public function UstawioneRepo()
    {
