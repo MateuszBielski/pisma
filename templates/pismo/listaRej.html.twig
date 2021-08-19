@@ -11,6 +11,8 @@
             </td>
             <td class="tekst_nie_lamany">
                 {{ pismo.oznaczenieUzytkownika }}
+                <br>
+                {{ pismo.dataDokumentu|date('Y-m-d')}}
             </td>
             <td>
                 <a href="{{ pismo.sciezkaGenerUrl }}">

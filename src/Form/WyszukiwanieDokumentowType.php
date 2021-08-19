@@ -9,9 +9,14 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class WyszukiwanieDokumentowType extends AbstractType
 {
+    public function __construct(Stopwatch $sw)
+    {
+        $this->stopwatch = $sw;
+    }
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $date = new \DateTime();
@@ -45,7 +50,7 @@ class WyszukiwanieDokumentowType extends AbstractType
                 'widget' => 'choice',
                 'years' => range(2001,$endYear+1),
                 'format' => 'dd MM yyyy',])
-            ->addEventSubscriber(new WyszDokEventSubsc)
+            ->addEventSubscriber(new WyszDokEventSubsc($this->stopwatch))
         ;
         
     }

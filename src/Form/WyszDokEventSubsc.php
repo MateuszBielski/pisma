@@ -13,6 +13,10 @@ class WyszDokEventSubsc implements EventSubscriberInterface
 {
     private $wyszukiwanie;
     private $formularz;
+    public function __construct(Stopwatch $sw)
+    {
+        $this->stopwatch = $sw;
+    }
     
     public static function getSubscribedEvents(): array
     {
@@ -39,31 +43,14 @@ class WyszDokEventSubsc implements EventSubscriberInterface
         
        
     }
-
+    
     public function onPreSubmit(FormEvent $event): void
     {
         //nowe dane z formularza są już dostępne, nie ma dostępu do aktulanego obiektu
-        // $this->stopwatch->start('onPreSubmit');
+        $this->stopwatch->start('onPreSubmit');
         if(!$this->wyszukiwanie->UstawioneRepo())return;
-
-        $this->formularz = $event->getData();
-        $this->wyszukiwanie->setDokument($this->formularz['dokument']);
-        $this->wyszukiwanie->setSprawa($this->formularz['sprawa']);
-        $this->wyszukiwanie->setKontrahent($this->formularz['kontrahent']);
-        $this->wyszukiwanie->PobierzDatyZformularzaJesliSa($this->formularz);
-        $this->wyszukiwanie->WyszukajDokumenty();
-        $this->wyszukiwanie->UstalZakresDatWyszukanychDokumentow($this->wyszukiwanie->WyszukaneDokumenty());
-        
-        $poczatek = array_map('intval',explode('-',$this->wyszukiwanie->getPoczatekData()->format('Y-m-d')));
-        $this->formularz['poczatekData']['year'] = $poczatek[0];
-        $this->formularz['poczatekData']['month'] = $poczatek[1];
-        $this->formularz['poczatekData']['day'] = $poczatek[2];
-        $koniec = array_map('intval',explode('-',$this->wyszukiwanie->getKoniecData()->format('Y-m-d')));
-        $this->formularz['koniecData']['year'] = $koniec[0];
-        $this->formularz['koniecData']['month'] = $koniec[1];
-        $this->formularz['koniecData']['day'] = $koniec[2];
-        $event->setData($this->formularz);
-        // $this->stopwatch->stop('onPreSubmit');
+        $event->setData($this->wyszukiwanie->onPreSubmit($event->getData()));
+        $this->stopwatch->stop('onPreSubmit');
     }
     public function onSubmit(FormEvent $event)
     {

@@ -7,6 +7,7 @@ use App\Entity\Pismo;
 use App\Repository\KontrahentRepository;
 use App\Repository\PismoRepository;
 use App\Repository\SprawaRepository;
+use DateTimeInterface;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -24,6 +25,7 @@ class WyszukiwanieDokumentow
    private $ustawioneRepo = false;
    private $czyDatyDoWyszukiwania = false;
    private $stopwatch;
+   private $wyszukaneDokumenty = [];
 
     public function UstawStopWatch(Stopwatch $stopwatch)
     {
@@ -150,13 +152,13 @@ class WyszukiwanieDokumentow
    }
    public function WyszukajDokumenty()
    {
-       $this->WyszukajUzywajac($this->pismoRepository, $this->sprawaRepository, $this->kontrahentRepository, $this->pismoController);
+        if ($this->ustawioneRepo)
+        $this->WyszukajUzywajac($this->pismoRepository, $this->sprawaRepository, $this->kontrahentRepository, $this->pismoController);
    }
    public function UstalZakresDatWyszukanychDokumentow(array $odszukaneDokumenty)
    {
         
         
-        $this->stopwatch->start('UstalZakresDat');
         if (!count($odszukaneDokumenty))return;
         $daty = [];
         foreach($odszukaneDokumenty as $d)
@@ -165,7 +167,6 @@ class WyszukiwanieDokumentow
         }
         $this->poczatekData=min($daty);
         $this->koniecData=max($daty);
-        $this->stopwatch->stop('UstalZakresDat');
    }
    public function UstawioneRepo()
    {
@@ -195,6 +196,39 @@ class WyszukiwanieDokumentow
    public function koniecDataDlaRepo(): string
    {
         return ($this->koniecData == null)?'':$this->koniecData->format('Y-m-d');
+   }
+   public function UstawDatyWformularzuJesliSa(array &$formularz)
+   {
+        if( $this->poczatekData instanceof DateTimeInterface)
+        {
+            $poczatek = array_map('intval',explode('-',$this->poczatekData->format('Y-m-d')));
+            $formularz['poczatekData']['year'] = $poczatek[0];
+            $formularz['poczatekData']['month'] = $poczatek[1];
+            $formularz['poczatekData']['day'] = $poczatek[2];
+        }
+        if($this->koniecData instanceof DateTimeInterface)
+        {
+            $koniec = array_map('intval',explode('-',$this->koniecData->format('Y-m-d')));
+            $formularz['koniecData']['year'] = $koniec[0];
+            $formularz['koniecData']['month'] = $koniec[1];
+            $formularz['koniecData']['day'] = $koniec[2];
+        }
+   }
+   public function onPreSubmit(array $formularz): array
+   {
+        
+        $this->dokument = @$formularz['dokument'];
+        $this->sprawa = @$formularz['sprawa'];
+        $this->kontrahent = @$formularz['kontrahent'];
+        $this->PobierzDatyZformularzaJesliSa($formularz);
+        $this->WyszukajDokumenty();
+        $this->UstalZakresDatWyszukanychDokumentow($this->wyszukaneDokumenty());
+        $this->UstawDatyWformularzuJesliSa($formularz);
+        return $formularz;
+   }
+   public function UstawWyszukaneDokumenty(array $wyszDok)
+   {
+        $this->wyszukaneDokumenty = $wyszDok;
    }
 }
 
