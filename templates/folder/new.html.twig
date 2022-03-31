@@ -3,10 +3,15 @@
 {% block title %}Uwzględnij folder
 {% endblock %}
 
-{% block b_div_lewy %}
-    <h3>Dodaj folder</h3>
+{% block b_div_centr %}
+	<h3>Dodaj folder</h3>
 
-    {{ include('folder/_form.html.twig') }}
-
-    <a href="{{ path('folder_index') }}">powrót do listy</a>
+	{{ include('folder/_form.html.twig') }}
+	<div 
+		id="div_lista_plikow">{# {{ include('pismo/listaNier.html.twig') }} #}
+        treść początkowa
+	</div>
+	<a href="{{ path('folder_index') }}">powrót do listy</a>
+	<script type="text/javascript" src="/js/jquery.min.js"></script>
+	<script type="text/javascript" src="/js/odczytZawartosciFolderu.js"></script>
 {% endblock %}

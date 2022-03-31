@@ -67,7 +67,7 @@ class PracaNaPlikach
     {
         $pisma = [];
         $this->PobierzWszystkieNazwyPlikowZfolderu($folder);
-        $nazwy = strlen($rozsz)? $this->NazwyBezSciezkiZrozszerzeniem($rozsz): $this->odczytaneWszystkieNazwy;
+        $nazwy = (strlen($rozsz)? $this->NazwyBezSciezkiZrozszerzeniem($rozsz): $this->odczytaneWszystkieNazwy)??[];
         foreach($nazwy as $n)
             $pisma[] = $this->UtworzPismoNaPodstawie($this->folderOdczytu,$n);
         return $pisma;

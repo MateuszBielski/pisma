@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Folder;
 use App\Form\FolderType;
 use App\Repository\FolderRepository;
+use App\Service\PracaNaPlikach;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,6 +24,21 @@ class FolderController extends AbstractController
         return $this->render('folder/index.html.twig', [
             'folders' => $folderRepository->findAll(),
         ]);
+    }
+
+    /**
+     * @Route("/odczytZawartosciAjax", name="folder_odczytZawartosci_ajax", methods={"GET"})
+     */
+    public function odczytZawartosciAjax(Request $request, PracaNaPlikach $pnp)
+    {
+        $sciezka = $request->query->get("fraza");
+        $pisma = $pnp->UtworzPismaZfolderu($sciezka);
+        $response = $this->render('pismo/listaNier.html.twig',[
+            'pisma' => $pisma,
+            'pismo_id' => -1,
+            ]);
+        $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
+        return  $response;
     }
 
     /**
@@ -83,7 +99,7 @@ class FolderController extends AbstractController
      */
     public function delete(Request $request, Folder $folder): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$folder->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $folder->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($folder);
             $entityManager->flush();
