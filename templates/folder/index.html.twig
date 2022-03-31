@@ -1,0 +1,17 @@
+{% extends 'trzyKolumny.html.twig' %}
+
+{% block title %}Zarejestrowane
+{% endblock %}
+
+{# {% block b_div_pod_belka %}
+	<h3>Foldery uwzględnione</h3>
+	{% include "pismo/_wyszukajAjaxWgOpisuKontrahIsprawy.html.twig" %}
+{% endblock %} #}
+{% block b_div_lewy %}
+	<div id="div_lista_foldery">
+		{{ include('folder/_lista.html.twig') }}
+	</div>
+
+	<a href="{{ path('folder_new') }}">Dodaj folder do uwzględnienia</a>
+{% endblock %}
+{% block belka_dol %}{% endblock %}

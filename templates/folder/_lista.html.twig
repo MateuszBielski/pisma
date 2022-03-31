@@ -1,0 +1,25 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Sciezka</th>
+            <th>akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for folder in folders %}
+            <tr>
+                <td>{{ folder.id }}</td>
+                <td>{{ folder.sciezkaMoja }}</td>
+                <td>
+                    <a href="{{ path('folder_show', {'id': folder.id}) }}">show</a>
+                    <a href="{{ path('folder_edit', {'id': folder.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">brak wyników</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

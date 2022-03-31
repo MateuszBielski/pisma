@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Folder{% endblock %}
+
+{% block body %}
+    <h1>Folder</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ folder.id }}</td>
+            </tr>
+            <tr>
+                <th>SciezkaMoja</th>
+                <td>{{ folder.sciezkaMoja }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('folder_index') }}">back to list</a>
+
+    <a href="{{ path('folder_edit', {'id': folder.id}) }}">edit</a>
+
+    {{ include('folder/_delete_form.html.twig') }}
+{% endblock %}

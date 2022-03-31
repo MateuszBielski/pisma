@@ -1,0 +1,12 @@
+{% extends 'trzyKolumny.html.twig' %}
+
+{% block title %}Uwzględnij folder
+{% endblock %}
+
+{% block b_div_lewy %}
+    <h3>Dodaj folder</h3>
+
+    {{ include('folder/_form.html.twig') }}
+
+    <a href="{{ path('folder_index') }}">powrót do listy</a>
+{% endblock %}

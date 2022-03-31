@@ -31,7 +31,7 @@ class PrzechwytywanieZselect2
     public function przechwycNazweStronyDlaPisma(Request $request)
     {
         $pismo = $request->request->get('pismo');
-        $strona = $pismo['strona'];
+        $strona = $pismo['strona']??'';
         if(!is_numeric($strona) && strlen($strona))
         {
             $this->utworzycNowegoKontrahenta = true;
@@ -43,7 +43,7 @@ class PrzechwytywanieZselect2
     public function przechwycRodzajDokumentuDlaPisma(Request $request)
     {
         $pismo = $request->request->get('pismo');
-        $rodzaj = $pismo['rodzaj'];
+        $rodzaj = $pismo['rodzaj']??'';
         if(!is_numeric($rodzaj) && strlen($rodzaj))
         {
             $this->utworzycNowyRodzaj = true;
