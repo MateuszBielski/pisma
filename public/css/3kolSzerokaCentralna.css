@@ -1,0 +1,14 @@
+@import "styl.css";
+
+#div_lewy{
+    float: left;
+    width: 20%;
+}
+#div_centr{
+    float: left;
+    width: 60%;
+}
+#div_prawy{
+    float: left;
+    width: 19%;
+}

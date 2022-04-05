@@ -1,5 +1,8 @@
 {% extends 'trzyKolumny.html.twig' %}
-
+{% block stylesheets %}
+	<link
+	href="/css/3kolSzerokaCentralna.css" rel="stylesheet"/>
+{% endblock %}
 {% block title %}Uwzględnij folder
 {% endblock %}
 
@@ -7,9 +10,10 @@
 	<h3>Dodaj folder</h3>
 
 	{{ include('folder/_form.html.twig') }}
-	<div 
-		id="div_lista_plikow">{# {{ include('pismo/listaNier.html.twig') }} #}
-        treść początkowa
+	<div
+		id="div_lista_plikow">
+		{# {{ include('pismo/listaNier.html.twig') }} #}
+		treść początkowa
 	</div>
 	<a href="{{ path('folder_index') }}">powrót do listy</a>
 	<script type="text/javascript" src="/js/jquery.min.js"></script>
