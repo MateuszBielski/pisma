@@ -2,6 +2,8 @@
 {% block stylesheets %}
 	<link
 	href="/css/3kolSzerokaCentralna.css" rel="stylesheet"/>
+	<link
+	href="/js/jquery-ui-1.13.1/jquery-ui.css" rel="stylesheet"/>
 {% endblock %}
 {% block title %}Uwzględnij folder
 {% endblock %}
@@ -16,6 +18,9 @@
 		treść początkowa
 	</div>
 	<a href="{{ path('folder_index') }}">powrót do listy</a>
-	<script type="text/javascript" src="/js/jquery.min.js"></script>
+	<script type="text/javascript" src="/js/jquery-ui-1.13.1/external/jquery/jquery.js"></script>
+	<script type="text/javascript" src="/js/jquery-ui-1.13.1/jquery-ui.js"></script>
+	<script type="text/javascript" src="/js/jquery-ui-1.13.1/jquery-ui.min.js"></script>
+	{# {{ encore_entry_script_tags('app') }} #}
 	<script type="text/javascript" src="/js/odczytZawartosciFolderu.js"></script>
 {% endblock %}

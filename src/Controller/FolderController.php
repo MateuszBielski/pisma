@@ -32,11 +32,42 @@ class FolderController extends AbstractController
     public function odczytZawartosciAjax(Request $request, PracaNaPlikach $pnp)
     {
         $sciezka = $request->query->get("fraza");
+        $sciezka = $pnp->NajglebszyMozliwyFolderZniepelnejSciezki($sciezka);
         $pisma = $pnp->UtworzPismaZfolderu($sciezka);
-        $response = $this->render('pismo/listaNier.html.twig',[
-            'pisma' => $pisma,
-            'pismo_id' => -1,
-            ]);
+        $foldery = $pnp->PobierzWszystkieNazwyFolderowZfolderu($sciezka);
+        // $foldery = $pnp->ZfolderuPobierzNazwyFolderowZakonczoneUkosnikiem($sciezka);
+        $response = new Response();
+
+        $response->setContent(json_encode([
+            'dataAutocomplete' => $foldery,
+            'dataHtml' => $this->render('pismo/listaNier.html.twig',[
+                'pisma' => $pisma,
+            ])
+        ]));   
+        $response->headers->set('Content-Type', 'application/json');
+        $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
+        return  $response;
+        
+    }
+    /**
+     * @Route("/nazwyFolderowDlaAutocomplete", name="nazwy_folderow_dla_autocomplete", methods={"GET"})
+     */
+    public function nazwyFolderowDlaAutocomplete(Request $request, PracaNaPlikach $pnp)
+    {
+        $sciezka = $request->query->get("fraza");
+        $sciezkaOstatniegoFolderu = $pnp->NajglebszyMozliwyFolderZniepelnejSciezki($sciezka);
+        $sciezkaPozostaloscDoWyszukania = $pnp->CzescSciezkiZaFolderem($sciezka,$sciezkaOstatniegoFolderu);
+        $foldery = $pnp->PobierzWszystkieNazwyFolderowZfolderu($sciezkaOstatniegoFolderu);
+
+        $folderyPasujaceDoFrazy = $pnp->FitrujFolderyPasujaceDoFrazy($foldery, $sciezkaPozostaloscDoWyszukania);
+        // $foldery = $pnp->ZfolderuPobierzNazwyFolderowZakonczoneUkosnikiem($sciezka);
+        $response = new Response();
+
+        $response->setContent(json_encode([
+            'foldery' => $folderyPasujaceDoFrazy,
+            ])
+        );   
+        $response->headers->set('Content-Type', 'application/json');
         $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
         return  $response;
     }

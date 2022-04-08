@@ -1,0 +1,21 @@
+<table>
+    {% for folder in foldery %}
+        <tr>
+            <td>
+                {# {% set nazwa = pismo.NazwaZrodlaPrzedZarejestrowaniem %} #}
+                {# <a href="{{ path('pismo_nowe_ze_skanu', {'nazwa': nazwa, 'numerStrony': 1}) }}" >{{ pismo.NazwaSkroconaZrodla(20) }}</a> #}
+                {{ folder }}
+            </td>
+            <td>
+                {# {% if pismo.JestPodgladDlaZrodla() %}+{% endif %} #}
+                
+            </td>
+            {% if pokazDate is defined %}
+            
+            <td>
+                {{ pismo.dataModyfikacji }}
+            </td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+</table>
