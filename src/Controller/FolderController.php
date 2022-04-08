@@ -40,14 +40,13 @@ class FolderController extends AbstractController
 
         $response->setContent(json_encode([
             'dataAutocomplete' => $foldery,
-            'dataHtml' => $this->render('pismo/listaNier.html.twig',[
+            'dataHtml' => $this->render('pismo/listaNier.html.twig', [
                 'pisma' => $pisma,
             ])
-        ]));   
+        ]));
         $response->headers->set('Content-Type', 'application/json');
         $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
         return  $response;
-        
     }
     /**
      * @Route("/nazwyFolderowDlaAutocomplete", name="nazwy_folderow_dla_autocomplete", methods={"GET"})
@@ -56,17 +55,18 @@ class FolderController extends AbstractController
     {
         $sciezka = $request->query->get("fraza");
         $sciezkaOstatniegoFolderu = $pnp->NajglebszyMozliwyFolderZniepelnejSciezki($sciezka);
-        $sciezkaPozostaloscDoWyszukania = $pnp->CzescSciezkiZaFolderem($sciezka,$sciezkaOstatniegoFolderu);
+        $sciezkaPozostaloscDoWyszukania = $pnp->CzescSciezkiZaFolderem($sciezka, $sciezkaOstatniegoFolderu);
         $foldery = $pnp->PobierzWszystkieNazwyFolderowZfolderu($sciezkaOstatniegoFolderu);
 
         $folderyPasujaceDoFrazy = $pnp->FitrujFolderyPasujaceDoFrazy($foldery, $sciezkaPozostaloscDoWyszukania);
-        // $foldery = $pnp->ZfolderuPobierzNazwyFolderowZakonczoneUkosnikiem($sciezka);
+        $pelneFoldery = rtrim($sciezkaOstatniegoFolderu,"/");
         $response = new Response();
-
-        $response->setContent(json_encode([
-            'foldery' => $folderyPasujaceDoFrazy,
+        $response->setContent(
+            json_encode([
+                'foldery' => $folderyPasujaceDoFrazy,
+                'pelneFoldery' => $pelneFoldery,
             ])
-        );   
+        );
         $response->headers->set('Content-Type', 'application/json');
         $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
         return  $response;

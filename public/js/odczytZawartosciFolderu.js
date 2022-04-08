@@ -28,6 +28,7 @@ jQuery(document).ready(function () {
     // input_sciezka_do_folderu.on('input', function () {
     //     var tekst = input_sciezka_do_folderu.val();
     var adres = "/folder/nazwyFolderowDlaAutocomplete";
+    var ostatniFolder = "ostatni";
 
     // });
 
@@ -46,14 +47,16 @@ jQuery(document).ready(function () {
                     success: function (data) {
                         // response($.ui.autocomplete.filter(data.foldery,request.term));//filtruje po stronie przeglądarki
                         response(data.foldery);
+                        ostatniFolder = data.pelneFoldery;
                     }
                 });
                 
             },
         select: function (event, ui) {
             // console.log(ui.item.label);
-            input_sciezka_do_folderu.val(ui.item.label); // display the selected text
+            input_sciezka_do_folderu.val(ostatniFolder+ui.item.label); // display the selected text
             // $('#selectuser_id').val(ui.item.value); // save selected id to input
+            // input_sciezka_do_folderu.autocomplete();
             return false;
         },
         // focus: function (event, ui) {
