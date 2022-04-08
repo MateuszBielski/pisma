@@ -178,7 +178,10 @@ class PracaNaPlikach
     public function FitrujFolderyPasujaceDoFrazy($foldery, $sciezkaPozostaloscDoWyszukania)
     {
         if(!strlen($sciezkaPozostaloscDoWyszukania))return $foldery;
-        $pattern = "/^\\".$sciezkaPozostaloscDoWyszukania."/";// podwójny lewy ukośnik na początku jest dla zabezpieczenia ukośnika prawego od którego rozpoczyna się $sciezka....
+        $pattern = "/^\\".$sciezkaPozostaloscDoWyszukania."/i";
+        // podwójny lewy ukośnik na początku jest dla zabezpieczenia ukośnika prawego 
+        //od którego rozpoczyna się $sciezka....
+        //caseInsensitive "/i" case sensitive "/"
         return array_values(preg_grep($pattern,$foldery))??[];
     }
 }

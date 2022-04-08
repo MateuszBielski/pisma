@@ -53,19 +53,13 @@ jQuery(document).ready(function () {
                 
             },
         select: function (event, ui) {
-            // console.log(ui.item.label);
-            input_sciezka_do_folderu.val(ostatniFolder+ui.item.label); // display the selected text
-            // $('#selectuser_id').val(ui.item.value); // save selected id to input
-            // input_sciezka_do_folderu.autocomplete();
+            input_sciezka_do_folderu.val(ostatniFolder+ui.item.label);
             return false;
         },
-        // focus: function (event, ui) {
-        //     console.log("focus");
-        //     input_sciezka_do_folderu.val(ui.item.foldery);
-        //     // $( "#selectuser_id" ).val( ui.item.value );
-
-        //     return false;
-        // },
+        focus: function (event, ui) {
+            input_sciezka_do_folderu.val(ostatniFolder+ui.item.label);
+            return false;
+        },
     });
 
 

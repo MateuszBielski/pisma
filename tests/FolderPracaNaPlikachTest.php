@@ -88,4 +88,11 @@ class FolderPracaNaPlikachTest extends TestCase
         $folderyPasujace = ["/alib","/lib32","/lib47","/li"];
         $this->assertEquals($folderyPasujace,$pnp->FitrujFolderyPasujaceDoFrazy($folderyRozne,""));
     }
+    public function testFitrujFolderyPasujaceDoFrazy_WielkoscLiterNiewazna()
+    {
+        $pnp = new PracaNaPlikach();
+        $folderyRozne = ["/alib","/lIb32","/Lib47","/li"];
+        $folderyPasujace = ["/lIb32","/Lib47","/li"];
+        $this->assertEquals($folderyPasujace,$pnp->FitrujFolderyPasujaceDoFrazy($folderyRozne,"/li"));
+    }
 }
