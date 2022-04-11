@@ -42,14 +42,26 @@ class PismoPracaNaPlikachTest extends TestCase
         $pnp = new PracaNaPlikach();
         $pisma = $pnp->UtworzPismaZfolderu($this->pathSkanyFolder);
         $this->assertEquals(5,count($pisma));
-        $this->assertEquals('dok3.pdf',$pisma[2]->getNazwaZrodlaPrzedZarejestrowaniem());
+        $this->assertEquals('dok3.pdf',$pisma[2]->getNazwaZrodlaPrzedZarejestrowaniemObcietaSciezka());
     }
     public function testUtworzPismaZfolderu_tylkoPdf()
     {
         $pnp = new PracaNaPlikach();
         $pisma = $pnp->UtworzPismaZfolderu($this->pathSkanyFolder,'pdf');
         $this->assertEquals(3,count($pisma));
-        $this->assertEquals('dok3.pdf',$pisma[2]->getNazwaZrodlaPrzedZarejestrowaniem());
+        $this->assertEquals('dok3.pdf',$pisma[2]->getNazwaZrodlaPrzedZarejestrowaniemObcietaSciezka());
+    }
+    public function testUtworzPismoNaPodstawie_ZnazwyObcinaSciezke()
+    {
+        $pnp = new PracaNaPlikach();
+        $pismo = $pnp->UtworzPismoNaPodstawie("jakas/sciezka","nie/obciete/nazwa");
+        $this->assertEquals("jakas/sciezka/nazwa",$pismo->getAdresZrodlaPrzedZarejestrowaniem());
+    }
+    public function testUtworzPismaZfolderu_bezSciezkiBezRozszerzenia()
+    {
+        $pnp = new PracaNaPlikach();
+        $pisma = $pnp->UtworzPismaZfolderu($this->pathSkanyFolder);
+        $this->assertEquals('dok3.pdf',$pisma[2]->getNazwaZrodlaPrzedZarejestrowaniemObcietaSciezka());
     }
     public function testKomunikatJezeliPustyFolder()
     {
@@ -71,7 +83,7 @@ class PismoPracaNaPlikachTest extends TestCase
         $nazwaZrodla = "dok2.pdf";
         $pnp = new PracaNaPlikach;
         $pismo = $pnp->UtworzPismoNaPodstawie($this->pathSkanyFolder,$nazwaZrodla);
-        $this->assertEquals($nazwaZrodla,$pismo->getNazwaZrodlaPrzedZarejestrowaniem());
+        $this->assertEquals($nazwaZrodla,$pismo->getNazwaZrodlaPrzedZarejestrowaniemObcietaSciezka());
     }
     public function testGenerujPodgladJesliNieMaDlaPisma_tworzyOdpowiedniFolder()
     {

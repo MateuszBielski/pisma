@@ -2,7 +2,7 @@
 	{% for pismo in pisma %}
 		<tr>
 			<td>
-				{% set nazwa = pismo.NazwaZrodlaPrzedZarejestrowaniem %}
+				{% set nazwa = pismo.NazwaZrodlaPrzedZarejestrowaniemObcietaSciezka %}
 				{% if dlugoscNazwy is not defined %}
 					{% set dlugoscNazwy = 20 %}
 				{% endif %}
@@ -18,6 +18,13 @@
 				<td>
 					{{ pismo.dataModyfikacji }}
 				</td>
+			{% endif %}
+			{% if pismo.rozmiarDokumentu > 0 %}
+			<td>
+				{{ pismo.RozmiarCzytelny() }}
+			</td>
+			{% else %}
+				<td>rozmiar</td>
 			{% endif %}
 		</tr>
 	{% endfor %}

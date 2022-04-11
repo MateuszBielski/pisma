@@ -59,7 +59,9 @@ class PracaNaPlikach
     public function UtworzPismoNaPodstawie($folder, $nazwaZrodla): Pismo
     {
         if (substr($folder, -1) != '/') $folder .= '/';
-        return new Pismo($folder . $nazwaZrodla);
+        $arr = explode('/',$nazwaZrodla);
+        $zrodlo = count($arr)? end($arr): $nazwaZrodla;
+        return new Pismo($folder . $zrodlo);
     }
     public function UtworzPismaZfolderu(string $folder, $rozsz = ""): array
     {

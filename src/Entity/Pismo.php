@@ -90,6 +90,8 @@ class Pismo
      */
     private $opisCiag;
 
+    private int $rozmiar = 0;
+
     public function __construct(string $adresZrodlaPrzedZarejestrowaniem = "")
     {
         $this->adresZrodlaPrzedZarejestrowaniem = $adresZrodlaPrzedZarejestrowaniem;
@@ -98,9 +100,10 @@ class Pismo
         $this->dataDokumentu = new DateTime();
         $this->dataDokumentu->setTimestamp($timestamp);
         $this->dataModyfikacji = @date("Y-m-d",$timestamp);
-        $this->nazwaPliku = $this->getNazwaZrodlaPrzedZarejestrowaniem();
+        $this->nazwaPliku = $this->getNazwaZrodlaPrzedZarejestrowaniemObcietaSciezka();
         $this->sprawy = new ArrayCollection();
         $this->opis = new ArrayCollection();
+        $this->rozmiar = @filesize($adresZrodlaPrzedZarejestrowaniem);
     }
 
     public function getId(): ?int
@@ -136,14 +139,14 @@ class Pismo
 
         return $this;
     }
-    public function getNazwaZrodlaPrzedZarejestrowaniem(): string
+    public function getNazwaZrodlaPrzedZarejestrowaniemObcietaSciezka(): string
     {
         $arr = explode('/',$this->adresZrodlaPrzedZarejestrowaniem);
         return end($arr);
     }
     public function NazwaSkroconaZrodla(int $dlugosc): string
     {
-        $skrot = $this->getNazwaZrodlaPrzedZarejestrowaniem();
+        $skrot = $this->getNazwaZrodlaPrzedZarejestrowaniemObcietaSciezka();
         $przod = substr($skrot,0,-4);
         // print("\n".strlen($przod)."   ".$dlugosc+1);
         // echo "\nprzod:  ".$przod." strlen: ".strlen($przod);
@@ -281,7 +284,7 @@ class Pismo
     }
     public function NazwaZrodlaBezRozszerzenia(): string
     {
-        $nazwa = $this->getNazwaZrodlaPrzedZarejestrowaniem();
+        $nazwa = $this->getNazwaZrodlaPrzedZarejestrowaniemObcietaSciezka();
         return substr($nazwa,0,strrpos($nazwa,'.'));
     }
     public function getDataModyfikacji()
@@ -630,5 +633,27 @@ class Pismo
         $czyFormatBazy = preg_match('|[\d]{4}_[\d]{5}|',$ozn);
         $res = $czyFormatBazy ? $this->OznaczenieKonwertujDlaUzytkownika($ozn):$ozn;
         return ($res == null) ? '':$res;
+    }
+    public function getRozmiarDokumentu(): int
+    {
+        return $this->rozmiar;
+    }
+    public function setRozmiar(int $rozmiar)
+    {
+        $this->rozmiar = $rozmiar;
+    }
+    public function RozmiarCzytelny(): string
+    {
+        $jednostki = ["B","kiB", "MiB"];
+        $zaDuze = true;
+        $podzielone = $this->rozmiar;
+        while($zaDuze)
+        {
+            $jednostka = array_shift($jednostki);
+            if($podzielone < 1024)return sprintf('%3.1f',$podzielone)." ".$jednostka;
+            $podzielone = $podzielone / 1024;
+        }
+
+        return $this->rozmiar." B";
     }
 }

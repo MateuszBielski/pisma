@@ -8,6 +8,7 @@ use App\Entity\Sprawa;
 use App\Entity\WyrazWciagu;
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Filesystem\Filesystem;
 
 class PismoTest extends TestCase
 {
@@ -15,12 +16,12 @@ class PismoTest extends TestCase
     {
         // $adrZrodla = "/var/www/html/skany/BRN3C2AF41C02A8_006357.pdf";
         $pismo = new Pismo("/var/www/html/skany/BRN3C2AF41C02A8_006357.pdf");
-        $this->assertEquals('/png/BRN3C2AF41C02A8_006357/BRN3C2AF41C02A8_006357-000001.png',$pismo->SciezkaDoPlikuPierwszejStronyDuzegoPodgladuPrzedZarejestrowaniem());
+        $this->assertEquals('/png/BRN3C2AF41C02A8_006357/BRN3C2AF41C02A8_006357-000001.png', $pismo->SciezkaDoPlikuPierwszejStronyDuzegoPodgladuPrzedZarejestrowaniem());
     }
     public function testFolderZpodlgademPngWzglednieZgodnieZeZrodlem()
     {
         $pismo = new Pismo("/var/www/html/skany/BRN3C2AF41C02A8_006357.pdf");
-        $this->assertEquals('png/BRN3C2AF41C02A8_006357/',$pismo->FolderZpodlgademPngWzglednieZgodnieZeZrodlem());//do ustalenia ukośniki
+        $this->assertEquals('png/BRN3C2AF41C02A8_006357/', $pismo->FolderZpodlgademPngWzglednieZgodnieZeZrodlem()); //do ustalenia ukośniki
     }
     public function testUtworzonePokazujePolozeniePodgladu1strony_zmianaDomyslnegoFold()
     {
@@ -28,20 +29,20 @@ class PismoTest extends TestCase
 
         $pismo = new Pismo("/var/www/html/skany/BRN3C2AF41C02A8_006357.pdf");
         $pismo->setFolderPodgladu("rcp/");
-        $this->assertEquals('/rcp/BRN3C2AF41C02A8_006357/BRN3C2AF41C02A8_006357-000001.png',$pismo->SciezkaDoPlikuPierwszejStronyDuzegoPodgladuPrzedZarejestrowaniem());
+        $this->assertEquals('/rcp/BRN3C2AF41C02A8_006357/BRN3C2AF41C02A8_006357-000001.png', $pismo->SciezkaDoPlikuPierwszejStronyDuzegoPodgladuPrzedZarejestrowaniem());
     }
     public function testFolderZpodlgademPngWzglednieZgodnieZeZrodlem_zmianaDomyslnegoFold()
     {
         $pismo = new Pismo("/var/www/html/skany/BRN3C2AF41C02A8_006357.pdf");
         $pismo->setFolderPodgladu("rcp/");
-        $this->assertEquals('rcp/BRN3C2AF41C02A8_006357/',$pismo->FolderZpodlgademPngWzglednieZgodnieZeZrodlem());//do ustalenia ukośniki
+        $this->assertEquals('rcp/BRN3C2AF41C02A8_006357/', $pismo->FolderZpodlgademPngWzglednieZgodnieZeZrodlem()); //do ustalenia ukośniki
     }
     public function testFolderZpodlgademPngWzglednieZgodnieZnazwaPliku()
     {
         $pismo = new Pismo("/var/www/html/skany/BRN3C2AF41C02A8_006357.pdf");
         $pismo->setNazwaPliku("BRN3C2AF41C02A8_006358.pdf");
         $pismo->setFolderPodgladu("rcp/");
-        $this->assertEquals('rcp/BRN3C2AF41C02A8_006358/',$pismo->FolderZpodlgademPngWzglednieZgodnieZnazwaPliku());
+        $this->assertEquals('rcp/BRN3C2AF41C02A8_006358/', $pismo->FolderZpodlgademPngWzglednieZgodnieZnazwaPliku());
     }
 
 
@@ -61,21 +62,21 @@ class PismoTest extends TestCase
         $pismo = new Pismo("/var/jakas/sciezka/skany/maPodglad.pdf");
         $pismo->setFolderPodgladu("tests/png/");
         $sciezkiDoPodgladu = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem();
-        $this->assertEquals(3,count($sciezkiDoPodgladu));
+        $this->assertEquals(3, count($sciezkiDoPodgladu));
     }
     public function testSciezkiDoPlikuPodgladowPrzedZarejestrowaniem_bezSlashaWiodacgo()
     {
         $pismo = new Pismo("/var/jakas/sciezka/skany/maPodglad.pdf");
         $pismo->setFolderPodgladu("tests/png/");
         $sciezkiDoPodgladu = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem(false);
-        $this->assertEquals('tests/png/maPodglad/maPodglad-000002.png',$sciezkiDoPodgladu[1]);
+        $this->assertEquals('tests/png/maPodglad/maPodglad-000002.png', $sciezkiDoPodgladu[1]);
     }
     public function testSciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego()
     {
         $pismo = new Pismo("/var/jakas/sciezka/skany/maPodglad.pdf");
         $pismo->setFolderPodgladu("tests/png/");
         $sciezkiDoPodgladu = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego();
-        $this->assertEquals('maPodglad/maPodglad-000002.png',$sciezkiDoPodgladu[1]);
+        $this->assertEquals('maPodglad/maPodglad-000002.png', $sciezkiDoPodgladu[1]);
     }
     public function testGenerujNazwyZeSciezkamiDlaDocelowychPodgladow()
     {
@@ -83,8 +84,7 @@ class PismoTest extends TestCase
         $pismo->setFolderPodgladu("tests/png/");
         $pismo->setNazwaPliku("nowaNazwa3.pdf");
         $sciezkiWygenerowane = $pismo->GenerujNazwyZeSciezkamiDlaDocelowychPodgladow();
-        $this->assertEquals('tests/png/nowaNazwa3/nowaNazwa3-000002.png',$sciezkiWygenerowane[1]);
-
+        $this->assertEquals('tests/png/nowaNazwa3/nowaNazwa3-000002.png', $sciezkiWygenerowane[1]);
     }
     public function testGenerujNazwyDocelowychPodgladowZeSciezkamiWfolderzeZrodlowym()
     {
@@ -93,45 +93,45 @@ class PismoTest extends TestCase
         $pismo->setFolderPodgladu("tests/png/");
         $pismo->setNazwaPliku("nowaNazwa3.pdf");
         $sciezkiWygenerowane = $pismo->GenerujNazwyDocelowychPodgladowZeSciezkamiWfolderzeZrodlowym();
-        $this->assertEquals('tests/png/maPodglad/nowaNazwa3-000002.png',$sciezkiWygenerowane[1]);
+        $this->assertEquals('tests/png/maPodglad/nowaNazwa3-000002.png', $sciezkiWygenerowane[1]);
     }
     public function testSciezkiDoPodgladowZarejestrowanych()
     {
         $pismo = new Pismo("/var/jakas/sciezka/skany/zrodlo.pdf");
-        $pismo->setNazwaPliku("maPodglad.pdf");//nie ma znaczenia że folder ten sam jak dla testów podglądu dla źródła
+        $pismo->setNazwaPliku("maPodglad.pdf"); //nie ma znaczenia że folder ten sam jak dla testów podglądu dla źródła
         $pismo->setFolderPodgladu("tests/png/");
         $sciezkiDoPodgladu = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
-        
-        $this->assertEquals('/tests/png/maPodglad/maPodglad-000002.png',$sciezkiDoPodgladu[1]);
+
+        $this->assertEquals('/tests/png/maPodglad/maPodglad-000002.png', $sciezkiDoPodgladu[1]);
     }
     public function testSciezkiDoPodgladowZarejestrowanychBezFolderuGlownego()
     {
         $pismo = new Pismo("/var/jakas/sciezka/skany/zrodlo.pdf");
-        $pismo->setNazwaPliku("maPodglad.pdf");//nie ma znaczenia że folder ten sam jak dla testów podglądu dla źródła
+        $pismo->setNazwaPliku("maPodglad.pdf"); //nie ma znaczenia że folder ten sam jak dla testów podglądu dla źródła
         $pismo->setFolderPodgladu("tests/png/");
         $sciezkiDoPodgladu = $pismo->SciezkiDoPlikuPodgladowZarejestrowanychBezFolderuGlownego();
-        $this->assertEquals('maPodglad/maPodglad-000002.png',$sciezkiDoPodgladu[1]);
+        $this->assertEquals('maPodglad/maPodglad-000002.png', $sciezkiDoPodgladu[1]);
     }
 
     public function testNazwaSkroconaZrodla()
     {
         $pismo2 = new Pismo("/skany/skan.pdf");
-        $this->assertEquals('skan.pdf',$pismo2->NazwaSkroconaZrodla(2));
+        $this->assertEquals('skan.pdf', $pismo2->NazwaSkroconaZrodla(2));
         $pismo = new Pismo("/var/www/html/skany/BRN3C2AF41C02A8_006357.pdf");
-        $this->assertEquals('BRN3C...pdf',$pismo->NazwaSkroconaZrodla(5));
-        $this->assertEquals('BRN3C2A...pdf',$pismo->NazwaSkroconaZrodla(7));
+        $this->assertEquals('BRN3C...pdf', $pismo->NazwaSkroconaZrodla(5));
+        $this->assertEquals('BRN3C2A...pdf', $pismo->NazwaSkroconaZrodla(7));
     }
     public function testSciezkiDoPlikuPodgladowZarejestrowanych_jesliNieMaPodgladu()
     {
         $pismo = new Pismo("/skany/skan.pdf");
         $sciezki = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
-        $this->assertEquals(1,count($sciezki));
+        $this->assertEquals(1, count($sciezki));
     }
     public function testSetNazwaPliku_jestDostepDoNazwyPlikuPrzedZmiana()
     {
         $pismo = new Pismo("/jakis/folder/staraNazwa.pdf");
         $pismo->setNazwaPliku("nowaNazwa.pdf");
-        $this->assertEquals('staraNazwa.pdf',$pismo->getNazwaPlikuPrzedZmiana());
+        $this->assertEquals('staraNazwa.pdf', $pismo->getNazwaPlikuPrzedZmiana());
     }
     public function testUstalStroneNaPodstawieKierunku()
     {
@@ -142,54 +142,53 @@ class PismoTest extends TestCase
         $nadawca->setNazwa('strona');
         $odbiorca = new Kontrahent;
         $odbiorca->setNazwa('strona');
-        $pismo->UstalStroneNaPodstawieKierunku($nadawca,$kierunek1);
-        $this->assertEquals(null,$pismo->getOdbiorca());
-        $this->assertEquals('strona',$pismo->getNadawca()->getNazwa());
+        $pismo->UstalStroneNaPodstawieKierunku($nadawca, $kierunek1);
+        $this->assertEquals(null, $pismo->getOdbiorca());
+        $this->assertEquals('strona', $pismo->getNadawca()->getNazwa());
 
-        $pismo->UstalStroneNaPodstawieKierunku($odbiorca,$kierunek2);
-        $this->assertEquals('strona',$pismo->getOdbiorca()->getNazwa());
-        $this->assertEquals(null,$pismo->getNadawca());
-
+        $pismo->UstalStroneNaPodstawieKierunku($odbiorca, $kierunek2);
+        $this->assertEquals('strona', $pismo->getOdbiorca()->getNazwa());
+        $this->assertEquals(null, $pismo->getNadawca());
     }
     public function testUstawienieOdbiorcyZerujeNadawce()
     {
         $pismo = new Pismo;
         $pismo->setNadawca(new Kontrahent);
         $pismo->setOdbiorca(new Kontrahent);
-        $this->assertEquals(null,$pismo->getNadawca());
+        $this->assertEquals(null, $pismo->getNadawca());
     }
     public function testUstawienieNadawcyZerujeOdbiorcy()
     {
         $pismo = new Pismo;
         $pismo->setOdbiorca(new Kontrahent);
         $pismo->setNadawca(new Kontrahent);
-        $this->assertEquals(null,$pismo->getOdbiorca());
+        $this->assertEquals(null, $pismo->getOdbiorca());
     }
     public function testKierunekJesliJestNadawca()
     {
         $pismo = new Pismo;
         $pismo->setNadawca(new Kontrahent);
-        $this->assertEquals(1,$pismo->getKierunek());
+        $this->assertEquals(1, $pismo->getKierunek());
     }
     public function testKierunekJesliJestOdbiorca()
     {
         $pismo = new Pismo;
         $pismo->setOdbiorca(new Kontrahent);
-        $this->assertEquals(2,$pismo->getKierunek());
+        $this->assertEquals(2, $pismo->getKierunek());
     }
     public function testStronaJesliJestNadawca()
     {
         $pismo = new Pismo;
         $k = new Kontrahent;
         $pismo->setNadawca($k);
-        $this->assertEquals($k,$pismo->getStrona());
+        $this->assertEquals($k, $pismo->getStrona());
     }
     public function testStronaJesliJestOdbiorca()
     {
         $pismo = new Pismo;
         $k = new Kontrahent;
         $pismo->setOdbiorca($k);
-        $this->assertEquals($k,$pismo->getStrona());
+        $this->assertEquals($k, $pismo->getStrona());
     }
     public function testKierunek1_ustawiaNadawce()
     {
@@ -197,8 +196,8 @@ class PismoTest extends TestCase
         $k = new Kontrahent;
         $pismo->setStrona($k);
         $pismo->setKierunek(1);
-        $this->assertEquals(null,$pismo->getOdbiorca());
-        $this->assertEquals($k,$pismo->getNadawca());
+        $this->assertEquals(null, $pismo->getOdbiorca());
+        $this->assertEquals($k, $pismo->getNadawca());
     }
     public function testKierunek2_ustawiaOdbiorce()
     {
@@ -206,8 +205,8 @@ class PismoTest extends TestCase
         $k = new Kontrahent;
         $pismo->setStrona($k);
         $pismo->setKierunek(2);
-        $this->assertEquals(null,$pismo->getNadawca());
-        $this->assertEquals($k,$pismo->getOdbiorca());
+        $this->assertEquals(null, $pismo->getNadawca());
+        $this->assertEquals($k, $pismo->getOdbiorca());
     }
     public function testUstalKierunekIstroneJesliNadawca()
     {
@@ -215,7 +214,7 @@ class PismoTest extends TestCase
         $k = new Kontrahent;
         $pismo->setNadawca($k);
         $pismo->UstalStroneIKierunek();
-        $this->assertEquals(1,$pismo->getKierunek());
+        $this->assertEquals(1, $pismo->getKierunek());
     }
     public function testUstalKierunekIstroneJesliOdbiorca()
     {
@@ -223,15 +222,15 @@ class PismoTest extends TestCase
         $k = new Kontrahent;
         $pismo->setOdbiorca($k);
         $pismo->UstalStroneIKierunek();
-        $this->assertEquals(2,$pismo->getKierunek());
+        $this->assertEquals(2, $pismo->getKierunek());
     }
     public function testKierunekOpisowo()
     {
         $pismo = new Pismo;
         $pismo->setKierunek(1);
-        $this->assertEquals("przychodzące od: ",$pismo->getKierunekOpisowo());
+        $this->assertEquals("przychodzące od: ", $pismo->getKierunekOpisowo());
         $pismo->setKierunek(2);
-        $this->assertEquals("wychodzące do: ",$pismo->getKierunekOpisowo());
+        $this->assertEquals("wychodzące do: ", $pismo->getKierunekOpisowo());
     }
     public function testDataModyfikacjiJestDataDokumentu_dlaNiezarejestrowanych()
     {
@@ -239,7 +238,7 @@ class PismoTest extends TestCase
         $pismo = new Pismo($adresPliku);
         $dataModyfikacji = new DateTime;
         $dataModyfikacji->setTimestamp(filemtime($adresPliku));
-        $this->assertEquals($dataModyfikacji,$pismo->getDataDokumentu());
+        $this->assertEquals($dataModyfikacji, $pismo->getDataDokumentu());
     }
     public function testUstalJesliTrzebaDateDokumentuZdatyMod_nieTrzeba()
     {
@@ -253,7 +252,7 @@ class PismoTest extends TestCase
         $pismo = new Pismo();
         $nazwaPliku = "dok2.pdf";
         $folderZplikiem = "tests/skanyDoTestow/";
-        $adresPliku = $folderZplikiem.$nazwaPliku;
+        $adresPliku = $folderZplikiem . $nazwaPliku;
 
         $pismo->setNazwaPliku($nazwaPliku);
         $pismo->setSciezkaDoFolderuPdf($folderZplikiem);
@@ -262,79 +261,77 @@ class PismoTest extends TestCase
 
         $dataModyfikacji = new DateTime;
         $dataModyfikacji->setTimestamp(filemtime($adresPliku));
-        $this->assertEquals($dataModyfikacji,$pismo->getDataDokumentu());
+        $this->assertEquals($dataModyfikacji, $pismo->getDataDokumentu());
     }
-   public function testPrzechwycOpisyNowychsSpraw_utworzNoweSprawy()
-   {
-       $sprawy = ['nowy opis1','nowy opis2'];
-       $pismo = new Pismo();
-       $pismo->PrzechwycOpisyNowychsSpraw($sprawy);
-       $this->assertEquals('nowy opis1',$pismo->getSprawy()[0]->getOpis());
-       $this->assertEquals('nowy opis2',$pismo->getSprawy()[1]->getOpis());
-   }
-   public function testPrzechwycOpisyNowychsSpraw_nieTworzyDlaPustego()
-   {
+    public function testPrzechwycOpisyNowychsSpraw_utworzNoweSprawy()
+    {
+        $sprawy = ['nowy opis1', 'nowy opis2'];
+        $pismo = new Pismo();
+        $pismo->PrzechwycOpisyNowychsSpraw($sprawy);
+        $this->assertEquals('nowy opis1', $pismo->getSprawy()[0]->getOpis());
+        $this->assertEquals('nowy opis2', $pismo->getSprawy()[1]->getOpis());
+    }
+    public function testPrzechwycOpisyNowychsSpraw_nieTworzyDlaPustego()
+    {
         $pismo = new Pismo();
         $sprawy = [];
         $pismo->PrzechwycOpisyNowychsSpraw($sprawy);
-        $this->assertEquals(0,count($pismo->getSprawy()));
-   }
-   public function testPrzechwycOpisyNowychsSpraw_dodajeNowaTylkoDlaOpisowejWartosci()
-   {
+        $this->assertEquals(0, count($pismo->getSprawy()));
+    }
+    public function testPrzechwycOpisyNowychsSpraw_dodajeNowaTylkoDlaOpisowejWartosci()
+    {
         $pismo = new Pismo();
-        $sprawy = [3,5,'opisowa wartość'];
+        $sprawy = [3, 5, 'opisowa wartość'];
         $spr3 = new Sprawa;
         $spr5 = new Sprawa;
         $pismo->addSprawy($spr3);
         $pismo->addSprawy($spr5);
         $pismo->PrzechwycOpisyNowychsSpraw($sprawy);
-        $this->assertEquals(3,count($pismo->getSprawy()));
-   }
+        $this->assertEquals(3, count($pismo->getSprawy()));
+    }
 
-   public function testPrzechwycOpisyNowychsSpraw_usuwaWykorzystaneOpisy()
-   {
+    public function testPrzechwycOpisyNowychsSpraw_usuwaWykorzystaneOpisy()
+    {
         $pismo = new Pismo();
-        $sprawy = [3,5,'opisowa wartość',12,'inny opis',32,24];
+        $sprawy = [3, 5, 'opisowa wartość', 12, 'inny opis', 32, 24];
         $pismo->PrzechwycOpisyNowychsSpraw($sprawy);
-        $this->assertEquals([3,5,12,32,24],$sprawy);
-   }
-   public function testUtworzIdodajNoweSprawyWgOpisow()
-   {
+        $this->assertEquals([3, 5, 12, 32, 24], $sprawy);
+    }
+    public function testUtworzIdodajNoweSprawyWgOpisow()
+    {
         $pismo = new Pismo();
         $opisySpraw = ['opis jeden', 'opis dwa', 'jeszcze inny opis'];
         $pismo->UtworzIdodajNoweSprawyWgOpisow($opisySpraw);
-        $this->assertEquals('opis jeden',$pismo->getSprawy()[0]->getOpis());
-        $this->assertEquals('opis dwa',$pismo->getSprawy()[1]->getOpis());
-        $this->assertEquals('jeszcze inny opis',$pismo->getSprawy()[2]->getOpis());
-
-   }
-   public function testUtworzIdodajNoweSprawy_NieUsuwaIstniejacych()
-   {
+        $this->assertEquals('opis jeden', $pismo->getSprawy()[0]->getOpis());
+        $this->assertEquals('opis dwa', $pismo->getSprawy()[1]->getOpis());
+        $this->assertEquals('jeszcze inny opis', $pismo->getSprawy()[2]->getOpis());
+    }
+    public function testUtworzIdodajNoweSprawy_NieUsuwaIstniejacych()
+    {
         $pismo = new Pismo();
         $opisySpraw = ['opis jeden', 'opis dwa', 'jeszcze inny opis'];
         $pismo->addSprawy(new Sprawa);
         $pismo->UtworzIdodajNoweSprawyWgOpisow($opisySpraw);
-        $this->assertEquals(4,count($pismo->getSprawy()));
-
-   }
-   public function testSetOpis()
+        $this->assertEquals(4, count($pismo->getSprawy()));
+    }
+    public function testSetOpis()
     {
         $pismo = new Pismo;
         $opis = 'jest to pismo z testu setOpis';
         $pismo->setOpis($opis);
-        $this->assertEquals('jest to pismo z testu setOpis',$pismo->getOpis());
+        $this->assertEquals('jest to pismo z testu setOpis', $pismo->getOpis());
     }
     public function testUstawienieOpisuZerowejDlugosci()
     {
         $pismo = new Pismo;
         $pismo->setOpis('');
-        $this->assertEquals('',$pismo->getOpis());
+        $this->assertEquals('', $pismo->getOpis());
     }
     public function testUstawienieOpisuNull()
     {
         $pismo = new Pismo;
         $pismo->setOpis(null);
-        $this->assertEquals('',$pismo->getOpis());
+        $this->assertEquals('', $pismo->getOpis());
     }
     public function testSetOpisJesliZmieniony_nieZmienia()
     {
@@ -347,7 +344,7 @@ class PismoTest extends TestCase
         $s = new Pismo;
         $s->setOpis('opis pierwszy');
         $this->assertTrue($s->setOpisJesliZmieniony('opis drugi'));
-        $this->assertEquals('opis drugi',$s->getOpis());
+        $this->assertEquals('opis drugi', $s->getOpis());
     }
 
     public function testListaWyrazowDoUsuniecia()
@@ -356,16 +353,15 @@ class PismoTest extends TestCase
         $s->setOpis('opis pierwszy');
         $s->setOpisJesliZmieniony('inny opis');
         $doUsuniecia = $s->NiepotrzebneWyrazy();
-        $this->assertEquals('opis',$doUsuniecia[0]->getWartosc());
-        $this->assertEquals('pierwszy',$doUsuniecia[1]->getWartosc());
+        $this->assertEquals('opis', $doUsuniecia[0]->getWartosc());
+        $this->assertEquals('pierwszy', $doUsuniecia[1]->getWartosc());
     }
     public function testSetOpis_WyrazyNalezaDoPisma()
     {
         $s = new Pismo;
         $s->setOpis('jakiś opis ciąg dalszy');
-        foreach($s->getOpisCol() as $r)
-        {
-            $this->assertEquals($s,$r->getPismo());
+        foreach ($s->getOpisCol() as $r) {
+            $this->assertEquals($s, $r->getPismo());
         }
     }
     public function testSetOpisJesliZmieniony_niepotrzebneWyrazyNieNalezaDoPisma()
@@ -373,9 +369,8 @@ class PismoTest extends TestCase
         $s = new Pismo;
         $s->setOpis('opis pierwszy');
         $s->setOpisJesliZmieniony('inny opis');
-        foreach($s->NiepotrzebneWyrazy() as $n)
-        {
-            $this->assertEquals(null,$n->getPismo());
+        foreach ($s->NiepotrzebneWyrazy() as $n) {
+            $this->assertEquals(null, $n->getPismo());
         }
     }
     public function testOpisZnazwyPliku_obcinaRozszerzenie()
@@ -383,21 +378,21 @@ class PismoTest extends TestCase
         $p = new Pismo;
         $p->setNazwaPliku('jakaśNazwa.pdf');
         $p->OpisZnazwyPliku();
-        $this->assertEquals('jakaśNazwa',$p->getOpis());
+        $this->assertEquals('jakaśNazwa', $p->getOpis());
     }
     public function testOpisZnazwyPliku_NieObcinaJesliNieMaRozsz()
     {
         $p = new Pismo;
         $p->setNazwaPliku('jakaśNazwa');
         $p->OpisZnazwyPliku();
-        $this->assertEquals('jakaśNazwa',$p->getOpis());
+        $this->assertEquals('jakaśNazwa', $p->getOpis());
     }
     public function testOpisZnazwyPliku_rozdzielaSpacja()
     {
         $p = new Pismo;
         $p->setNazwaPliku('jakaś Nazwa');
         $p->OpisZnazwyPliku();
-        $this->assertEquals(2,count($p->getOpisCol()));
+        $this->assertEquals(2, count($p->getOpisCol()));
     }
 
     public function testOpisZnazwyPliku_rozdzielaDolnaKreska()
@@ -405,13 +400,13 @@ class PismoTest extends TestCase
         $p = new Pismo;
         $p->setNazwaPliku('jakaś_Inna_Nazwa');
         $p->OpisZnazwyPliku();
-        $this->assertEquals(3,count($p->getOpisCol()));
+        $this->assertEquals(3, count($p->getOpisCol()));
     }
     public function testSetOpisUstawiaOpisCiag()
     {
         $p = new Pismo;
         $p->setOpis('nazwa pliku');
-        $this->assertEquals('nazwa pliku',$p->getOpisCiag());
+        $this->assertEquals('nazwa pliku', $p->getOpisCiag());
     }
     public function testOpisZnazwyPliku_nieUstawiaJesliOpisIstnial()
     {
@@ -419,7 +414,7 @@ class PismoTest extends TestCase
         $p->setNazwaPliku('nazwa pliku');
         $p->setOpis('opis1 pliku');
         $p->OpisZnazwyPliku();
-        $this->assertEquals('opis1 pliku',$p->getOpis());
+        $this->assertEquals('opis1 pliku', $p->getOpis());
     }
     public function testOpisZnazwyPliku_UstawiaOpisCiag()
     {
@@ -428,40 +423,40 @@ class PismoTest extends TestCase
         $p->addOpi(new WyrazWciagu('opis1'));
         $p->addOpi(new WyrazWciagu('pliku'));
         $p->OpisZnazwyPliku();
-        $this->assertEquals('opis1 pliku',$p->getOpisCiag());
+        $this->assertEquals('opis1 pliku', $p->getOpisCiag());
     }
     public function testKonwersjaOznaczenia_dlaUzytkownika()
     {
         $pismo = new Pismo;
         $oznaczenieZbazy = '2021_00017';
         $oznaczenieUzytkownika = 'L.dz. 17/2021';
-        $this->assertEquals($oznaczenieUzytkownika,$pismo->OznaczenieKonwertujDlaUzytkownika($oznaczenieZbazy));
+        $this->assertEquals($oznaczenieUzytkownika, $pismo->OznaczenieKonwertujDlaUzytkownika($oznaczenieZbazy));
     }
     public function testKonwersjaOznaczenia_dlaBazy()
     {
         $pismo = new Pismo;
         $oznaczenieUzytkownika = 'L.dz. 17/2021';
         $oznaczenieDlabazy = '2021_00017';
-        $this->assertEquals($oznaczenieDlabazy,$pismo->OznaczenieKonwertujDlaBazy($oznaczenieUzytkownika));
+        $this->assertEquals($oznaczenieDlabazy, $pismo->OznaczenieKonwertujDlaBazy($oznaczenieUzytkownika));
     }
     public function testZwiekszNumeracjeOznaczeniaUzytkownika()
     {
         $pismo = new Pismo;
         $oznaczenieUzytkownika = 'L.dz. 245/2023';
-        $this->assertEquals('L.dz. 246/2023',$pismo->ZwiekszNumeracjeOznaczeniaUzytkownika($oznaczenieUzytkownika));
+        $this->assertEquals('L.dz. 246/2023', $pismo->ZwiekszNumeracjeOznaczeniaUzytkownika($oznaczenieUzytkownika));
     }
     public function testZwiekszNumeracjeOznaczeniaUzytkownika_innaLiczba()
     {
         $pismo = new Pismo;
         $oznaczenieUzytkownika = 'L.dz. 245/2023';
-        $this->assertEquals('L.dz. 249/2023',$pismo->ZwiekszNumeracjeOznaczeniaUzytkownika($oznaczenieUzytkownika,4));
+        $this->assertEquals('L.dz. 249/2023', $pismo->ZwiekszNumeracjeOznaczeniaUzytkownika($oznaczenieUzytkownika, 4));
     }
     public function testWewnetrznieKonwertujDlaUzytkownikaIzwiekszOjeden()
     {
         $pismo = new Pismo;
         $pismo->setOznaczenie('2021_00017');
         $pismo->WewnetrznieKonwertujDlaUzytkownikaIzwiekszOjeden();
-        $this->assertEquals('L.dz. 18/2021',$pismo->getOznaczenie());
+        $this->assertEquals('L.dz. 18/2021', $pismo->getOznaczenie());
     }
     public function testNaPodstawieOstatniegoZaproponujOznaczenieZaktualnymRokiem_2006()
     {
@@ -469,41 +464,70 @@ class PismoTest extends TestCase
         $pismo->setOznaczenie('2006_00078');
         $dataTeraz = new DateTime('now');
         $aktualnyRok = $dataTeraz->format('Y');
-        $oznaczenieZaktualnymRokiem = 'L.dz. 1/'.$aktualnyRok;
-        $this->assertEquals($oznaczenieZaktualnymRokiem,$pismo->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem());
+        $oznaczenieZaktualnymRokiem = 'L.dz. 1/' . $aktualnyRok;
+        $this->assertEquals($oznaczenieZaktualnymRokiem, $pismo->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem());
     }
     public function testNaPodstawieOstatniegoZaproponujOznaczenieZaktualnymRokiem_aktualny()
     {
         $dataTeraz = new DateTime('now');
         $aktualnyRok = $dataTeraz->format('Y');
-        
+
         $pismo = new Pismo;
-        $pismo->setOznaczenie($aktualnyRok.'_00078');
-        $oznaczenieZaktualnymRokiem = 'L.dz. 79/'.$aktualnyRok;
-        $this->assertEquals($oznaczenieZaktualnymRokiem,$pismo->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem());
+        $pismo->setOznaczenie($aktualnyRok . '_00078');
+        $oznaczenieZaktualnymRokiem = 'L.dz. 79/' . $aktualnyRok;
+        $this->assertEquals($oznaczenieZaktualnymRokiem, $pismo->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem());
     }
     public function testGetOznaczenieUzytkownika()
     {
         $pismo = new Pismo;
         $pismo->setOznaczenie('2006_00078');
-        $this->assertEquals('L.dz. 78/2006',$pismo->getOznaczenieUzytkownika());
+        $this->assertEquals('L.dz. 78/2006', $pismo->getOznaczenieUzytkownika());
         $pismo->setOznaczenie('L.dz. 62/2011');
-        $this->assertEquals('L.dz. 62/2011',$pismo->getOznaczenieUzytkownika());
+        $this->assertEquals('L.dz. 62/2011', $pismo->getOznaczenieUzytkownika());
     }
     public function testSetOznaczenie_NullzamieniaNaZerowyString()
     {
         $p = new Pismo;
         $p->setOznaczenie(null);
-        $this->assertEquals('',$p->getOznaczenieUzytkownika());
+        $this->assertEquals('', $p->getOznaczenieUzytkownika());
     }
     public function testNaPodstawieOstatniegoZaproponujOznaczenieZaktualnymRokiem_dlaNieUstawionegoPisma()
     {
         $dataTeraz = new DateTime('now');
         $aktualnyRok = $dataTeraz->format('Y');
-        
+
         $pismo = new Pismo;
-        $oznaczenieZaktualnymRokiem = 'L.dz. 1/'.$aktualnyRok;
-        $this->assertEquals($oznaczenieZaktualnymRokiem,$pismo->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem());
+        $oznaczenieZaktualnymRokiem = 'L.dz. 1/' . $aktualnyRok;
+        $this->assertEquals($oznaczenieZaktualnymRokiem, $pismo->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem());
+    }
+    public function testRozmiarDokumentu()
+    {
+        $sciezkaDoPismoRozmiar = "tests/dodawanieUsuwanie/dokRozmiar.txt";
+        $filesystem = new Filesystem;
+        if (!$filesystem->exists($sciezkaDoPismoRozmiar))
+            $filesystem->appendToFile($sciezkaDoPismoRozmiar, 'jakis tekst');
+        $pismo = new Pismo($sciezkaDoPismoRozmiar);
+        $this->assertEquals(11, $pismo->getRozmiarDokumentu());
+        $filesystem->remove($sciezkaDoPismoRozmiar);
+        # code...
+    }
+    public function testRozmiarCzytelny_B()
+    {
+        $pismo = new Pismo();
+        $pismo->setRozmiar(928);
+        $this->assertEquals('928.0 B',$pismo->RozmiarCzytelny());
+    }
+    public function testRozmiarCzytelny_kiB()
+    {
+        $pismo = new Pismo();
+        $pismo->setRozmiar(1025);
+        $this->assertEquals('1.0 kiB',$pismo->RozmiarCzytelny());
+    }
+    public function testRozmiarCzytelny_MiB()
+    {
+        $pismo = new Pismo();
+        $pismo->setRozmiar(2525033);
+        $this->assertEquals('2.4 MiB',$pismo->RozmiarCzytelny());
     }
     /*
     public function testBrakPodgladuZarejestrowanego_GenerujePodglad()
