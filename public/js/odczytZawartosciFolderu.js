@@ -6,8 +6,9 @@ jQuery(document).ready(function () {
     var adresPliki = "/folder/odczytZawartosciAjax";
     var ostatniFolder = "ostatni";
     var szerokoscWyswietlanegoElementu = div_lista_plikow.width();
+    var poprzedniaSciezka = '';
     console.log();
-    $(window).on('resize', function(){
+    $(window).on('resize', function () {
         szerokoscWyswietlanegoElementu = div_lista_plikow.width();
     });
 
@@ -35,22 +36,25 @@ jQuery(document).ready(function () {
         },
         focus: function (event, ui) {
             var sciezkaDoFolderu = ostatniFolder + ui.item.label;
+            if (poprzedniaSciezka != sciezkaDoFolderu) {
+                input_sciezka_do_folderu.val(sciezkaDoFolderu);
+                $.ajax({
+                    url: adresPliki,
+                    type: "GET",
+                    data: {
+                        fraza: sciezkaDoFolderu,
+                        rozmiar: szerokoscWyswietlanegoElementu
+                    },
+                    success: function (msg) {
+                        div_lista_plikow.html(msg);
+                    }
+                    , error: function (err) {
+                        div_lista_plikow.text(err.Message);
+                    }
+                });
+                poprzedniaSciezka = sciezkaDoFolderu;
+            }
 
-            input_sciezka_do_folderu.val(sciezkaDoFolderu);
-            $.ajax({
-                url: adresPliki,
-                type: "GET",
-                data: {
-                    fraza: sciezkaDoFolderu,
-                    rozmiar: szerokoscWyswietlanegoElementu
-                },
-                success: function (msg) {
-                    div_lista_plikow.html(msg);
-                }
-                , error: function (err) {
-                    div_lista_plikow.text(err.Message);
-                }
-            });
             return false;
         },
     });
