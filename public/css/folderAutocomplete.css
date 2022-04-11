@@ -1,0 +1,21 @@
+.ui-autocomplete{
+    background: rgb(57, 97, 103);
+}
+.ui-autocomplete-input{
+    background: #b5ccc3;
+    /* color: rgb(229,178,128); */
+    letter-spacing: -.4px;
+    font-weight: normal;
+}
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active,
+a.ui-button:active,
+.ui-button:active,
+.ui-button.ui-state-active:hover {
+	border: 1px solid rgb(122,228,226);
+	background: rgb(42, 71, 75);
+	font-weight: normal;
+	/* color: #9afc4a; */
+}
+/* background-color: #b5ccc3; */

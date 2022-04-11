@@ -33,7 +33,7 @@ class FolderController extends AbstractController
     {
         $sciezka = $request->query->get("fraza");
         $szerokoscElementuPix = $request->query->get("rozmiar");
-        $dlugoscNazwy = intval($szerokoscElementuPix/10);
+        $dlugoscNazwy = intval($szerokoscElementuPix/14);
         $sciezka = $pnp->NajglebszyMozliwyFolderZniepelnejSciezki($sciezka);
         $pisma = $pnp->UtworzPismaZfolderu($sciezka);
         $response = $this->render('pismo/listaNier.html.twig', [
