@@ -1,44 +1,21 @@
-// jQuery(document).ready(function () {
-//     var input_sciezka_do_folderu = $('#folder_sciezkaMoja');
-//     input_sciezka_do_folderu.on('input', function () {
-//         var tekst = input_sciezka_do_folderu.val();
-//         var adres = "/folder/odczytZawartosciAjax";
-//         $.ajax({
-//             url: adres,
-//             type: "GET",
-//             data: {
-//                 fraza: tekst
-//             },
-//             success: function (msg) {
-//                 input_sciezka_do_folderu.autocomplete({
-//                         source: msg.dataAutocomplete
-//                     });
-//                 $('#div_lista_plikow').html(msg.dataAutocomplete);
-//             }
-//             , error: function (err) {
-//                 $("#div_lista_plikow").text(err.Message);
-//             }
-//         });
-//     });
-// });
-
 
 jQuery(document).ready(function () {
     var input_sciezka_do_folderu = $('#folder_sciezkaMoja');
-    // input_sciezka_do_folderu.on('input', function () {
-    //     var tekst = input_sciezka_do_folderu.val();
-    var adres = "/folder/nazwyFolderowDlaAutocomplete";
+    var div_lista_plikow = $('#div_lista_plikow');
+    var adresFoldery = "/folder/nazwyFolderowDlaAutocomplete";
+    var adresPliki = "/folder/odczytZawartosciAjax";
     var ostatniFolder = "ostatni";
+    var szerokoscWyswietlanegoElementu = div_lista_plikow.width();
+    console.log();
+    $(window).on('resize', function(){
+        szerokoscWyswietlanegoElementu = div_lista_plikow.width();
+    });
 
-    // });
-
-    // Single Select
     input_sciezka_do_folderu.autocomplete({
         source:
             function (request, response) {
-                // Fetch data
                 $.ajax({
-                    url: adres,
+                    url: adresFoldery,
                     type: 'get',
                     dataType: "json",
                     data: {
@@ -50,14 +27,30 @@ jQuery(document).ready(function () {
                         ostatniFolder = data.pelneFoldery;
                     }
                 });
-                
+
             },
         select: function (event, ui) {
-            input_sciezka_do_folderu.val(ostatniFolder+ui.item.label);
+            input_sciezka_do_folderu.val(ostatniFolder + ui.item.label);
             return false;
         },
         focus: function (event, ui) {
-            input_sciezka_do_folderu.val(ostatniFolder+ui.item.label);
+            var sciezkaDoFolderu = ostatniFolder + ui.item.label;
+
+            input_sciezka_do_folderu.val(sciezkaDoFolderu);
+            $.ajax({
+                url: adresPliki,
+                type: "GET",
+                data: {
+                    fraza: sciezkaDoFolderu,
+                    rozmiar: szerokoscWyswietlanegoElementu
+                },
+                success: function (msg) {
+                    div_lista_plikow.html(msg);
+                }
+                , error: function (err) {
+                    div_lista_plikow.text(err.Message);
+                }
+            });
             return false;
         },
     });
@@ -65,10 +58,3 @@ jQuery(document).ready(function () {
 
 });
 // https://jqueryui.com/autocomplete/#folding
-// source: function( request, response ) {
-//     var matcher = new RegExp( $.ui.autocomplete.escapeRegex( request.term ), "i" );
-//     response( $.grep( names, function( value ) {
-//       value = value.label || value.value || value;
-//       return matcher.test( value ) || matcher.test( normalize( value ) );
-//     }) );
-//   }

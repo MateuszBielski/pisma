@@ -1,20 +1,24 @@
 <table>
-    {% for pismo in pisma %}
-        <tr>
-            <td>
-                {% set nazwa = pismo.NazwaZrodlaPrzedZarejestrowaniem %}
-                <a href="{{ path('pismo_nowe_ze_skanu', {'nazwa': nazwa, 'numerStrony': 1}) }}" >{{ pismo.NazwaSkroconaZrodla(20) }}</a>
-            </td>
-            <td>
-                {% if pismo.JestPodgladDlaZrodla() %}+{% endif %}
-                
-            </td>
-            {% if pokazDate is defined %}
-            
-            <td>
-                {{ pismo.dataModyfikacji }}
-            </td>
-            {% endif %}
-        </tr>
-    {% endfor %}
+	{% for pismo in pisma %}
+		<tr>
+			<td>
+				{% set nazwa = pismo.NazwaZrodlaPrzedZarejestrowaniem %}
+				{% if dlugoscNazwy is not defined %}
+					{% set dlugoscNazwy = 20 %}
+				{% endif %}
+				<a href="{{ path('pismo_nowe_ze_skanu', {'nazwa': nazwa, 'numerStrony': 1}) }}">{{ pismo.NazwaSkroconaZrodla(dlugoscNazwy) }}</a>
+			</td>
+			<td>
+				{% if pismo.JestPodgladDlaZrodla() %}+
+				{% endif %}
+
+			</td>
+			{% if pokazDate is defined %}
+
+				<td>
+					{{ pismo.dataModyfikacji }}
+				</td>
+			{% endif %}
+		</tr>
+	{% endfor %}
 </table>

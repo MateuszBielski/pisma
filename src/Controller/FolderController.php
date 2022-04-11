@@ -32,19 +32,14 @@ class FolderController extends AbstractController
     public function odczytZawartosciAjax(Request $request, PracaNaPlikach $pnp)
     {
         $sciezka = $request->query->get("fraza");
+        $szerokoscElementuPix = $request->query->get("rozmiar");
+        $dlugoscNazwy = intval($szerokoscElementuPix/10);
         $sciezka = $pnp->NajglebszyMozliwyFolderZniepelnejSciezki($sciezka);
         $pisma = $pnp->UtworzPismaZfolderu($sciezka);
-        $foldery = $pnp->PobierzWszystkieNazwyFolderowZfolderu($sciezka);
-        // $foldery = $pnp->ZfolderuPobierzNazwyFolderowZakonczoneUkosnikiem($sciezka);
-        $response = new Response();
-
-        $response->setContent(json_encode([
-            'dataAutocomplete' => $foldery,
-            'dataHtml' => $this->render('pismo/listaNier.html.twig', [
-                'pisma' => $pisma,
-            ])
-        ]));
-        $response->headers->set('Content-Type', 'application/json');
+        $response = $this->render('pismo/listaNier.html.twig', [
+            'pisma' => $pisma,
+            'dlugoscNazwy' => $dlugoscNazwy,
+        ]);
         $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
         return  $response;
     }
