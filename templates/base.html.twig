@@ -5,7 +5,8 @@
         <title>{% block title %}Pisma{% endblock %}</title>
         
         {% block stylesheets %}
-            <link href="/css/styl.css" rel="stylesheet"/>
+            {# <link href="/css/styl.css" rel="stylesheet"/> #}
+            {{ encore_entry_link_tags('stylMain') }}
         {% endblock %}
 
         {% block javascripts %}

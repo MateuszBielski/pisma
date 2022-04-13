@@ -4,6 +4,7 @@
         "@symfony/stimulus-bridge": "^3.0.0",
         "@symfony/webpack-encore": "^1.7.0",
         "core-js": "^3.0.0",
+        "jquery-ui-themes": "^1.12.0",
         "regenerator-runtime": "^0.13.2",
         "webpack-notifier": "^1.6.0"
     },
@@ -14,5 +15,9 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
+    },
+    "dependencies": {
+        "jquery": "^3.6.0",
+        "jquery-ui": "^1.13.1"
     }
 }

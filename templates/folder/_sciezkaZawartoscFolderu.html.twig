@@ -1,3 +1,4 @@
+{{ encore_entry_link_tags('folderAutocomplete') }}
 {{ include('folder/_sciezkaTuJestem.html.twig')}}
 {{ include('folder/_form.html.twig') }}
 <div
@@ -5,4 +6,5 @@
 	{# {{ include('pismo/listaNier.html.twig') }} #}
 	treść początkowa
 </div>
-<script type="text/javascript" src="/js/odczytZawartosciFolderu.js"></script>
+{# <script type="text/javascript" src="/js/odczytZawartosciFolderu.js"></script> #}
+{{ encore_entry_script_tags('folder_new') }}
