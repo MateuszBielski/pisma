@@ -1,9 +1,4 @@
 <div id="div_podglad">
-
-    {# skrypt w tym miejscu po to by funkcjonalności nadal działały#}
-    {# <script type="text/javascript" src="/js/odczytOCRfragmentuObrazu.js"></script> #}
-    <script type="text/javascript" src="/js/podmianaObrazowDlaStron.js"></script>
-
     strony: 
     {% set indeks = 1 %}
     {% for sciezka in sciezki_dla_stron %}
@@ -27,5 +22,5 @@
         {% endif %}
     
     </div>
-    <script type="text/javascript" src="/js/odczytOCRfragmentuObrazuZrysowaniem.js"></script>
+    {{ encore_entry_script_tags('pismo_podglad') }}
 </div>

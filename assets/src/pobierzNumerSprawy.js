@@ -1,3 +1,6 @@
+import $ from 'jquery';
+import jQuery from 'jquery';
+
 jQuery(document).ready(function() {
     var $id_pismo_kierunek = $('#pismo_kierunek');
 

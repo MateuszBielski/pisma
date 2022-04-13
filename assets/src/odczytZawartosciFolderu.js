@@ -1,3 +1,6 @@
+import jQuery from 'jquery';
+import $ from 'jquery';
+import autocomplete from 'jquery-ui/ui/widgets/autocomplete';
 
 jQuery(document).ready(function () {
     var input_sciezka_do_folderu = $('#folder_sciezkaMoja');

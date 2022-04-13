@@ -6,6 +6,7 @@
         "core-js": "^3.0.0",
         "jquery-ui-themes": "^1.12.0",
         "regenerator-runtime": "^0.13.2",
+        "select2": "^4.1.0-rc.0",
         "webpack-notifier": "^1.6.0"
     },
     "license": "UNLICENSED",

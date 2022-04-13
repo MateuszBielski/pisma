@@ -1,3 +1,6 @@
+import $ from 'jquery';
+import select2 from 'select2';
+
 $(document).ready(function() {
     $('.dlaSelect2').select2({
         

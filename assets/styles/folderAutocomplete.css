@@ -1,3 +1,6 @@
+@import 'jquery-ui-themes/jquery-ui.css';
+@import 'jquery-ui-themes/jquery-ui.structure.css';
+
 .ui-autocomplete{
     background: rgb(57, 97, 103);
 }

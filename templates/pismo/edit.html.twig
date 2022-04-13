@@ -1,23 +1,20 @@
 {% extends 'dwieKolumny.html.twig' %}
 {% block b_dodatkoweArkuszeIskrypty %}
-<script type="text/javascript" src="/js/jquery.min.js"></script>
-<script type="text/javascript" src="/js/select2.min.js"></script>
-<script type="text/javascript" src="/js/zmianaSelect.js"></script>
-<script type="text/javascript" src="/js/pobierzNumerSprawy.js"></script>
-<!-- <script type="text/javascript" src="/js/odczytOCRfragmentuObrazu.js"></script> -->
-
-<link href="/css/select2.min.css" rel="stylesheet"/>
+	{{ encore_entry_script_tags('pismo_edycja') }}
+	{{ encore_entry_link_tags('select2css') }}
 {% endblock %}
-{% block title %}{{pismo.nazwaPliku}}{% endblock %}
+{% block title %}
+	{{pismo.nazwaPliku}}
+{% endblock %}
 {% block b_div_pod_belka %}
-    <h3>Edycja danych dokumentu</h3>
-    {{pismo.nazwaPliku}}
+	<h3>Edycja danych dokumentu</h3>
+	{{pismo.nazwaPliku}}
 {% endblock %}
 {% block b_div_2_lewy %}
 
-{% include "pismo/_form.html.twig" %}
-<a href="{{ path('pismo_show', {'id': pismo.id, 'numerStrony': numerStrony }) }}">rezygnuj ze zmiany</a>
+	{% include "pismo/_form.html.twig" %}
+	<a href="{{ path('pismo_show', {'id': pismo.id, 'numerStrony': numerStrony }) }}">rezygnuj ze zmiany</a>
 {% endblock %}
 {% block b_div_2_prawy %}
-{% include "pismo/_podglad.html.twig" %}
+	{% include "pismo/_podglad.html.twig" %}
 {% endblock %}
