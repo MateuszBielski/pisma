@@ -1,17 +1,21 @@
 {% extends 'dwieKolumny.html.twig' %}
 
-{% block title %}{{ pismo.nazwaPliku }}{% endblock %}
-
+{% block title %}
+	{{ pismo.nazwaPliku }}
+{% endblock %}
+{% block b_dodatkoweArkuszeIskrypty %}
+	<script type="text/javascript" src="/js/jquery.min.js"></script>
+{% endblock %}
 {% block b_div_pod_belka %}
-    <h3>{{ pismo.nazwaPliku }}</h3>
+	<h3>{{ pismo.nazwaPliku }}</h3>
 {% endblock %}
 
 {% block b_div_2_lewy %}
-{% include "pismo/_szczegoly.html.twig" %}
-<br>
-<a href="{{path('pismo_pobieranie',{'id' : pismo.id})}}">pobierz plik</a><br>
-<a href="{{path('pismo_edit', {'id' : pismo.id, 'numerStrony': numerStrony })}}">edytuj dane dokumentu</a>
+	{% include "pismo/_szczegoly.html.twig" %}
+	<br>
+	<a href="{{path('pismo_pobieranie',{'id' : pismo.id})}}">pobierz plik</a><br>
+	<a href="{{path('pismo_edit', {'id' : pismo.id, 'numerStrony': numerStrony })}}">edytuj dane dokumentu</a>
 {% endblock %}
 {% block b_div_2_prawy %}
-{% include "pismo/_podglad.html.twig" %}
+	{% include "pismo/_podglad.html.twig" %}
 {% endblock %}

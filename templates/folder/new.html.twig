@@ -4,22 +4,21 @@
 	<link href="/css/3kolSzerokaCentralna.css" rel="stylesheet"/>
 	<link href="/css/folderAutocomplete.css" rel="stylesheet"/>
 {% endblock %}
+
+{% block javascripts %}
+	<script type="text/javascript" src="/js/jquery-ui-1.13.1/external/jquery/jquery.js"></script>
+	<script type="text/javascript" src="/js/jquery-ui-1.13.1/jquery-ui.js"></script>
+	<script type="text/javascript" src="/js/jquery-ui-1.13.1/jquery-ui.min.js"></script>
+{% endblock %}
 {% block title %}Uwzględnij folder
 {% endblock %}
 
 {% block b_div_centr %}
 	<h3>Dodaj folder</h3>
-
-	{{ include('folder/_form.html.twig') }}
-	<div
-		id="div_lista_plikow">
-		{# {{ include('pismo/listaNier.html.twig') }} #}
-		treść początkowa
+	<div id="sciezka_zawartosc_folderu">
+		{{ include('folder/_sciezkaZawartoscFolderu.html.twig') }}
 	</div>
 	<a href="{{ path('folder_index') }}">powrót do listy</a>
-	<script type="text/javascript" src="/js/jquery-ui-1.13.1/external/jquery/jquery.js"></script>
-	<script type="text/javascript" src="/js/jquery-ui-1.13.1/jquery-ui.js"></script>
-	<script type="text/javascript" src="/js/jquery-ui-1.13.1/jquery-ui.min.js"></script>
+
 	{# {{ encore_entry_script_tags('app') }} #}
-	<script type="text/javascript" src="/js/odczytZawartosciFolderu.js"></script>
 {% endblock %}

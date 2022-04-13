@@ -68,6 +68,28 @@ class FolderController extends AbstractController
     }
 
     /**
+     * @Route("/sciezkaZawartoscFolderuAjax", name="sciezka_zawartosc_folderu_ajax", methods={"GET"})
+     */
+    public function sciezkaZawartoscFolderuAjax(Request $request, PracaNaPlikach $pnp)
+    {
+        $pisma = [];
+        $dlugoscNazwy = 40;
+        $folder = new Folder();
+        $form = $this->createForm(FolderType::class, $folder);
+        $form->handleRequest($request);
+        $folder->setSciezkaMoja("/jakas/dziwna/sciezka");
+        
+        $response = $this->renderForm('folder/_sciezkaZawartoscFolderu.html.twig', [
+            'pisma' => $pisma,
+            'dlugoscNazwy' => $dlugoscNazwy,
+            'form' => $form,
+            'sciezkaTuJestem' =>$folder->SciezkaTuJestem(),
+        ]);
+        $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
+        return $response;
+    }
+
+    /**
      * @Route("/new", name="folder_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
@@ -87,6 +109,7 @@ class FolderController extends AbstractController
         return $this->renderForm('folder/new.html.twig', [
             'folder' => $folder,
             'form' => $form,
+            'sciezkaTuJestem' =>$folder->SciezkaTuJestem(),
         ]);
     }
 

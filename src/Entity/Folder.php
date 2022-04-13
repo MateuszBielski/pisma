@@ -38,4 +38,19 @@ class Folder
 
         return $this;
     }
+    public function SciezkaTuJestem()
+    {
+        $tuJestem = [];
+        $foldery = explode("/",$this->sciezkaMoja);
+        array_shift($foldery);
+        $sciezka = "";
+        foreach($foldery as $f)
+        {
+            $sciezka .="/".$f;
+            $arr = ['folder' => $f, 'sciezka' => $sciezka];
+            $tuJestem[] = $arr;
+        }
+
+        return $tuJestem;
+    }
 }
