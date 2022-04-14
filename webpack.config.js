@@ -25,6 +25,7 @@ Encore
     .addEntry('pismo_noweZeSkanu','./assets/pismo/noweZeSkanu.js')
     .addEntry('pismo_edycja','./assets/pismo/edycja.js')
     .addEntry('pismo_podglad','./assets/pismo/podglad.js')
+    .addEntry('pismo_wyszukajAjaxWgOpisuKontrahIsprawy','./assets/pismo/wyszukajAjaxWgOpisuKontrahIsprawy.js')
 
     .addEntry('stylMain','./assets/styles/styl.css')
     .addEntry('3kolSzerokaCentralna', './assets/styles/3kolSzerokaCentralna.css')
