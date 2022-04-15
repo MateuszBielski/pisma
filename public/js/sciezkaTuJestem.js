@@ -1,0 +1,1 @@
+/var/www/html/pisma/assets/folder/sciezkaTuJestem.js
