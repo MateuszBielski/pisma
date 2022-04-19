@@ -10,6 +10,7 @@ jQuery(document).ready(function () {
     var ostatniFolder = "ostatni";
     var szerokoscWyswietlanegoElementu = div_lista_plikow.width();
     var poprzedniaSciezka = '';
+    var listaPlikowOdczytana = '';
     console.log();
     $(window).on('resize', function () {
         szerokoscWyswietlanegoElementu = div_lista_plikow.width();
@@ -23,7 +24,8 @@ jQuery(document).ready(function () {
                     type: 'get',
                     dataType: "json",
                     data: {
-                        fraza: request.term
+                        sciezkaWpisana: request.term,
+                        sciezkaOdcietaDoFolderuDotychczas: ostatniFolder,
                     },
                     success: function (data) {
                         // response($.ui.autocomplete.filter(data.foldery,request.term));//filtruje po stronie przeglądarki
@@ -34,7 +36,10 @@ jQuery(document).ready(function () {
 
             },
         select: function (event, ui) {
-            input_sciezka_do_folderu.val(ostatniFolder + ui.item.label);
+            ostatniFolder += ui.item.label;
+            input_sciezka_do_folderu.val(ostatniFolder);
+            $('#div_sciezka_tu_jestem').text(ostatniFolder);
+            div_lista_plikow.html(listaPlikowOdczytana);
             return false;
         },
         focus: function (event, ui) {
@@ -49,7 +54,8 @@ jQuery(document).ready(function () {
                         rozmiar: szerokoscWyswietlanegoElementu
                     },
                     success: function (msg) {
-                        div_lista_plikow.html(msg);
+                        listaPlikowOdczytana = msg;
+                        div_lista_plikow.html(listaPlikowOdczytana);
                     }
                     , error: function (err) {
                         div_lista_plikow.text(err.Message);

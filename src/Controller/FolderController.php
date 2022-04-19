@@ -31,11 +31,13 @@ class FolderController extends AbstractController
      */
     public function odczytZawartosciAjax(Request $request, PracaNaPlikach $pnp)
     {
-        $sciezka = $request->query->get("fraza");
+        $sciezkaWpisana = $request->query->get("fraza");
+        
+        $sciezkaOdcietaDoFolderu = $pnp->NajglebszyMozliwyFolderZniepelnejSciezki($sciezkaWpisana);
+        
         $szerokoscElementuPix = $request->query->get("rozmiar");
         $dlugoscNazwy = intval($szerokoscElementuPix/14);
-        $sciezka = $pnp->NajglebszyMozliwyFolderZniepelnejSciezki($sciezka);
-        $pisma = $pnp->UtworzPismaZfolderu($sciezka);
+        $pisma = $pnp->UtworzPismaZfolderu($sciezkaOdcietaDoFolderu);
         $response = $this->render('pismo/listaNier.html.twig', [
             'pisma' => $pisma,
             'dlugoscNazwy' => $dlugoscNazwy,
@@ -48,13 +50,16 @@ class FolderController extends AbstractController
      */
     public function nazwyFolderowDlaAutocomplete(Request $request, PracaNaPlikach $pnp)
     {
-        $sciezka = $request->query->get("fraza");
-        $sciezkaOstatniegoFolderu = $pnp->NajglebszyMozliwyFolderZniepelnejSciezki($sciezka);
-        $sciezkaPozostaloscDoWyszukania = $pnp->CzescSciezkiZaFolderem($sciezka, $sciezkaOstatniegoFolderu);
-        $foldery = $pnp->PobierzWszystkieNazwyFolderowZfolderu($sciezkaOstatniegoFolderu);
+        $sciezka = $request->query->get("sciezkaWpisana");
+        $poprzedniaOdcietaSciezka = $request->query->get("sciezkaOdcietaDoFolderuDotychczas"); 
+        $sciezkaOdcietaDoFolderu = $pnp->NajglebszyMozliwyFolderZniepelnejSciezki($sciezka);
+        $zmienilSieFolder = $sciezkaOdcietaDoFolderu != $poprzedniaOdcietaSciezka;
+        if(!$zmienilSieFolder)return new Response();
+        $sciezkaPozostaloscDoWyszukania = $pnp->CzescSciezkiZaFolderem($sciezka, $sciezkaOdcietaDoFolderu);
+        $foldery = $pnp->PobierzWszystkieNazwyFolderowZfolderu($sciezkaOdcietaDoFolderu);
 
         $folderyPasujaceDoFrazy = $pnp->FitrujFolderyPasujaceDoFrazy($foldery, $sciezkaPozostaloscDoWyszukania);
-        $pelneFoldery = rtrim($sciezkaOstatniegoFolderu,"/");
+        $pelneFoldery = rtrim($sciezkaOdcietaDoFolderu,"/");
         $response = new Response();
         $response->setContent(
             json_encode([
