@@ -11,11 +11,11 @@ jQuery(document).ready(function () {
     var szerokoscWyswietlanegoElementu = div_lista_plikow.width();
     var poprzedniaSciezka = '';
     var listaPlikowOdczytana = '';
-    console.log();
+    var sciezkaTuJestemHtml = '/';
+    
     $(window).on('resize', function () {
         szerokoscWyswietlanegoElementu = div_lista_plikow.width();
     });
-
     input_sciezka_do_folderu.autocomplete({
         source:
             function (request, response) {
@@ -31,6 +31,7 @@ jQuery(document).ready(function () {
                         // response($.ui.autocomplete.filter(data.foldery,request.term));//filtruje po stronie przeglądarki
                         response(data.foldery);
                         ostatniFolder = data.pelneFoldery;
+                        sciezkaTuJestemHtml = data.sciezkaTuJestemHtml;
                     }
                 });
 
@@ -38,7 +39,7 @@ jQuery(document).ready(function () {
         select: function (event, ui) {
             ostatniFolder += ui.item.label;
             input_sciezka_do_folderu.val(ostatniFolder);
-            $('#div_sciezka_tu_jestem').text(ostatniFolder);
+            $('#div_sciezka_tu_jestem').html(sciezkaTuJestemHtml);
             div_lista_plikow.html(listaPlikowOdczytana);
             return false;
         },
@@ -54,8 +55,10 @@ jQuery(document).ready(function () {
                         rozmiar: szerokoscWyswietlanegoElementu
                     },
                     success: function (msg) {
-                        listaPlikowOdczytana = msg;
+                        listaPlikowOdczytana = msg.listaPlikow;
                         div_lista_plikow.html(listaPlikowOdczytana);
+                        sciezkaTuJestemHtml = msg.sciezkaTuJestemHtml;
+                        $('#div_sciezka_tu_jestem').html(sciezkaTuJestemHtml);
                     }
                     , error: function (err) {
                         div_lista_plikow.text(err.Message);

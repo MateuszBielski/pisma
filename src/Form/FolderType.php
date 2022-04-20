@@ -16,7 +16,7 @@ class FolderType extends AbstractType
             ->add('sciezkaMoja',TextType::class,['attr' => [
                 // 'id'=>"input_find_pismo_wgSprawy",
                 'size'=>"60",
-                'placeholder' => 'ścieżka/do/folderu'
+                'placeholder' => '/'
                 ]])
         ;
     }

@@ -38,10 +38,23 @@ class FolderController extends AbstractController
         $szerokoscElementuPix = $request->query->get("rozmiar");
         $dlugoscNazwy = intval($szerokoscElementuPix/14);
         $pisma = $pnp->UtworzPismaZfolderu($sciezkaOdcietaDoFolderu);
-        $response = $this->render('pismo/listaNier.html.twig', [
+        $folder = new Folder();
+        $folder->setSciezkaMoja($sciezkaOdcietaDoFolderu);
+        $sciezkaTuJestemHtml = $this->renderView('folder/_sciezkaTuJestem.html.twig',[
+                    'sciezkaTuJestem' => $folder->SciezkaTuJestem(),
+        ]);
+        $listaPlikow = $this->renderView('pismo/listaNier.html.twig', [
             'pisma' => $pisma,
             'dlugoscNazwy' => $dlugoscNazwy,
         ]);
+        $response = new Response();
+        $response->setContent(
+            json_encode([
+                'listaPlikow' => $listaPlikow,
+                'sciezkaTuJestemHtml' => $sciezkaTuJestemHtml,
+            ])
+        );
+        $response->headers->set('Content-Type', 'application/json');
         $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
         return  $response;
     }
@@ -53,18 +66,24 @@ class FolderController extends AbstractController
         $sciezka = $request->query->get("sciezkaWpisana");
         $poprzedniaOdcietaSciezka = $request->query->get("sciezkaOdcietaDoFolderuDotychczas"); 
         $sciezkaOdcietaDoFolderu = $pnp->NajglebszyMozliwyFolderZniepelnejSciezki($sciezka);
-        $zmienilSieFolder = $sciezkaOdcietaDoFolderu != $poprzedniaOdcietaSciezka;
-        if(!$zmienilSieFolder)return new Response();
+        // $zmienilSieFolder = $sciezkaOdcietaDoFolderu != $poprzedniaOdcietaSciezka;
+        // if(!$zmienilSieFolder)return new Response();
         $sciezkaPozostaloscDoWyszukania = $pnp->CzescSciezkiZaFolderem($sciezka, $sciezkaOdcietaDoFolderu);
         $foldery = $pnp->PobierzWszystkieNazwyFolderowZfolderu($sciezkaOdcietaDoFolderu);
 
         $folderyPasujaceDoFrazy = $pnp->FitrujFolderyPasujaceDoFrazy($foldery, $sciezkaPozostaloscDoWyszukania);
         $pelneFoldery = rtrim($sciezkaOdcietaDoFolderu,"/");
+        $folder = new Folder();
+        $folder->setSciezkaMoja($pelneFoldery);
+        $sciezkaTuJestemHtml = $this->renderView('folder/_sciezkaTuJestem.html.twig',[
+                    'sciezkaTuJestem' => $folder->SciezkaTuJestem(),
+        ]);
         $response = new Response();
         $response->setContent(
             json_encode([
                 'foldery' => $folderyPasujaceDoFrazy,
                 'pelneFoldery' => $pelneFoldery,
+                'sciezkaTuJestemHtml' => $sciezkaTuJestemHtml,
             ])
         );
         $response->headers->set('Content-Type', 'application/json');
@@ -97,11 +116,12 @@ class FolderController extends AbstractController
     /**
      * @Route("/new", name="folder_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, PracaNaPlikach $pnp): Response
     {
         $folder = new Folder();
         $form = $this->createForm(FolderType::class, $folder);
         $form->handleRequest($request);
+        $pisma = $pnp->UtworzPismaZfolderu("/");
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
@@ -114,6 +134,7 @@ class FolderController extends AbstractController
         return $this->renderForm('folder/new.html.twig', [
             'folder' => $folder,
             'form' => $form,
+            'pisma' => $pisma,
             'sciezkaTuJestem' =>$folder->SciezkaTuJestem(),
         ]);
     }

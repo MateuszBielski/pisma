@@ -1,8 +1,11 @@
 {{ encore_entry_link_tags('folderAutocomplete') }}
 {{ include('folder/_form.html.twig') }}
-{{ include('folder/_sciezkaTuJestem.html.twig')}}
+<div id="div_sciezka_tu_jestem" class="sciezka_tu_jestem">
+
+	{{ include('folder/_sciezkaTuJestem.html.twig')}}
+</div>
 <div
 	id="div_lista_plikow">
-	treść początkowa
+	{{ include("pismo/listaNier.html.twig") }}
 </div>
 {{ encore_entry_script_tags('folder_new') }}
