@@ -46,11 +46,17 @@ class Folder
         $sciezka = "";
         foreach($foldery as $f)
         {
-            $sciezka .="/".$f;
+            $f = str_replace('+','++',$f);
+            $sciezka .="+".$f;
             $arr = ['folder' => $f, 'sciezka' => $sciezka];
             $tuJestem[] = $arr;
         }
 
         return $tuJestem;
+    }
+    public function SciezkePobierzZadresuIkonwertuj(string $sciezkaZadresu)
+    {
+        $sciezkaZadresu = str_replace("+","/",$sciezkaZadresu);
+        $this->sciezkaMoja = str_replace("//","+",$sciezkaZadresu);
     }
 }

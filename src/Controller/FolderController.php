@@ -114,14 +114,16 @@ class FolderController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="folder_new", methods={"GET","POST"})
+     * @Route("/new/{sciezka}", name="folder_new", methods={"GET","POST"})
      */
-    public function new(Request $request, PracaNaPlikach $pnp): Response
+    public function new(Request $request, PracaNaPlikach $pnp,string $sciezka =""): Response
     {
         $folder = new Folder();
+        $folder->SciezkePobierzZadresuIkonwertuj($sciezka);
         $form = $this->createForm(FolderType::class, $folder);
         $form->handleRequest($request);
-        $pisma = $pnp->UtworzPismaZfolderu("/");
+        $sciezkaOdczytu = $folder->getSciezkaMoja()??"/";
+        $pisma = $pnp->UtworzPismaZfolderu($sciezkaOdczytu);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();

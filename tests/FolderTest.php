@@ -30,6 +30,27 @@ class FolderTest extends TestCase
         $folder = new Folder;
         $folder->setSciezkaMoja("/jakas/inna/sciezka");
         $tuJestem = $folder->SciezkaTuJestem();
-        $this->assertEquals("/jakas/inna", $tuJestem[1]['sciezka']);
+        $this->assertEquals("+jakas+inna", $tuJestem[1]['sciezka']);
+    }
+    public function testSciezkaTuJestem_sciezkaplus(): void
+    {
+        $folder = new Folder;
+        $folder->setSciezkaMoja("/jakas/inna/sciez+ka");
+        $tuJestem = $folder->SciezkaTuJestem();
+        $this->assertEquals("+jakas+inna+sciez++ka", $tuJestem[2]['sciezka']);
+    }
+    public function testSciezkaKonwertujZadresu()
+    {
+        $folder = new Folder;
+        $folder->SciezkePobierzZadresuIkonwertuj("+jakas+inna+sciezka");
+        $this->assertEquals("/jakas/inna/sciezka",$folder->getSciezkaMoja());
+
+    }
+    public function testSciezkaKonwertujZadresu_plus()
+    {
+        $folder = new Folder;
+        $folder->SciezkePobierzZadresuIkonwertuj("+ja++kas+inna+sciezka");
+        $this->assertEquals("/ja+kas/inna/sciezka",$folder->getSciezkaMoja());
+
     }
 }
