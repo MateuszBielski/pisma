@@ -40,18 +40,17 @@ class Folder
     }
     public function SciezkaTuJestem()
     {
-        $tuJestem = [];
+        $tuJestem = [['folder' => "/", 'sciezka' => "+"]];
         $foldery = explode("/",$this->sciezkaMoja);
-        array_shift($foldery);
+        $ostatni = count($foldery) - 1;
         $sciezka = "";
-        foreach($foldery as $f)
+        for($i = 1 ; $i < $ostatni; $i++)
         {
-            $f = str_replace('+','++',$f);
-            $sciezka .="+".$f;
-            $arr = ['folder' => $f, 'sciezka' => $sciezka];
-            $tuJestem[] = $arr;
+            $sciezka .="+".str_replace('+','++',$foldery[$i]);
+            $tuJestem[] = ['folder' => $foldery[$i]."/", 'sciezka' => $sciezka];
         }
-
+        $sciezka .="+".str_replace('+','++',$foldery[$ostatni]);
+        $tuJestem[] = ['folder' => $foldery[$ostatni], 'sciezka' => $sciezka];
         return $tuJestem;
     }
     public function SciezkePobierzZadresuIkonwertuj(string $sciezkaZadresu)

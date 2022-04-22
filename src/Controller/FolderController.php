@@ -116,7 +116,7 @@ class FolderController extends AbstractController
     /**
      * @Route("/new/{sciezka}", name="folder_new", methods={"GET","POST"})
      */
-    public function new(Request $request, PracaNaPlikach $pnp,string $sciezka =""): Response
+    public function new(Request $request, PracaNaPlikach $pnp,string $sciezka ="/"): Response
     {
         $folder = new Folder();
         $folder->SciezkePobierzZadresuIkonwertuj($sciezka);

@@ -1,8 +1,8 @@
 
 	{# // <script type="text/javascript" src="/js/sciezkaTuJestem.js"></script> #}
 	<br>
-	/ 
-	{% for sciezkaFolder in sciezkaTuJestem %}
-		<a href="{{ sciezkaFolder.sciezka }}">{{ sciezkaFolder.folder }}</a> /
+	{% for poziom in sciezkaTuJestem %}
+		<a href="{{ path('folder_new',{'sciezka' : poziom.sciezka}) }}">{{ poziom.folder }}</a>
 	{% endfor %}
 	<br>
+	
