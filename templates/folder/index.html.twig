@@ -1,4 +1,7 @@
 {% extends 'trzyKolumny.html.twig' %}
+{% block stylesheets %}
+	{{ encore_entry_link_tags('3kolSzerokaCentralna') }}
+{% endblock %}
 
 {% block title %}Foldery uwzględnione
 {% endblock %}
@@ -7,7 +10,7 @@
 	<h3>Foldery uwzględnione</h3>
 	{% include "pismo/_wyszukajAjaxWgOpisuKontrahIsprawy.html.twig" %}
 {% endblock %} #}
-{% block b_div_lewy %}
+{% block b_div_centr %}
 	<div id="div_lista_foldery">
 		{{ include('folder/_lista.html.twig') }}
 	</div>

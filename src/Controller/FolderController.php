@@ -28,9 +28,10 @@ class FolderController extends AbstractController
     }
 
     /**
-     * @Route("/odczytZawartosciAjax", name="folder_odczytZawartosci_ajax", methods={"GET"})
+     * @Route("/odczytZawartosciAjax/{id}", name="folder_odczytZawartosci_ajax", methods={"GET"})
+     * @ParamConverter("folder", isOptional="true")
      */
-    public function odczytZawartosciAjax(Request $request, PracaNaPlikach $pnp)
+    public function odczytZawartosciAjax(Request $request, PracaNaPlikach $pnp, Folder $folder = null)
     {
         $sciezkaWpisana = $request->query->get("fraza");
 
@@ -39,7 +40,7 @@ class FolderController extends AbstractController
         $szerokoscElementuPix = $request->query->get("rozmiar");
         $dlugoscNazwy = intval($szerokoscElementuPix / 14);
         $pisma = $pnp->UtworzPismaZfolderu($sciezkaOdcietaDoFolderu);
-        $folder = new Folder();
+        $folder = $folder?? new Folder();
         $folder->setSciezkaMoja($sciezkaOdcietaDoFolderu);
         $sciezkaTuJestemHtml = $this->renderView($folder->getSzablonSciezkaTuJestem(), [
             'sciezkaTuJestem' => $folder->SciezkaTuJestem(),

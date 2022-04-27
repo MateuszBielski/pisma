@@ -13,7 +13,7 @@ jQuery(document).ready(function () {
     var folderId = $('#div_sciezka_tu_jestem').attr("folder_id");
     if (folderId == "") folderId = null;
     var adresFoldery = "/folder/nazwyFolderowDlaAutocomplete/"+folderId;
-    var adresPliki = "/folder/odczytZawartosciAjax";
+    var adresPliki = "/folder/odczytZawartosciAjax/"+folderId;
     
     $(window).on('resize', function () {
         szerokoscWyswietlanegoElementu = div_lista_plikow.width();
