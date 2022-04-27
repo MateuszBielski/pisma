@@ -27,6 +27,11 @@ class Folder
         return $this->id;
     }
 
+    public function setId(int $id)
+    {
+        $this->id = $id;
+    }
+
     public function getSciezkaMoja(): ?string
     {
         return $this->sciezkaMoja;
@@ -57,5 +62,11 @@ class Folder
     {
         $sciezkaZadresu = str_replace("+","/",$sciezkaZadresu);
         $this->sciezkaMoja = str_replace("//","+",$sciezkaZadresu);
+    }
+    public function getSzablonSciezkaTuJestem(): string
+    {
+        $new = "folder/_sciezkaTuJestemNew.html.twig";
+        $edit = "folder/_sciezkaTuJestemEdit.html.twig";
+        return ($this->id != null)?$edit : $new;
     }
 }

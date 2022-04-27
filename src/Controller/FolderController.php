@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * @Route("/folder")
@@ -32,16 +33,16 @@ class FolderController extends AbstractController
     public function odczytZawartosciAjax(Request $request, PracaNaPlikach $pnp)
     {
         $sciezkaWpisana = $request->query->get("fraza");
-        
+
         $sciezkaOdcietaDoFolderu = $pnp->NajglebszyMozliwyFolderZniepelnejSciezki($sciezkaWpisana);
-        
+
         $szerokoscElementuPix = $request->query->get("rozmiar");
-        $dlugoscNazwy = intval($szerokoscElementuPix/14);
+        $dlugoscNazwy = intval($szerokoscElementuPix / 14);
         $pisma = $pnp->UtworzPismaZfolderu($sciezkaOdcietaDoFolderu);
         $folder = new Folder();
         $folder->setSciezkaMoja($sciezkaOdcietaDoFolderu);
-        $sciezkaTuJestemHtml = $this->renderView('folder/_sciezkaTuJestem.html.twig',[
-                    'sciezkaTuJestem' => $folder->SciezkaTuJestem(),
+        $sciezkaTuJestemHtml = $this->renderView($folder->getSzablonSciezkaTuJestem(), [
+            'sciezkaTuJestem' => $folder->SciezkaTuJestem(),
         ]);
         $listaPlikow = $this->renderView('pismo/listaNier.html.twig', [
             'pisma' => $pisma,
@@ -59,12 +60,13 @@ class FolderController extends AbstractController
         return  $response;
     }
     /**
-     * @Route("/nazwyFolderowDlaAutocomplete", name="nazwy_folderow_dla_autocomplete", methods={"GET"})
+     * @Route("/nazwyFolderowDlaAutocomplete/{id}", name="nazwy_folderow_dla_autocomplete", methods={"GET"})
+     * @ParamConverter("folder", isOptional="true")
      */
-    public function nazwyFolderowDlaAutocomplete(Request $request, PracaNaPlikach $pnp)
+    public function nazwyFolderowDlaAutocomplete(Request $request,Folder $folder = null, PracaNaPlikach $pnp)
     {
         $sciezka = $request->query->get("sciezkaWpisana");
-        $poprzedniaOdcietaSciezka = $request->query->get("sciezkaOdcietaDoFolderuDotychczas"); 
+        $poprzedniaOdcietaSciezka = $request->query->get("sciezkaOdcietaDoFolderuDotychczas");
         $sciezkaOdcietaDoFolderu = $pnp->NajglebszyMozliwyFolderZniepelnejSciezki($sciezka);
         // $zmienilSieFolder = $sciezkaOdcietaDoFolderu != $poprzedniaOdcietaSciezka;
         // if(!$zmienilSieFolder)return new Response();
@@ -72,11 +74,13 @@ class FolderController extends AbstractController
         $foldery = $pnp->PobierzWszystkieNazwyFolderowZfolderu($sciezkaOdcietaDoFolderu);
 
         $folderyPasujaceDoFrazy = $pnp->FitrujFolderyPasujaceDoFrazy($foldery, $sciezkaPozostaloscDoWyszukania);
-        $pelneFoldery = rtrim($sciezkaOdcietaDoFolderu,"/");
-        $folder = new Folder();
+        $pelneFoldery = rtrim($sciezkaOdcietaDoFolderu, "/");
+        $folder = $folder?? new Folder();
         $folder->setSciezkaMoja($pelneFoldery);
-        $sciezkaTuJestemHtml = $this->renderView('folder/_sciezkaTuJestem.html.twig',[
-                    'sciezkaTuJestem' => $folder->SciezkaTuJestem(),
+        $szablon = $folder->getSzablonSciezkaTuJestem();
+        $sciezkaTuJestemHtml = $this->renderView($szablon, [
+            'folder' => $folder,
+            'sciezkaTuJestem' => $folder->SciezkaTuJestem(),
         ]);
         $response = new Response();
         $response->setContent(
@@ -102,12 +106,12 @@ class FolderController extends AbstractController
         $form = $this->createForm(FolderType::class, $folder);
         $form->handleRequest($request);
         $folder->setSciezkaMoja("/jakas/dziwna/sciezka");
-        
+
         $response = $this->renderForm('folder/_sciezkaZawartoscFolderu.html.twig', [
             'pisma' => $pisma,
             'dlugoscNazwy' => $dlugoscNazwy,
             'form' => $form,
-            'sciezkaTuJestem' =>$folder->SciezkaTuJestem(),
+            'sciezkaTuJestem' => $folder->SciezkaTuJestem(),
         ]);
         $response->headers->set('Symfony-Debug-Toolbar-Replace', 1);
         return $response;
@@ -116,13 +120,13 @@ class FolderController extends AbstractController
     /**
      * @Route("/new/{sciezka}", name="folder_new", methods={"GET","POST"})
      */
-    public function new(Request $request, PracaNaPlikach $pnp,string $sciezka ="/"): Response
+    public function new(Request $request, PracaNaPlikach $pnp, string $sciezka = "/"): Response
     {
         $folder = new Folder();
         $folder->SciezkePobierzZadresuIkonwertuj($sciezka);
         $form = $this->createForm(FolderType::class, $folder);
         $form->handleRequest($request);
-        $sciezkaOdczytu = $folder->getSciezkaMoja()??"/";
+        $sciezkaOdczytu = $folder->getSciezkaMoja() ?? "/";
         $pisma = $pnp->UtworzPismaZfolderu($sciezkaOdczytu);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -137,7 +141,7 @@ class FolderController extends AbstractController
             'folder' => $folder,
             'form' => $form,
             'pisma' => $pisma,
-            'sciezkaTuJestem' =>$folder->SciezkaTuJestem(),
+            'sciezkaTuJestem' => $folder->SciezkaTuJestem(),
         ]);
     }
 
@@ -152,12 +156,16 @@ class FolderController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="folder_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit/{sciezka}", name="folder_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Folder $folder): Response
+    public function edit(Request $request, Folder $folder, PracaNaPlikach $pnp, string $sciezka = ""): Response
     {
+        if (strlen($sciezka))
+            $folder->SciezkePobierzZadresuIkonwertuj($sciezka);
         $form = $this->createForm(FolderType::class, $folder);
         $form->handleRequest($request);
+        $sciezkaOdczytu = $folder->getSciezkaMoja() ?? "/";
+        $pisma = $pnp->UtworzPismaZfolderu($sciezkaOdczytu);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
@@ -168,6 +176,8 @@ class FolderController extends AbstractController
         return $this->renderForm('folder/edit.html.twig', [
             'folder' => $folder,
             'form' => $form,
+            'pisma' => $pisma,
+            'sciezkaTuJestem' => $folder->SciezkaTuJestem()
         ]);
     }
 

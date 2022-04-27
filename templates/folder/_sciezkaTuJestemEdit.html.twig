@@ -1,0 +1,8 @@
+
+	{# // <script type="text/javascript" src="/js/sciezkaTuJestem.js"></script> #}
+	<br>
+	{% for poziom in sciezkaTuJestem %}
+		<a href="{{ path( 'folder_edit' ,{'sciezka' : poziom.sciezka, 'id' : folder.id}) }}">{{ poziom.folder }}</a>
+	{% endfor %}
+	<br>
+	

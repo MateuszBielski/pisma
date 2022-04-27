@@ -90,4 +90,15 @@ class FolderTest extends TestCase
         $this->assertEquals("/ja+kas/inna/sciezka",$folder->getSciezkaMoja());
 
     }
+    public function testSzablonSciezkaTuJestemDlaFolderBezId()
+    {
+        $folder = new Folder;
+        $this->assertEquals('folder/_sciezkaTuJestemNew.html.twig',$folder->getSzablonSciezkaTuJestem());
+    }
+    public function testSzablonSciezkaTuJestemDlaFolderZId()
+    {
+        $folder = new Folder;
+        $folder->setId(3);
+        $this->assertEquals('folder/_sciezkaTuJestemEdit.html.twig',$folder->getSzablonSciezkaTuJestem());
+    }
 }

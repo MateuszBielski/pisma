@@ -5,13 +5,15 @@ import autocomplete from 'jquery-ui/ui/widgets/autocomplete';
 jQuery(document).ready(function () {
     var input_sciezka_do_folderu = $('#folder_sciezkaMoja');
     var div_lista_plikow = $('#div_lista_plikow');
-    var adresFoldery = "/folder/nazwyFolderowDlaAutocomplete";
-    var adresPliki = "/folder/odczytZawartosciAjax";
     var ostatniFolder = "ostatni";
     var szerokoscWyswietlanegoElementu = div_lista_plikow.width();
     var poprzedniaSciezka = '';
     var listaPlikowOdczytana = '';
     var sciezkaTuJestemHtml = '/';
+    var folderId = $('#div_sciezka_tu_jestem').attr("folder_id");
+    if (folderId == "") folderId = null;
+    var adresFoldery = "/folder/nazwyFolderowDlaAutocomplete/"+folderId;
+    var adresPliki = "/folder/odczytZawartosciAjax";
     
     $(window).on('resize', function () {
         szerokoscWyswietlanegoElementu = div_lista_plikow.width();

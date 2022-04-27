@@ -1,13 +1,16 @@
-{% extends 'base.html.twig' %}
+{% extends 'trzyKolumny.html.twig' %}
+{% block stylesheets %}
+	{{ encore_entry_link_tags('3kolSzerokaCentralna') }}
+{% endblock %}
 
-{% block title %}Edit Folder{% endblock %}
+{% block title %}Edytuj folder
+{% endblock %}
 
-{% block body %}
-    <h1>Edit Folder</h1>
+{% block b_div_centr %}
+	<h3>Edytuj folder</h3>
+	<div id="sciezka_zawartosc_folderu">
+		{{ include('folder/_sciezkaZawartoscFolderu.html.twig') }}
+	</div>
+	<a href="{{ path('folder_index') }}">powrót do listy</a>
 
-    {{ include('folder/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('folder_index') }}">back to list</a>
-
-    {{ include('folder/_delete_form.html.twig') }}
 {% endblock %}
