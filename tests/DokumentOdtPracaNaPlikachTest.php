@@ -11,14 +11,13 @@ class DokumentOdtPracaNaPlikachTest extends TestCase
     public function testOdtUtworzZPliku_WlasciwaKlasa(): void
     {
         $pnp = new PracaNaPlikach;
-        $dokument = $pnp->UtworzPismoNaPodstawie("dokumentyOdt","pierwszyOdt.odt");
+        $dokument = $pnp->UtworzPismoNaPodstawie("dokumentyOdt", "pierwszyOdt.odt");
         $this->assertInstanceOf(DokumentOdt::class, $dokument);
     }
     public function testUtworzony_znaSwojaNazwe(): void
     {
         $pnp = new PracaNaPlikach;
-        $dokument = $pnp->UtworzPismoNaPodstawie("dokumentyOdt","pierwszyOdt.odt");
+        $dokument = $pnp->UtworzPismoNaPodstawie("dokumentyOdt", "pierwszyOdt.odt");
         $this->assertEquals("pierwszyOdt.odt", $dokument->getNazwaPliku());
     }
-
 }
