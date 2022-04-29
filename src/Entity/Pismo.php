@@ -17,6 +17,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *     message="Dokument o tej nazwie został już zarejestrowany")
  * 
  */
+// * @ORM\InheritanceType("JOINED")
+// * @ORM\DiscriminatorColumn(name="discriminator")
 class Pismo
 {
     /**
@@ -38,7 +40,7 @@ class Pismo
      */
     private $oznaczenie = '';
 
-    private $adresZrodlaPrzedZarejestrowaniem;
+    protected $adresZrodlaPrzedZarejestrowaniem;
     private $dataModyfikacji;
     private $folderPodgladu = 'png/';
     private $nazwaPlikuPrzedZmiana = '';
