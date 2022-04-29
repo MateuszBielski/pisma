@@ -1,26 +1,19 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Folder{% endblock %}
-
-{% block body %}
-    <h1>Folder</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ folder.id }}</td>
-            </tr>
-            <tr>
-                <th>SciezkaMoja</th>
-                <td>{{ folder.sciezkaMoja }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('folder_index') }}">back to list</a>
-
-    <a href="{{ path('folder_edit', {'id': folder.id}) }}">edit</a>
-
-    {{ include('folder/_delete_form.html.twig') }}
+{% extends 'trzyKolumny.html.twig' %}
+{% block stylesheets %}
+	{{ encore_entry_link_tags('3kolSzerokaCentralna') }}
 {% endblock %}
+
+{% block title %}Pokaż folder
+{% endblock %}
+
+{% block b_div_centr %}
+	<h3>Pokaż folder</h3>
+	<a href="{{ path('folder_edit', {'id': folder.id}) }}">edytuj</a>
+	{{ include('folder/_delete_form.html.twig') }}
+	<a href="{{ path('folder_index') }}">lista folderów</a>
+	<div id="sciezka_zawartosc_folderu">
+		{{ include('folder/_sciezkaZawartoscFolderu.html.twig') }}
+	</div>
+
+{% endblock %}
+

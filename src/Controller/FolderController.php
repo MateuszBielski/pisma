@@ -44,6 +44,7 @@ class FolderController extends AbstractController
         $folder->setSciezkaMoja($sciezkaOdcietaDoFolderu);
         $sciezkaTuJestemHtml = $this->renderView($folder->getSzablonSciezkaTuJestem(), [
             'sciezkaTuJestem' => $folder->SciezkaTuJestem(),
+            'folder' => $folder,
         ]);
         $listaPlikow = $this->renderView('pismo/listaNier.html.twig', [
             'pisma' => $pisma,
@@ -149,10 +150,15 @@ class FolderController extends AbstractController
     /**
      * @Route("/{id}", name="folder_show", methods={"GET"})
      */
-    public function show(Folder $folder): Response
+    public function show(Folder $folder, PracaNaPlikach $pnp): Response
     {
+        
+        $sciezka = $folder->getSciezkaMoja();
+        $pisma = $pnp->UtworzPismaZfolderu($sciezka);
         return $this->render('folder/show.html.twig', [
             'folder' => $folder,
+            'pisma' => $pisma,
+            'sciezkaTuJestem' => $folder->SciezkaTuJestem(),
         ]);
     }
 

@@ -1,11 +1,12 @@
 {{ encore_entry_link_tags('folderAutocomplete') }}
-{{ include('folder/_form.html.twig') }}
+{% if form is defined  %}
+	{{ include('folder/_form.html.twig') }}
+{% endif %}
 <div id="div_sciezka_tu_jestem" class="sciezka_tu_jestem" folder_id="{{ folder.id }}">
 
 	{% include folder.szablonSciezkaTuJestem %}
 </div>
-<div
-	id="div_lista_plikow">
+<div id="div_lista_plikow">
 	{{ include("pismo/listaNier.html.twig") }}
 </div>
 {{ encore_entry_script_tags('folder_new') }}
