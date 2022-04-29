@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\DokumentOdt;
 use App\Entity\Pismo;
 
 class PracaNaPlikach
@@ -61,6 +62,9 @@ class PracaNaPlikach
         if (substr($folder, -1) != '/') $folder .= '/';
         $arr = explode('/',$nazwaZrodla);
         $zrodlo = count($arr)? end($arr): $nazwaZrodla;
+        $path = $folder.$nazwaZrodla;
+        $rozsz = pathinfo($path, PATHINFO_EXTENSION);
+        if($rozsz == "odt")return new DokumentOdt($path);
         return new Pismo($folder . $zrodlo);
     }
     public function UtworzPismaZfolderu(string $folder, $rozsz = ""): array
