@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @ORM\Entity(repositoryClass=PismoRepository::class)
@@ -93,6 +94,8 @@ class Pismo
     private $opisCiag;
 
     private int $rozmiar = 0;
+
+    protected UrlGeneratorInterface $router;
 
     public function __construct(string $adresZrodlaPrzedZarejestrowaniem = "")
     {
@@ -657,5 +660,14 @@ class Pismo
         }
 
         return $this->rozmiar." B";
+    }
+    public function setRouter(UrlGeneratorInterface $router)
+    {
+        $this->router = $router;
+    }
+    public function UrlWidokNowe()
+    {
+        return $this->router->generate('pismo_nowe_ze_skanu',[
+            'nazwa' => $this->nazwaPliku]);
     }
 }

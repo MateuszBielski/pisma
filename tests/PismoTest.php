@@ -9,6 +9,7 @@ use App\Entity\WyrazWciagu;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PismoTest extends TestCase
 {
@@ -528,6 +529,11 @@ class PismoTest extends TestCase
         $pismo = new Pismo();
         $pismo->setRozmiar(2525033);
         $this->assertEquals('2.4 MiB',$pismo->RozmiarCzytelny());
+    }
+    public function testGenerujSciezkeWidokNiezarejestrowanego(UrlGeneratorInterface $router )
+    {
+        $sciezka = $router->generate('pismo_nowe_index');
+        $n = 2;
     }
     /*
     public function testBrakPodgladuZarejestrowanego_GenerujePodglad()

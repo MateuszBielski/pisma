@@ -7,6 +7,7 @@
 					{% set dlugoscNazwy = 20 %}
 				{% endif %}
 				{# https://symfony.com/doc/current/routing.html#generating-urls-in-services #}
+				{# https://symfony.com/doc/current/testing.html#retrieving-services-in-the-test #}
 				{% include "pismo/_link_nowePismo_i_nazwa.twig.html" %}
 				{# <a href="{{ path('pismo_nowe_ze_skanu', {'nazwa': nazwa, 'numerStrony': 1}) }}">{{ pismo.NazwaSkroconaZrodla(dlugoscNazwy) }}</a> #}
 			</td>
