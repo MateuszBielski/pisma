@@ -230,5 +230,10 @@ class WyszukiwanieDokumentow
    {
         $this->wyszukaneDokumenty = $wyszDok;
    }
+   public function RozmiaryOkreslDlaWspolnegoPolozenia(string $wspolnePolozenie)
+   {
+        foreach($this->wyszukaneDokumenty as $d)
+        $d->RozmiarOkreslPoUstaleniuPolozenia($wspolnePolozenie);
+   }
 }
 

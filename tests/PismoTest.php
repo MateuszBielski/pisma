@@ -530,6 +530,14 @@ class PismoTest extends TestCase
         $pismo->setRozmiar(2525033);
         $this->assertEquals('2.4 MiB',$pismo->RozmiarCzytelny());
     }
+    public function testRozmiarOkreslPoUstaleniuPolozenia()
+    {
+        //w bazie Pisma mają swoje nazwy, ale nie wiedzą, gdzie znajdują się pliki
+        $pismo = new Pismo();
+        $pismo->setNazwaPliku('rozmiar.pdf');
+        $pismo->RozmiarOkreslPoUstaleniuPolozenia('tests/rozmiar/');
+        $this->assertEquals('14.7 kiB',$pismo->RozmiarCzytelny());
+    }
     public function testGenerujSciezkeWidokNiezarejestrowanego(UrlGeneratorInterface $router )
     {
         $sciezka = $router->generate('pismo_nowe_index');

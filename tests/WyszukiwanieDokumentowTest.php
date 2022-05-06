@@ -199,4 +199,14 @@ class WyszukiwanieDokumentowTest extends TestCase
         $this->assertEquals(2,$formularz['koniecData']['month']);
         $this->assertEquals(2014,$formularz['koniecData']['year']);
     }
+    public function testRozmiaryOkreslDlaWspolnegoPolozenia()
+    {
+        $pis = new Pismo();
+        $pis->setNazwaPliku('rozmiar.pdf');
+
+        $wd = new WyszukiwanieDokumentow;
+        $wd->UstawWyszukaneDokumenty([$pis]);
+        $wd->RozmiaryOkreslDlaWspolnegoPolozenia('tests/rozmiar/');
+        $this->assertEquals('14.7 kiB',$pis->RozmiarCzytelny());
+    }
 }

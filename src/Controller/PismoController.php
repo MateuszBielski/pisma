@@ -147,9 +147,11 @@ class PismoController extends AbstractController
         $form = $this->createForm(WyszukiwanieDokumentowType::class, $wd);
         $sw->stop('iAxWgOpisuKontrahIsprawy_form');
         $sw->start('iAxWgOpisuKontrahIsprawy_handle');
-        $form->handleRequest($request);
+        $form->handleRequest($request);//w tym momencie następuje wyszukanie w funkcji $wd->onPreSubmit()
         $sw->stop('iAxWgOpisuKontrahIsprawy_handle');
-        
+        $sw->start('iAxWgOpisuKontrahIsprawy_okreslenieRozmiaru');
+        $wd->RozmiaryOkreslDlaWspolnegoPolozenia($this->getParameter('sciezka_do_zarejestrowanych'));
+        $sw->stop('iAxWgOpisuKontrahIsprawy_okreslenieRozmiaru');
         $response = $this->render('pismo/3Kol_formPismaSprawyKontr.html.twig',[
             'pisma' => $wd->WyszukaneDokumenty(),
             'pismo_id' => -1,
@@ -277,6 +279,13 @@ class PismoController extends AbstractController
             'numerStrony' => $numerStrony,
             // 'kontrahentForm' => $kontrahentForm->createView(),
         ]);
+    }
+    /**
+     * @Route("/nowyDokumentOdt/{nazwa}/{numerStrony}", name="nowy_dokument_odt", methods={"GET","POST"})
+     */
+    public function nowyDokumentOdt($numerStrony = 1)
+    {
+        return new Response();
     }
 
     /**

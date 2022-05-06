@@ -8,6 +8,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -34,7 +35,7 @@ class Pismo
      
      * 
      */
-    private $nazwaPliku;
+    protected $nazwaPliku;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -661,13 +662,21 @@ class Pismo
 
         return $this->rozmiar." B";
     }
+    public function RozmiarOkreslPoUstaleniuPolozenia(string $polozeniePliku)
+    {
+        $plik = $polozeniePliku.$this->nazwaPliku;
+        $this->rozmiar = @filesize($plik);
+    }
     public function setRouter(UrlGeneratorInterface $router)
     {
         $this->router = $router;
     }
     public function UrlWidokNowe()
     {
+        if (!isset($this->router)) throw new Exception(
+            'należy ustawić router dla pisma'
+        );
         return $this->router->generate('pismo_nowe_ze_skanu',[
-            'nazwa' => $this->nazwaPliku]);
+                'nazwa' => $this->nazwaPliku]);
     }
 }
