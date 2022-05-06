@@ -1,5 +1,4 @@
-import jQuery from 'jquery';
-import $ from 'jquery';
+import Podmiana from "../src/podmianaObrazowDlaStron.js";
 
-require("../src/podmianaObrazowDlaStron.js");
 require("../src/odczytOCRfragmentuObrazuZrysowaniem.js");
+Podmiana();
