@@ -4,13 +4,21 @@ namespace App\Service;
 
 use App\Entity\DokumentOdt;
 use App\Entity\Pismo;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PracaNaPlikach
 {
     private $odczytaneWszystkieNazwy;
     private $folderOdczytu;
     protected $uruchomienie;
+    private UrlGeneratorInterface $router;
 
+    public function __construct(UrlGeneratorInterface $router = null)
+    {
+        if (isset($router))
+        $this->router = $router;
+    }
+    
     public function PobierzWszystkieNazwyPlikowZfolderu(string $path): array
     {
 
@@ -65,7 +73,9 @@ class PracaNaPlikach
         $path = $folder.$nazwaZrodla;
         $rozsz = pathinfo($path, PATHINFO_EXTENSION);
         if($rozsz == "odt")return new DokumentOdt($path);
-        return new Pismo($folder . $zrodlo);
+        $pismo = new Pismo($folder . $zrodlo);
+        if (isset($this->router))$pismo->setRouter($this->router);
+        return $pismo;
     }
     public function UtworzPismaZfolderu(string $folder, $rozsz = ""): array
     {

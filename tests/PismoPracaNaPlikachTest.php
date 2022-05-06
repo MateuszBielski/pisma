@@ -257,6 +257,7 @@ class PismoPracaNaPlikachTest extends TestCase
         $this->assertTrue(file_exists($folderZplikiem.$nazwaPliku2));
         unlink($folderZplikiem.$nazwaPliku2);//
     }
+    
     //jeśli pusty folder surowychPDF
     //utworzenie folderu png jeśli nie ma
     

@@ -65,7 +65,7 @@ class PismoController extends AbstractController
     /**
      *@Route("/noweIndex", name="pismo_nowe_index", methods={"GET","POST"}) 
      */
-    public function NoweIndex(Request $request, SluggerInterface $slugger): Response
+    public function NoweIndex(Request $request, SluggerInterface $slugger, PracaNaPlikach $pnp): Response
     {
         /*
         $skany = [];
@@ -76,7 +76,6 @@ class PismoController extends AbstractController
         $form = $this->createForm(PismoLadowaniePdfType::class, $pismo);//
         $form->handleRequest($request);
         
-        $pnp = new PracaNaPlikach;
         if ($form->isSubmitted() && $form->isValid()) {
             $plikiPdf= $form->get('plik')->getData();
             foreach($plikiPdf as $plikPdf)
@@ -231,9 +230,9 @@ class PismoController extends AbstractController
     /**
      * @Route("/noweZeSkanu/{nazwa}/{numerStrony}", name="pismo_nowe_ze_skanu", methods={"GET","POST"})
      */
-    public function noweZeSkanu(Request $request, string $nazwa, $numerStrony = 1, KontrahentRepository $kr, PismoRepository $pr): Response
+    public function noweZeSkanu(Request $request, string $nazwa, $numerStrony = 1, KontrahentRepository $kr, PismoRepository $pr, PracaNaPlikach $pnp): Response
     {
-        $pnp = new PracaNaPlikach;
+        // $pnp = new PracaNaPlikach;
         // $pnp->PobierzWszystkieNazwyPlikowZfolderu($this->getParameter('sciezka_do_skanow'));
         $pismo = $pnp->UtworzPismoNaPodstawie($this->getParameter('sciezka_do_skanow'),$nazwa);
         $ostatniePismo = $pr->OstatniNumerPrzychodzacych() ;
@@ -241,17 +240,13 @@ class PismoController extends AbstractController
         $pismo->setOznaczenie($ostatniePismo->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem());
         $pnp->setUruchomienieProcesu(new UruchomienieProcesu);
         $pnp->GenerujPodgladJesliNieMaDlaPisma($this->getParameter('sciezka_do_png'),$pismo);
-
         
         $przechwytywanie = new PrzechwytywanieZselect2;
         $przechwytywanie->przechwycNazweStronyDlaPisma($request);
         $przechwytywanie->przechwycRodzajDokumentuDlaPisma($request);
         
-        
         $form = $this->createForm(PismoType::class, $pismo);
         $form->handleRequest($request);
-        // echo "\nXXXX".$nowaNazwaKontrahenta."YYY".($utworzycNowegoKontrahenta ? "tak":"nie");
-        
         
         if ($form->isSubmitted() && $form->isValid() && $pnp->PrzeniesPlikiPdfiPodgladu($this->getParameter('sciezka_do_zarejestrowanych'),$pismo)) {
             $entityManager = $this->getDoctrine()->getManager();
@@ -332,7 +327,7 @@ class PismoController extends AbstractController
     /**
      * @Route("/edit/{id}/{numerStrony}", name="pismo_edit", methods={"GET","POST"})
      */
-    public function edit($numerStrony, Request $request, Pismo $pismo): Response
+    public function edit($numerStrony, Request $request, Pismo $pismo, PracaNaPlikach $pnp): Response
     {
         
         $pismo->UstalStroneIKierunek();
@@ -359,7 +354,6 @@ class PismoController extends AbstractController
             }
             
             $em->flush();
-            $pnp = new PracaNaPlikach;
             $pnp->UaktualnijNazwyPlikowPodgladu($pismo);
             $pnp->UaktualnijNazwePlikuPdf($this->getParameter('sciezka_do_zarejestrowanych'),$pismo);
             return $this->redirectToRoute('pismo_show',['id'=> $id,'numerStrony' => $numerStrony]);
@@ -381,8 +375,6 @@ class PismoController extends AbstractController
             'numerStrony' => $numerStrony,
         ]);
     }
-    
-    
 
     /**
      * @Route("/{id}", name="pismo_delete", methods={"POST"})
