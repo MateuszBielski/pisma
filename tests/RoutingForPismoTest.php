@@ -39,6 +39,12 @@ class RoutingForPismoTest extends KernelTestCase
         $pisma = $pnp->UtworzPismaZfolderu("tests/skanyDoTestow",'pdf');
         $this->assertEquals('/pismo/noweZeSkanu/dok1.pdf', $pisma[0]->UrlWidokNowe());
     }
+    public function testRouterUstawiaDlaTworzonych_dokOdt()
+    {
+        $pnp = new PracaNaPlikach(static::getContainer()->get('router'));
+        $pisma = $pnp->UtworzPismaZfolderu("tests/dokumentyOdt");
+        $this->assertEquals('/pismo/nowyDokumentOdt/zZawartoscia.odt', $pisma[1]->UrlWidokNowe());
+    }
     public function testUrlWidokNowe_NumerStrony()
     {
         $pismo = new Pismo('sciezka/do/plikNr3.pdf');       

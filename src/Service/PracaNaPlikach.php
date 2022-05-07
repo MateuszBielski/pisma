@@ -70,10 +70,14 @@ class PracaNaPlikach
         if (substr($folder, -1) != '/') $folder .= '/';
         $arr = explode('/',$nazwaZrodla);
         $zrodlo = count($arr)? end($arr): $nazwaZrodla;
-        $path = $folder.$nazwaZrodla;
+        // $path = $folder.$nazwaZrodla;
+        $path = $folder.$zrodlo;
+        $RodzajDokumentu = Pismo::class;
+
         $rozsz = pathinfo($path, PATHINFO_EXTENSION);
-        if($rozsz == "odt")return new DokumentOdt($path);
-        $pismo = new Pismo($folder . $zrodlo);
+        if($rozsz == "odt")$RodzajDokumentu = DokumentOdt::class;
+
+        $pismo = new $RodzajDokumentu($path);
         if (isset($this->router))$pismo->setRouter($this->router);
         return $pismo;
     }
