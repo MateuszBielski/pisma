@@ -11,6 +11,7 @@ use App\Form\WyszukiwanieDokumentowType;
 use App\Repository\KontrahentRepository;
 use App\Repository\PismoRepository;
 use App\Repository\SprawaRepository;
+use App\Service\PismoPrzetwarzanie\PismoPrzetwarzanieNowe;
 use App\Service\PracaNaPlikach;
 use App\Service\PrzechwytywanieZselect2;
 use App\Service\RozpoznawanieTekstu;
@@ -227,6 +228,11 @@ class PismoController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+    public function noweZeSkanuNew(Request $request, string $nazwa, $numerStrony = 1, PismoPrzetwarzanieNowe $ppn)
+    {
+        # code...
+    }
+    
     /**
      * @Route("/noweZeSkanu/{nazwa}/{numerStrony}", name="pismo_nowe_ze_skanu", methods={"GET","POST"})
      */

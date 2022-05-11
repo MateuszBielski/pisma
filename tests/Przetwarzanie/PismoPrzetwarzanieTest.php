@@ -11,6 +11,7 @@ use App\Entity\Pismo;
 use App\Repository\PismoRepository;
 use App\Service\PismoPrzetwarzanie\PismoPrzetwarzanieNowe;
 use App\Service\PracaNaPlikach;
+use App\Service\PracaNaPlikachMock;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Exception;
 // use Symfony\Component\ErrorHandler\ThrowableUtils;
@@ -89,7 +90,7 @@ class PismoPrzetwarzanieTest extends KernelTestCase
             ->method('OstatniNumerPrzychodzacych')
             ->willReturn($ostatniePismo);
 
-        $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em,$pismoRepository);
+        $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em, $pismoRepository);
         $spodziewaneOznaczenie = 'L.dz. 6/' . $aktualnyRok;
         $przetwarzanie->setSciezkaLubNazwaPliku('jakas/sciezka/nazwaPliku.odt');
         $przetwarzanie->PrzedFormularzem();
@@ -109,10 +110,37 @@ class PismoPrzetwarzanieTest extends KernelTestCase
             ->method('OstatniNumerPrzychodzacych')
             ->willReturn(null);
 
-        $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em,$pismoRepository);
+        $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em, $pismoRepository);
         $spodziewaneOznaczenie = 'L.dz. 1/' . $aktualnyRok;
         $przetwarzanie->setSciezkaLubNazwaPliku('jakas/sciezka/nazwaPliku.odt');
         $przetwarzanie->PrzedFormularzem();
         $this->assertEquals($spodziewaneOznaczenie, $przetwarzanie->NowyDokument()->getOznaczenie());
     }
+    public function testUruchomienieProcesu()
+    {
+        $pnp = new PracaNaPlikachMock();
+        $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
+        $przetwarzanie->setSciezkaLubNazwaPliku('jakas/sciezka/nazwaPliku.odt');
+        $przetwarzanie->PrzedFormularzem();
+        $this->assertTrue($pnp->UruchomienieProcesuUstawione());
+    }
+    public function testGenerujPodgladDlaDokumentu_WyjateknieobslugiwanyFormat()
+    {
+        $pnp = new PracaNaPlikachMock();
+        $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
+        $przetwarzanie->setSciezkaLubNazwaPliku('jakas/sciezka/nazwaPliku.jar');
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Generowanie podglądu dla plików .jar nieobsługiwane');
+        $przetwarzanie->PrzedFormularzem();
+        // $this->assertTrue($pnp->UruchomienieProcesuUstawione());
+    }
+    public function testGenerujPodgladDlaDokumentu_pdf()
+    {
+        $pnp = new PracaNaPlikachMock();
+        $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
+        $przetwarzanie->setSciezkaLubNazwaPliku('jakas/sciezka/nazwaPliku.pdf');
+        $przetwarzanie->PrzedFormularzem();
+        $this->assertTrue($pnp->WywolaneGenerujPodgladJesliNieMa());
+    }
+    // $pnp->GenerujPodgladJesliNieMaDlaPisma($this->getParameter('sciezka_do_png'),$pismo);
 }

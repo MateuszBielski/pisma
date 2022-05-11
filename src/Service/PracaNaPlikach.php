@@ -12,6 +12,7 @@ class PracaNaPlikach
     private $folderOdczytu;
     protected $uruchomienie;
     private UrlGeneratorInterface $router;
+    private string $rozszerzeniePliku = '';
 
     public function __construct(UrlGeneratorInterface $router = null)
     {
@@ -75,11 +76,16 @@ class PracaNaPlikach
         $RodzajDokumentu = Pismo::class;
 
         $rozsz = pathinfo($path, PATHINFO_EXTENSION);
+        $this->rozszerzeniePliku = $rozsz;
         if($rozsz == "odt")$RodzajDokumentu = DokumentOdt::class;
 
         $pismo = new $RodzajDokumentu($path);
         if (isset($this->router))$pismo->setRouter($this->router);
         return $pismo;
+    }
+    public function RozszerzeniePliku()
+    {
+        return $this->rozszerzeniePliku;
     }
     public function UtworzPismaZfolderu(string $folder, $rozsz = ""): array
     {

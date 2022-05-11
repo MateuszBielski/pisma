@@ -5,6 +5,7 @@ namespace App\Service\PismoPrzetwarzanie;
 use App\Entity\Pismo;
 use App\Repository\PismoRepository;
 use App\Service\PracaNaPlikach;
+use App\Service\UruchomienieProcesu;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -13,6 +14,7 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
 {
     private Pismo $nowyDokument;
     private PismoRepository $pr;
+    private static array $podgladDlaTypowPlikow = ['odt','pdf'];
 
 
     public function __construct(PracaNaPlikach $pnp, UrlGeneratorInterface $router, EntityManagerInterface $em, PismoRepository $pr = null)
@@ -32,12 +34,18 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
         if($ostatniePismo == null) $ostatniePismo = new Pismo;
         
         $this->nowyDokument->setOznaczenie($ostatniePismo->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem());
+        $this->pnp->setUruchomienieProcesu(new UruchomienieProcesu);
+        $rozsz = $this->pnp->RozszerzeniePliku();
+        if (!$this->TworzeniePodgladuObslugiwaneDla($rozsz)) throw new Exception('Generowanie podglądu dla plików .'.$rozsz.' nieobsługiwane');
+        $this->pnp->GenerujPodgladJesliNieMaDlaPisma('trzeba zapewnic prawidlowa sciezke dla podgladu', $this->nowyDokument);
     }
     public function NowyDokument(): Pismo
     {
         return $this->nowyDokument;
     }
-    // $przetwarzanie->setNazwaPliku('nazwaPliku.odt');
-    //     $przetwarzanie->PrzedFormularzem();
-    //     $this->assertEquals('nazwaPliku.odt',$przetwarzanie->NowyDokument()->nazwaPliku());
+    public function TworzeniePodgladuObslugiwaneDla(string $rozsz)
+    {
+        return in_array($rozsz,PismoPrzetwarzanieNowe::$podgladDlaTypowPlikow);
+    }
+    
 }

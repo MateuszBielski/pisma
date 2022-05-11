@@ -19,6 +19,7 @@ abstract class PismoPrzetwarzanie
     protected string $nazwaPliku = '';
     protected string $polozenieDomyslne = '';
     protected string $polozenie = '';
+    // protected string $rozszerzenie = '';
 
     protected function __construct(PracaNaPlikach $pnp,UrlGeneratorInterface $router, EntityManagerInterface $em)
     {
