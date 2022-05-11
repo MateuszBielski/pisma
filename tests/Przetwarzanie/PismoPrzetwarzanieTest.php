@@ -7,6 +7,8 @@ namespace App\Tests\Przetwarzanie;
 // use App\Service\PracaNaPlikach;
 // use Doctrine\Common\Cache\Psr6\InvalidArgument;
 
+use App\Entity\Pismo;
+use App\Repository\PismoRepository;
 use App\Service\PismoPrzetwarzanie\PismoPrzetwarzanieNowe;
 use App\Service\PracaNaPlikach;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -72,5 +74,45 @@ class PismoPrzetwarzanieTest extends KernelTestCase
         $przetwarzanie->setSciezkaLubNazwaPliku('jakas+sciezka+nazwaPliku.odt');
         $przetwarzanie->PrzedFormularzem();
         $this->assertEquals('nazwaPliku.odt', $przetwarzanie->NowyDokument()->getNazwaPliku());
+    }
+    public function testZaroponujeOznaczenie()
+    {
+        // $pismoRepository= $this->createMock(ObjectRepository::class);
+        $ostatniePismo = new Pismo();
+        $d = new \DateTime('now');
+        $aktualnyRok = $d->format('Y');
+        $ostatniePismo->setOznaczenie('L.dz. 5/' . $aktualnyRok);
+
+        $pismoRepository = $this->createMock(PismoRepository::class);
+
+        $pismoRepository->expects($this->any())
+            ->method('OstatniNumerPrzychodzacych')
+            ->willReturn($ostatniePismo);
+
+        $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em,$pismoRepository);
+        $spodziewaneOznaczenie = 'L.dz. 6/' . $aktualnyRok;
+        $przetwarzanie->setSciezkaLubNazwaPliku('jakas/sciezka/nazwaPliku.odt');
+        $przetwarzanie->PrzedFormularzem();
+        $this->assertEquals($spodziewaneOznaczenie, $przetwarzanie->NowyDokument()->getOznaczenie());
+    }
+
+    public function testZaroponujeOznaczenie_BrakPoprzednich()
+    {
+        // $ostatniePismo = new Pismo();
+        $d = new \DateTime('now');
+        $aktualnyRok = $d->format('Y');
+        // $ostatniePismo->setOznaczenie('L.dz. 5/' . $aktualnyRok);
+
+        $pismoRepository = $this->createMock(PismoRepository::class);
+
+        $pismoRepository->expects($this->any())
+            ->method('OstatniNumerPrzychodzacych')
+            ->willReturn(null);
+
+        $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em,$pismoRepository);
+        $spodziewaneOznaczenie = 'L.dz. 1/' . $aktualnyRok;
+        $przetwarzanie->setSciezkaLubNazwaPliku('jakas/sciezka/nazwaPliku.odt');
+        $przetwarzanie->PrzedFormularzem();
+        $this->assertEquals($spodziewaneOznaczenie, $przetwarzanie->NowyDokument()->getOznaczenie());
     }
 }

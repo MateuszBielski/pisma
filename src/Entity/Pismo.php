@@ -570,6 +570,8 @@ class Pismo
     }
     public function OznaczenieKonwertujDlaUzytkownika(string $oznBazy): string
     {
+        $czyFormatBazy = preg_match('|[\d]{4}_[\d]{5}|', $oznBazy);
+        if (!$czyFormatBazy) return $oznBazy;
         $arr = explode('_', $oznBazy);
         if (count($arr) != 2) return 'zły format';
         return 'L.dz. ' . ltrim($arr[1], '0') . '/' . $arr[0];

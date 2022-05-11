@@ -433,6 +433,12 @@ class PismoTest extends TestCase
         $oznaczenieUzytkownika = 'L.dz. 17/2021';
         $this->assertEquals($oznaczenieUzytkownika, $pismo->OznaczenieKonwertujDlaUzytkownika($oznaczenieZbazy));
     }
+    public function testKonwersjaOznaczenia_dlaUzytkownika_bezZmiany()
+    {
+        $pismo = new Pismo;
+        $oznaczenieUzytkownika = 'L.dz. 17/2021';
+        $this->assertEquals($oznaczenieUzytkownika, $pismo->OznaczenieKonwertujDlaUzytkownika('L.dz. 17/2021'));
+    }
     public function testKonwersjaOznaczenia_dlaBazy()
     {
         $pismo = new Pismo;
@@ -538,7 +544,7 @@ class PismoTest extends TestCase
         $pismo->RozmiarOkreslPoUstaleniuPolozenia('tests/rozmiar/');
         $this->assertEquals('14.7 kiB',$pismo->RozmiarCzytelny());
     }
-    public function testGenerujSciezkeWidokNiezarejestrowanego(UrlGeneratorInterface $router )
+    public function _testGenerujSciezkeWidokNiezarejestrowanego(UrlGeneratorInterface $router )
     {
         $sciezka = $router->generate('pismo_nowe_index');
         $n = 2;
