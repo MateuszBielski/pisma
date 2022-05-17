@@ -48,4 +48,12 @@ abstract class PismoPrzetwarzanie
     {
         $this->polozenieDomyslne = $polozenie;
     }
+    public function setParametry(array $parametry)
+    {
+        foreach($parametry as $nazwaParametru => $parametr)
+        {
+            $Ustaw = 'set'.$nazwaParametru;
+            $this->$Ustaw($parametr);
+        }
+    }
 }

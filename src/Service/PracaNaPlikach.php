@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\DokumentOdt;
 use App\Entity\Pismo;
+use Exception;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PracaNaPlikach
@@ -13,6 +14,7 @@ class PracaNaPlikach
     protected $uruchomienie;
     private UrlGeneratorInterface $router;
     private string $rozszerzeniePliku = '';
+    protected string $folderPodgladu = '';
 
     public function __construct(UrlGeneratorInterface $router = null)
     {
@@ -96,8 +98,14 @@ class PracaNaPlikach
             $pisma[] = $this->UtworzPismoNaPodstawie($this->folderOdczytu, $n);
         return $pisma;
     }
+    public function getFolderDlaPlikowPodgladu()
+    {
+        return $this->folderPodgladu;
+    }
     public function GenerujPodgladJesliNieMaDlaPisma(string $folderPng, Pismo $pismo)
     {
+        if($folderPng == '') throw new Exception('należy zapewnić folder dla plików png');
+        $this->folderPodgladu = $folderPng;
         $pathFolderDlaJednegoDokumentu =  $folderPng . $pismo->NazwaZrodlaBezRozszerzenia();
 
         if (!file_exists($pathFolderDlaJednegoDokumentu)) {

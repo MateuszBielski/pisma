@@ -14,7 +14,9 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
 {
     private Pismo $nowyDokument;
     private PismoRepository $pr;
+    private string $folderPodgladu = '';
     private static array $podgladDlaTypowPlikow = ['odt','pdf'];
+
 
 
     public function __construct(PracaNaPlikach $pnp, UrlGeneratorInterface $router, EntityManagerInterface $em, PismoRepository $pr = null)
@@ -28,7 +30,7 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
     {
 
         $polozenie = (strlen($this->polozenie)) ? $this->polozenie : $this->polozenieDomyslne;
-        if (!strlen($polozenie)) throw new Exception('należy ustawić domyślne położenie plików');
+        if (!strlen($polozenie)) throw new Exception('należy ustawić folder z dokumentami');
         $this->nowyDokument = $this->pnp->UtworzPismoNaPodstawie('', $this->nazwaPliku);
         $ostatniePismo = isset($this->pr)? $this->pr->OstatniNumerPrzychodzacych() : new Pismo;
         if($ostatniePismo == null) $ostatniePismo = new Pismo;
@@ -37,7 +39,7 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
         $this->pnp->setUruchomienieProcesu(new UruchomienieProcesu);
         $rozsz = $this->pnp->RozszerzeniePliku();
         if (!$this->TworzeniePodgladuObslugiwaneDla($rozsz)) throw new Exception('Generowanie podglądu dla plików .'.$rozsz.' nieobsługiwane');
-        $this->pnp->GenerujPodgladJesliNieMaDlaPisma('trzeba zapewnic prawidlowa sciezke dla podgladu', $this->nowyDokument);
+        $this->pnp->GenerujPodgladJesliNieMaDlaPisma($this->folderPodgladu, $this->nowyDokument);
     }
     public function NowyDokument(): Pismo
     {
@@ -46,6 +48,10 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
     public function TworzeniePodgladuObslugiwaneDla(string $rozsz)
     {
         return in_array($rozsz,PismoPrzetwarzanieNowe::$podgladDlaTypowPlikow);
+    }
+    public function setFolderDlaPlikowPodgladu(string $sciezka)
+    {
+        $this->folderPodgladu = $sciezka;
     }
     
 }

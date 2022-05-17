@@ -5,6 +5,7 @@ namespace App\Tests;
 use App\Entity\Pismo;
 use App\Service\PracaNaPlikach;
 use App\Service\UruchomienieProcesuMock;
+use Exception;
 use PHPUnit\Framework\TestCase;
 
 
@@ -152,6 +153,18 @@ class PismoPracaNaPlikachTest extends TestCase
         $this->assertTrue(file_exists($this->pathDodawanieUsuwanie."posr/dok5"));
         rmdir($path2);
         rmdir($path1);
+    }
+    public function testGenerujPodgladJesliNieMaDlaPisma_wyjatekBrakSciezkiFolderu()
+    {
+        $pnp = new PracaNaPlikach;
+        $this->expectException(Exception::class);
+        $pnp->GenerujPodgladJesliNieMaDlaPisma('',new Pismo("jakisFolder/dok5.pdf"));
+    }
+    public function testGenerujPodgladJesliNieMaDlaPisma_wyjatekKomunikat()
+    {
+        $pnp = new PracaNaPlikach;
+        $this->expectExceptionMessage('należy zapewnić folder dla plików png');
+        $pnp->GenerujPodgladJesliNieMaDlaPisma('',new Pismo("jakisFolder/dok5.pdf"));
     }
     public function testPrzeniesPlikiPdfiPodgladu_czyPrzenosiPlik()
     {

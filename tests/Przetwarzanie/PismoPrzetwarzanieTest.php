@@ -14,12 +14,16 @@ use App\Service\PracaNaPlikach;
 use App\Service\PracaNaPlikachMock;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Exception;
-// use Symfony\Component\ErrorHandler\ThrowableUtils;
 
 class PismoPrzetwarzanieTest extends KernelTestCase
 {
     private $em;
     private $rou;
+    private $ustawieniaPowtarzalne = [
+        'FolderDlaPlikowPodgladu' => 'jakis/folder34/',
+        'DomyslnePolozeniePliku' => 'jakis/folder/',
+        'SciezkaLubNazwaPliku' => 'jakas/sciezka/nazwaPliku.odt'
+    ];
 
     protected function setUp(): void
     {
@@ -42,22 +46,21 @@ class PismoPrzetwarzanieTest extends KernelTestCase
         $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em);
         $przetwarzanie->setSciezkaLubNazwaPliku('nazwaPliku.odt');
         $this->expectException(Exception::class);
-        // $this->expectExceptionMessage('należy ustawić domyślne położenie plików');
         $przetwarzanie->PrzedFormularzem();
     }
     public function testNowe_NazwaBezSciezki_BrakDomyslnegoPolozenia_trescWyjatek()
     {
         $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em);
         $przetwarzanie->setSciezkaLubNazwaPliku('nazwaPliku.odt');
-        // $this->expectException(Exception::class);
-        $this->expectExceptionMessage('należy ustawić domyślne położenie plików');
+        $this->expectExceptionMessage('należy ustawić folder z dokumentami');
         $przetwarzanie->PrzedFormularzem();
     }
     public function testNowe_NazwaBezSciezki_DomyslnePolozenie()
     {
         $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em);
-        $przetwarzanie->setSciezkaLubNazwaPliku('nazwaPliku.odt');
-        $przetwarzanie->setDomyslnePolozeniePliku('jakis/folder/');
+        $parametry = $this->ustawieniaPowtarzalne;
+        $parametry['SciezkaLubNazwaPliku'] = 'nazwaPliku.odt';
+        $przetwarzanie->setParametry($parametry);
         $przetwarzanie->PrzedFormularzem();
         $this->assertEquals('nazwaPliku.odt', $przetwarzanie->NowyDokument()->getNazwaPliku());
     }
@@ -65,20 +68,23 @@ class PismoPrzetwarzanieTest extends KernelTestCase
     public function testNowe_SciezkaWnazwie()
     {
         $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em);
-        $przetwarzanie->setSciezkaLubNazwaPliku('jakas/sciezka/nazwaPliku.odt');
+        $parametry = $this->ustawieniaPowtarzalne;
+        $parametry['SciezkaLubNazwaPliku'] = 'jakas/sciezka/nazwaPliku.odt';
+        $przetwarzanie->setParametry($parametry);
         $przetwarzanie->PrzedFormularzem();
         $this->assertEquals('nazwaPliku.odt', $przetwarzanie->NowyDokument()->getNazwaPliku());
     }
     public function testNowe_SciezkaZakodowanaWnazwie()
     {
         $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em);
-        $przetwarzanie->setSciezkaLubNazwaPliku('jakas+sciezka+nazwaPliku.odt');
+        $parametry = $this->ustawieniaPowtarzalne;
+        $parametry['SciezkaLubNazwaPliku'] = 'jakas+sciezka+nazwaPliku.odt';
+        $przetwarzanie->setParametry($parametry);
         $przetwarzanie->PrzedFormularzem();
         $this->assertEquals('nazwaPliku.odt', $przetwarzanie->NowyDokument()->getNazwaPliku());
     }
-    public function testZaroponujeOznaczenie()
+    public function testZaproponujeOznaczenie()
     {
-        // $pismoRepository= $this->createMock(ObjectRepository::class);
         $ostatniePismo = new Pismo();
         $d = new \DateTime('now');
         $aktualnyRok = $d->format('Y');
@@ -92,17 +98,15 @@ class PismoPrzetwarzanieTest extends KernelTestCase
 
         $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em, $pismoRepository);
         $spodziewaneOznaczenie = 'L.dz. 6/' . $aktualnyRok;
-        $przetwarzanie->setSciezkaLubNazwaPliku('jakas/sciezka/nazwaPliku.odt');
+        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
         $przetwarzanie->PrzedFormularzem();
         $this->assertEquals($spodziewaneOznaczenie, $przetwarzanie->NowyDokument()->getOznaczenie());
     }
 
     public function testZaroponujeOznaczenie_BrakPoprzednich()
     {
-        // $ostatniePismo = new Pismo();
         $d = new \DateTime('now');
         $aktualnyRok = $d->format('Y');
-        // $ostatniePismo->setOznaczenie('L.dz. 5/' . $aktualnyRok);
 
         $pismoRepository = $this->createMock(PismoRepository::class);
 
@@ -112,7 +116,7 @@ class PismoPrzetwarzanieTest extends KernelTestCase
 
         $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em, $pismoRepository);
         $spodziewaneOznaczenie = 'L.dz. 1/' . $aktualnyRok;
-        $przetwarzanie->setSciezkaLubNazwaPliku('jakas/sciezka/nazwaPliku.odt');
+        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
         $przetwarzanie->PrzedFormularzem();
         $this->assertEquals($spodziewaneOznaczenie, $przetwarzanie->NowyDokument()->getOznaczenie());
     }
@@ -120,7 +124,7 @@ class PismoPrzetwarzanieTest extends KernelTestCase
     {
         $pnp = new PracaNaPlikachMock();
         $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
-        $przetwarzanie->setSciezkaLubNazwaPliku('jakas/sciezka/nazwaPliku.odt');
+        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
         $przetwarzanie->PrzedFormularzem();
         $this->assertTrue($pnp->UruchomienieProcesuUstawione());
     }
@@ -132,15 +136,22 @@ class PismoPrzetwarzanieTest extends KernelTestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Generowanie podglądu dla plików .jar nieobsługiwane');
         $przetwarzanie->PrzedFormularzem();
-        // $this->assertTrue($pnp->UruchomienieProcesuUstawione());
     }
     public function testGenerujPodgladDlaDokumentu_pdf()
     {
         $pnp = new PracaNaPlikachMock();
         $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
-        $przetwarzanie->setSciezkaLubNazwaPliku('jakas/sciezka/nazwaPliku.pdf');
+        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
         $przetwarzanie->PrzedFormularzem();
         $this->assertTrue($pnp->WywolaneGenerujPodgladJesliNieMa());
     }
-    // $pnp->GenerujPodgladJesliNieMaDlaPisma($this->getParameter('sciezka_do_png'),$pismo);
+    public function testGenerujPodgladDlaDokumentu_folderPngUstawiony()
+    {
+        $pnp = new PracaNaPlikach();
+        $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
+        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
+        $przetwarzanie->setFolderDlaPlikowPodgladu('jakis/ustawiony/folder');
+        $przetwarzanie->PrzedFormularzem();
+        $this->assertEquals('jakis/ustawiony/folder', $pnp->getFolderDlaPlikowPodgladu());
+    }
 }
