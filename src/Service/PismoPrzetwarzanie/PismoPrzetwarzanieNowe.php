@@ -15,7 +15,7 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
     private Pismo $nowyDokument;
     private PismoRepository $pr;
     private string $folderPodgladu = '';
-    private static array $podgladDlaTypowPlikow = ['odt','pdf'];
+    private static array $podgladDlaTypowPlikow = ['odt', 'pdf'];
 
 
 
@@ -31,27 +31,42 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
 
         $polozenie = (strlen($this->polozenie)) ? $this->polozenie : $this->polozenieDomyslne;
         if (!strlen($polozenie)) throw new Exception('należy ustawić folder z dokumentami');
-        $this->nowyDokument = $this->pnp->UtworzPismoNaPodstawie('', $this->nazwaPliku);
-        $ostatniePismo = isset($this->pr)? $this->pr->OstatniNumerPrzychodzacych() : new Pismo;
-        if($ostatniePismo == null) $ostatniePismo = new Pismo;
-        
+        $this->nowyDokument = $this->pnp->UtworzPismoNaPodstawie($polozenie, $this->nazwaPliku);
+        $ostatniePismo = isset($this->pr) ? $this->pr->OstatniNumerPrzychodzacych() : new Pismo;
+        if ($ostatniePismo == null) $ostatniePismo = new Pismo;
+
         $this->nowyDokument->setOznaczenie($ostatniePismo->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem());
         $this->pnp->setUruchomienieProcesu(new UruchomienieProcesu);
         $rozsz = $this->pnp->RozszerzeniePliku();
-        if (!$this->TworzeniePodgladuObslugiwaneDla($rozsz)) throw new Exception('Generowanie podglądu dla plików .'.$rozsz.' nieobsługiwane');
-        $this->pnp->GenerujPodgladJesliNieMaDlaPisma($this->folderPodgladu, $this->nowyDokument);
+        if (!$this->TworzeniePodgladuObslugiwaneDla($rozsz)) throw new Exception('Generowanie podglądu dla plików .' . $rozsz . ' nieobsługiwane');
+        $this->GenerujPodgladOdpowiedniDlaTypuPliku($rozsz);
     }
     public function NowyDokument(): Pismo
     {
         return $this->nowyDokument;
     }
-    public function TworzeniePodgladuObslugiwaneDla(string $rozsz)
-    {
-        return in_array($rozsz,PismoPrzetwarzanieNowe::$podgladDlaTypowPlikow);
-    }
     public function setFolderDlaPlikowPodgladu(string $sciezka)
     {
         $this->folderPodgladu = $sciezka;
     }
-    
+    protected function TworzeniePodgladuObslugiwaneDla(string $rozsz)
+    {
+        return in_array($rozsz, PismoPrzetwarzanieNowe::$podgladDlaTypowPlikow);
+    }
+    protected function GenerujPodgladOdpowiedniDlaTypuPliku(string $rozsz)
+    {
+        $funkcjePodgladuDlaTypowPliku = [
+            'pdf' => 'PodgladPdf',
+            'odt' => 'PodgladOdt',
+        ];
+        $PodgladFunkcja = $funkcjePodgladuDlaTypowPliku[$rozsz];
+        $this->$PodgladFunkcja();
+    }
+    protected function PodgladPdf()
+    {
+        $this->pnp->GenerujPodgladJesliNieMaDlaPisma($this->folderPodgladu, $this->nowyDokument);
+    }
+    protected function PodgladOdt()
+    {
+    }
 }

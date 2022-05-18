@@ -20,9 +20,9 @@ class PismoPrzetwarzanieTest extends KernelTestCase
     private $em;
     private $rou;
     private $ustawieniaPowtarzalne = [
-        'FolderDlaPlikowPodgladu' => 'jakis/folder34/',
+        'FolderDlaPlikowPodgladu' => 'tests/png/',
         'DomyslnePolozeniePliku' => 'jakis/folder/',
-        'SciezkaLubNazwaPliku' => 'jakas/sciezka/nazwaPliku.odt'
+        'SciezkaLubNazwaPliku' => 'maPodglad.odt'
     ];
 
     protected function setUp(): void
@@ -34,7 +34,6 @@ class PismoPrzetwarzanieTest extends KernelTestCase
         $this->em = $doctrine->getManager();
         $this->rou = static::getContainer()->get('router');
     }
-
 
     public function testNowe_TworzenieSerwisu()
     {
@@ -83,6 +82,28 @@ class PismoPrzetwarzanieTest extends KernelTestCase
         $przetwarzanie->PrzedFormularzem();
         $this->assertEquals('nazwaPliku.odt', $przetwarzanie->NowyDokument()->getNazwaPliku());
     }
+    public function testNowe_dokumentZnaSwojePolozenie_FolderDomyslny()
+    {
+        $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em);
+        $parametry = $this->ustawieniaPowtarzalne;
+        $parametry['SciezkaLubNazwaPliku'] = 'nazwaPliku.odt';
+        $parametry['DomyslnePolozeniePliku'] = 'folder245/';
+        $przetwarzanie->setParametry($parametry);
+        $przetwarzanie->PrzedFormularzem();
+        $this->assertEquals('folder245/nazwaPliku.odt', $przetwarzanie->NowyDokument()->getAdresZrodlaPrzedZarejestrowaniem());
+    }
+    public function testNowe_dokumentZnaSwojePolozenie_FolderWnazwie()
+    {
+        $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em);
+        $parametry = $this->ustawieniaPowtarzalne;
+        $parametry['SciezkaLubNazwaPliku'] = 'folder245/nazwaPliku.odt';
+        $parametry['DomyslnePolozeniePliku'] = '';
+        $przetwarzanie->setParametry($parametry);
+        $przetwarzanie->PrzedFormularzem();
+        $this->assertEquals('folder245/nazwaPliku.odt', $przetwarzanie->NowyDokument()->getAdresZrodlaPrzedZarejestrowaniem());
+    }
+    
+    // getAdresZrodlaPrzedZarejestrowaniem()
     public function testZaproponujeOznaczenie()
     {
         $ostatniePismo = new Pismo();
@@ -142,16 +163,28 @@ class PismoPrzetwarzanieTest extends KernelTestCase
         $pnp = new PracaNaPlikachMock();
         $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
         $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
+        $przetwarzanie->setSciezkaLubNazwaPliku('maPodglad.pdf');
         $przetwarzanie->PrzedFormularzem();
         $this->assertTrue($pnp->WywolaneGenerujPodgladJesliNieMa());
     }
+    
+    public function testNieWywolujeGenerujPodglad_Png_dlaOdt()
+    {
+        $pnp = new PracaNaPlikachMock();
+        $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
+        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
+        $przetwarzanie->setSciezkaLubNazwaPliku('maPodglad.odt');
+        $przetwarzanie->PrzedFormularzem();
+        $this->assertFalse($pnp->WywolaneGenerujPodgladJesliNieMa());
+    }
+    
     public function testGenerujPodgladDlaDokumentu_folderPngUstawiony()
     {
         $pnp = new PracaNaPlikach();
         $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
         $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
-        $przetwarzanie->setFolderDlaPlikowPodgladu('jakis/ustawiony/folder');
+        $przetwarzanie->setSciezkaLubNazwaPliku('maPodglad.pdf');
         $przetwarzanie->PrzedFormularzem();
-        $this->assertEquals('jakis/ustawiony/folder', $pnp->getFolderDlaPlikowPodgladu());
+        $this->assertEquals('tests/png/', $pnp->getFolderDlaPlikowPodgladu());
     }
 }

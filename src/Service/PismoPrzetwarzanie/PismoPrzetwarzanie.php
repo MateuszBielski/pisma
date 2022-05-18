@@ -56,4 +56,8 @@ abstract class PismoPrzetwarzanie
             $this->$Ustaw($parametr);
         }
     }
+    public function getPracaNaPlikach()
+    {
+        return $this->pnp;
+    }
 }
