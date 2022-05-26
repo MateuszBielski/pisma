@@ -17,6 +17,7 @@ use Exception;
 
 class PismoPrzetwarzanieTest extends KernelTestCase
 {
+    private $serwisyUstawione = false;
     private $em;
     private $rou;
     private $ustawieniaPowtarzalne = [
@@ -27,13 +28,17 @@ class PismoPrzetwarzanieTest extends KernelTestCase
 
     protected function setUp(): void
     {
+        if ($this->serwisyUstawione) return;
         $kernel = self::bootKernel();
         $doctrine = $this->entityManager = $kernel->getContainer()
             ->get('doctrine');
 
         $this->em = $doctrine->getManager();
         $this->rou = static::getContainer()->get('router');
+        $this->serwisyUstawione = true;
     }
+    protected function PrzywrocPrzeniesionyPlik()
+    {}
 
     public function testNowe_TworzenieSerwisu()
     {
@@ -186,5 +191,67 @@ class PismoPrzetwarzanieTest extends KernelTestCase
         $przetwarzanie->setSciezkaLubNazwaPliku('maPodglad.pdf');
         $przetwarzanie->PrzedFormularzem();
         $this->assertEquals('tests/png/', $pnp->getFolderDlaPlikowPodgladu());
+    }
+    public function testPrzeniesPliki_niePrzenosiDokumentu()
+    {
+        //pozostawia w pierwotnym miejscu, bo nie ustawiony folder docelowy dla dokumentow
+        //zwraca true
+        $pnp = new PracaNaPlikach();
+        $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
+        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
+        $przetwarzanie->PrzedFormularzem();
+
+        $this->assertTrue($przetwarzanie->PrzeniesPliki());
+        $this->assertTrue(file_exists('tests/przenoszenie/pierwotnaLokalizacja/plik.pdf'));
+        
+    }
+    public function testPrzeniesPliki_niePrzenosiPodgladu()
+    {
+        //pozostawia w pierwotnym miejscu, bo nie ustawiony folder docelowy dla podglądów
+        //zwraca true
+        $pnp = new PracaNaPlikach();
+        $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
+        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
+        $przetwarzanie->PrzedFormularzem();
+
+        $this->assertTrue($przetwarzanie->PrzeniesPliki());
+        $this->assertTrue(file_exists('tests/przenoszenie/pierwotnaLokalizacja/plik/podglad.png'));
+    }
+    public function testPrzeniesPliki_zwracaFalseWniepowodzeniuPrzeniesienia()
+    {
+        //ustawić ścieżkę do folderu, który nie istnieje
+        $pnp = new PracaNaPlikach();
+        $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
+        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
+        $przetwarzanie->setDocelowePolozeniePliku('jakis/nieIstniejacy/folder');
+        $this->assertFalse($przetwarzanie->PrzeniesPliki());
+        $this->assertTrue(file_exists('tests/przenoszenie/pierwotnaLokalizacja/plik/podglad.png'));
+    }
+    public function testPrzeniesPliki_przenosiDokument()
+    {
+        //przenosi i zwraca true
+        $przen = 'tests/przenoszenie';
+        $pierw = $przen.'/pierwotnaLokalizacja';
+        $docel = $przen.'/docelowaLokalizacja';
+        $pierwPlik = $pierw.'/plik.pdf';
+        $docelPlik = $docel.'/plik.pdf';
+
+        if(!file_exists($pierwPlik)) throw new Exception('brak pliku w pierwotnej lokalizacji');
+        $pnp = new PracaNaPlikach();
+        $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
+        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
+        $przetwarzanie->setSciezkaLubNazwaPliku($pierwPlik);
+        $przetwarzanie->setDocelowePolozeniePliku($docel);
+        $przetwarzanie->PrzedFormularzem();
+        
+        $this->assertTrue($przetwarzanie->PrzeniesPliki());
+        $this->assertTrue(file_exists($docelPlik));
+        $this->assertFalse(file_exists($pierwPlik));
+        rename($docelPlik,$pierwPlik);
+    }
+
+    public function _testPrzeniesPliki_przenosiPodglad()
+    {
+        //przenosi i zwraca true
     }
 }

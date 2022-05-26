@@ -239,17 +239,20 @@ class PismoController extends AbstractController
         $dokument = $ppn->NowyDokument();
         $pnp = $ppn->getPracaNaPlikach();//do usunięcia (pnp ma być tu niewidoczny)
         //przechwytywanie powinno być przeniesine do event subscribera i oddzielnie testowane
-        $przechwytywanie = new PrzechwytywanieZselect2;
-        $przechwytywanie->przechwycNazweStronyDlaPisma($request);
-        $przechwytywanie->przechwycRodzajDokumentuDlaPisma($request);
+        // $przechwytywanie = new PrzechwytywanieZselect2;
+        // $przechwytywanie->przechwycNazweStronyDlaPisma($request);
+        // $przechwytywanie->przechwycRodzajDokumentuDlaPisma($request);
 
         $form = $this->createForm(PismoType::class, $dokument);
         $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid() && $pnp->PrzeniesPlikiPdfiPodgladu($this->getParameter('sciezka_do_zarejestrowanych'), $dokument)) {
+        $isSubmitted = $form->isSubmitted();
+        $isValid = $isSubmitted ? $form->isValid() : false;
+        $przeniesionyPodglad = true;
+        // $przeniesionyPodglad = $isValid ? $pnp->PrzeniesPlikiPdfiPodgladu($this->getParameter('sciezka_do_zarejestrowanych'), $dokument) : false;
+        if ($isSubmitted && $isValid && $przeniesionyPodglad) {
             $entityManager = $this->getDoctrine()->getManager();
-            $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($dokument, $entityManager);
-            $przechwytywanie->przechwyconyRodzajDokumentuDlaPismaUtrwal($dokument, $entityManager);
+            // $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($dokument, $entityManager);
+            // $przechwytywanie->przechwyconyRodzajDokumentuDlaPismaUtrwal($dokument, $entityManager);
 
             $entityManager->persist($dokument);
             $entityManager->flush();

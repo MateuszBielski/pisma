@@ -41,6 +41,12 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
         if (!$this->TworzeniePodgladuObslugiwaneDla($rozsz)) throw new Exception('Generowanie podglądu dla plików .' . $rozsz . ' nieobsługiwane');
         $this->GenerujPodgladOdpowiedniDlaTypuPliku($rozsz);
     }
+    public function PrzeniesPliki(): bool
+    {
+        if(strlen($this->docelowePolozeniePliku) && !is_dir($this->docelowePolozeniePliku)) return false;
+        $this->pnp->PrzeniesPlikiPdfiPodgladu($this->docelowePolozeniePliku, $this->nowyDokument);
+        return true;
+    }
     public function NowyDokument(): Pismo
     {
         return $this->nowyDokument;

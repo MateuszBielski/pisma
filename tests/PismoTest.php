@@ -4,6 +4,7 @@ namespace App\Tests;
 
 use App\Entity\Kontrahent;
 use App\Entity\Pismo;
+use App\Entity\RodzajDokumentu;
 use App\Entity\Sprawa;
 use App\Entity\WyrazWciagu;
 use DateTime;
@@ -314,6 +315,44 @@ class PismoTest extends TestCase
         $pismo->addSprawy(new Sprawa);
         $pismo->UtworzIdodajNoweSprawyWgOpisow($opisySpraw);
         $this->assertEquals(4, count($pismo->getSprawy()));
+    }
+    public function testUtworzIustawNowyRodzaj_nieUstawiaPrzyBraku()
+    {
+        $pismo = new Pismo();
+        $rodzaj = new RodzajDokumentu;
+        $rodzaj->setNazwa('rodzajUstalony');
+        $pismo->setRodzaj($rodzaj);
+        $pismo->UtworzIustawNowyRodzaj('');
+        $this->assertEquals('rodzajUstalony',$pismo->getRodzaj()->getNazwa());
+    }
+    public function testUtworzIustawNowyRodzaj()
+    {
+        $pismo = new Pismo();
+        $rodzaj = new RodzajDokumentu;
+        $rodzaj->setNazwa('rodzajUstalony');
+        $pismo->setRodzaj($rodzaj);
+        $pismo->UtworzIustawNowyRodzaj('rodzajZmieniony');
+        $this->assertEquals('rodzajZmieniony',$pismo->getRodzaj()->getNazwa());
+    }
+    public function testUtworzStroneZnazwyIkierunku_nieUstawiaPrzyBraku()
+    {
+        $pismo = new Pismo();
+        $nadawca = new Kontrahent;
+        $nadawca->setNazwa('nadawcaUstalony');
+        $pismo->setNadawca($nadawca);
+        $pismo->UtworzStroneZnazwyIkierunku('',2);
+        $this->assertEquals('nadawcaUstalony',$pismo->getNadawca()->getNazwa());
+        $this->assertEquals(null,$pismo->getOdbiorca());
+    }
+    public function testUtworzStroneZnazwyIkierunku()
+    {
+        $pismo = new Pismo();
+        $nadawca = new Kontrahent;
+        $nadawca->setNazwa('nadawcaUstalony');
+        $pismo->setNadawca($nadawca);
+        $pismo->UtworzStroneZnazwyIkierunku('odbiorcaUstalony',2);
+        $this->assertEquals('odbiorcaUstalony',$pismo->getOdbiorca()->getNazwa());
+        $this->assertEquals(null,$pismo->getNadawca());
     }
     public function testSetOpis()
     {

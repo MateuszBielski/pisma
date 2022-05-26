@@ -51,9 +51,11 @@ class PismoEventSubscriber implements EventSubscriberInterface
         if(array_key_exists('sprawy',$form ))
         {
             $sprawy = $form['sprawy'];
-            $this->przechwytywanie->PrzechwycOpisyNowychSprawDlaPisma($sprawy);
+            $this->przechwytywanie->PrzechwycOpisyNowychSprawZostawiajacZapisane($sprawy);
             $form['sprawy'] = $sprawy;
         }
+        $this->przechwytywanie->przechwycRodzajDokumentuZtablicy($form);
+        $this->przechwytywanie->PrzechwycNazweStronyIkierunekZtablicy($form);
 
         $this->opisStr = $form['opis'];
         $form['opis'] = $this->staryOpisStr;//udajemy, że opis został nie zmieniony
@@ -72,24 +74,17 @@ class PismoEventSubscriber implements EventSubscriberInterface
         // $pismo->setOpis($this->staryOpisStr);
         $pismo->setOpisJesliZmieniony($this->opisStr);
         $pismo->UtworzIdodajNoweSprawyWgOpisow($this->przechwytywanie->PrzechwyconeOpisySpraw());
+        $pismo->UtworzIustawNowyRodzaj($this->przechwytywanie->PrzechwyconyRodzajDokumentu());
+        $pismo->UtworzStroneZnazwyIkierunku($this->przechwytywanie->PrzechwyconaNazwaStrony(),$this->przechwytywanie->PrzechwyconyKierunek());
         
         $oznaczenieUzytkownika = $pismo->getOznaczenie();
         $pismo->setOznaczenie($pismo->OznaczenieKonwertujDlaBazy($oznaczenieUzytkownika));
 
         $event->setData($pismo);
-        // $em = $event->getDoctrine()->getEntityManager();
-
-        // $pismo = $event->getData();
-        
-        // foreach($pismo->NiepotrzebneWyrazy() as $n)
-        // echo "id ".$n->getId()." ".$n->getWartosc()." ";
-        // echo ">";
-        // echo $pismo->getOpis();
 
     }
     public function onPostSubmit(FormEvent $event)
     {
-
     }
 
 }

@@ -51,22 +51,24 @@ class Pismo
     private $nazwyOdczytaneZfolderu = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Sprawa::class, inversedBy="dokumenty", cascade={"persist","remove"})
+     * @ORM\ManyToMany(targetEntity=Sprawa::class, inversedBy="dokumenty", cascade={"persist"})
+     * 
      */
+    //usuwam ,"remove" z cascade
     private $sprawy;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Kontrahent::class, inversedBy="odeMnie")
+     * @ORM\ManyToOne(targetEntity=Kontrahent::class, inversedBy="odeMnie", cascade={"persist"})
      */
     private $nadawca;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Kontrahent::class, inversedBy="doMnie")
+     * @ORM\ManyToOne(targetEntity=Kontrahent::class, inversedBy="doMnie", cascade={"persist"})
      */
     private $odbiorca;
 
     /**
-     * @ORM\ManyToOne(targetEntity=RodzajDokumentu::class, inversedBy="dokumenty")
+     * @ORM\ManyToOne(targetEntity=RodzajDokumentu::class, inversedBy="dokumenty", cascade={"persist"})
      */
     private $rodzaj;
 
@@ -422,6 +424,14 @@ class Pismo
             return;
         }
     }
+    public function UtworzStroneZnazwyIkierunku(string $nazwa, int $kierunek)
+    {
+        if(!strlen($nazwa))return;
+        $this->strona = new Kontrahent;
+        $this->strona->setNazwa($nazwa);
+        $this->kierunek = $kierunek;
+        $this->UstalStroneNaPodstawieKierunku($this->strona,$this->kierunek);
+    }
 
     public function getKierunek(): ?int
     {
@@ -543,6 +553,13 @@ class Pismo
             $sprawa->setOpis($s);
             $this->addSprawy(($sprawa));
         }
+    }
+    public function UtworzIustawNowyRodzaj(string $nazwaRodzaju)
+    {
+        if(!strlen($nazwaRodzaju)) return;
+        $rodzaj = new RodzajDokumentu();
+        $rodzaj->setNazwa($nazwaRodzaju);
+        $this->setRodzaj($rodzaj);
     }
 
     public function getOpisCiag(): ?string

@@ -19,9 +19,10 @@ abstract class PismoPrzetwarzanie
     protected string $nazwaPliku = '';
     protected string $polozenieDomyslne = '';
     protected string $polozenie = '';
+    protected string $docelowePolozeniePliku = '';
     // protected string $rozszerzenie = '';
 
-    protected function __construct(PracaNaPlikach $pnp,UrlGeneratorInterface $router, EntityManagerInterface $em)
+    protected function __construct(PracaNaPlikach $pnp, UrlGeneratorInterface $router, EntityManagerInterface $em)
     {
         $this->pnp = $pnp;
         $this->router = $router;
@@ -30,29 +31,33 @@ abstract class PismoPrzetwarzanie
     public function Zainicjowane(): bool
     {
         $this->zainicjowane = true;
-        if(!isset($this->em))$this->zainicjowane = false;
-        if(!isset($this->router))$this->zainicjowane = false;
-        if(!isset($this->pnp))$this->zainicjowane = false;
+        if (!isset($this->em)) $this->zainicjowane = false;
+        if (!isset($this->router)) $this->zainicjowane = false;
+        if (!isset($this->pnp)) $this->zainicjowane = false;
         return $this->zainicjowane;
     }
     public function setSciezkaLubNazwaPliku(string $nazwa)
     {
         $kod = new SciezkaKodowanieZnakow;
         $nazwa = $kod->Dekoduj($nazwa);
-        $pos = strrpos($nazwa,"/");
+        $pos = strrpos($nazwa, "/");
         $this->sciezkaLubNazwaPliku = $nazwa;
-        $this->polozenie = substr($nazwa,0,$pos);
-        $this->nazwaPliku = substr($nazwa,$pos);
+        $this->polozenie = substr($nazwa, 0, $pos);
+        $this->nazwaPliku = substr($nazwa, $pos);
     }
     public function setDomyslnePolozeniePliku(string $polozenie)
     {
         $this->polozenieDomyslne = $polozenie;
     }
+    public function setDocelowePolozeniePliku(string $polozenie)
+    {
+        if (substr($polozenie, -1) != '/') $polozenie .= '/';
+        $this->docelowePolozeniePliku = $polozenie;
+    }
     public function setParametry(array $parametry)
     {
-        foreach($parametry as $nazwaParametru => $parametr)
-        {
-            $Ustaw = 'set'.$nazwaParametru;
+        foreach ($parametry as $nazwaParametru => $parametr) {
+            $Ustaw = 'set' . $nazwaParametru;
             $this->$Ustaw($parametr);
         }
     }

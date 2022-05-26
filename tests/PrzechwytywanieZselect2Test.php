@@ -250,7 +250,7 @@ class PrzechwytywanieZselect2Test extends TestCase
     {
         $przechwytywanie = new PrzechwytywanieZselect2;
         $sprawy = [3,5,'opisowa wartość',12,'inny opis',32,24];
-        $przechwytywanie->PrzechwycOpisyNowychSprawDlaPisma($sprawy);
+        $przechwytywanie->PrzechwycOpisyNowychSprawZostawiajacZapisane($sprawy);
         $this->assertEquals([3,5,12,32,24],$sprawy);
     }
     public function testPrzechwycOpisyNowychSpraw_PusteZwracaPuste()
@@ -258,7 +258,7 @@ class PrzechwytywanieZselect2Test extends TestCase
         $sprawy = [];
 
         $przechwytywanie = new PrzechwytywanieZselect2;
-        $przechwytywanie->PrzechwycOpisyNowychSprawDlaPisma($sprawy);
+        $przechwytywanie->PrzechwycOpisyNowychSprawZostawiajacZapisane($sprawy);
 
         $this->assertEquals(0,count($przechwytywanie->PrzechwyconeOpisySpraw()));
     }
@@ -268,7 +268,7 @@ class PrzechwytywanieZselect2Test extends TestCase
             $sprawy = [3,5,'opisowa wartość'];
             
             $przechwytywanie = new PrzechwytywanieZselect2;
-            $przechwytywanie->PrzechwycOpisyNowychSprawDlaPisma($sprawy);
+            $przechwytywanie->PrzechwycOpisyNowychSprawZostawiajacZapisane($sprawy);
 
             $this->assertEquals(1,count($przechwytywanie->PrzechwyconeOpisySpraw()));
     }
