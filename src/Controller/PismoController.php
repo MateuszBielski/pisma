@@ -228,35 +228,32 @@ class PismoController extends AbstractController
     /**
      * @Route("/noweZeSkanu/{nazwa}/{numerStrony}", name="pismo_nowe_ze_skanu", methods={"GET","POST"})
      */
-    public function noweZeSkanuNew(Request $request, string $nazwa, $numerStrony = 1, PismoPrzetwarzanieNowe $ppn)
+    public function noweZeSkanuNew(Request $request, string $nazwa, $numerStrony = 1, PismoPrzetwarzanieNowe $przetwarzanie, Stopwatch $sw)
     {
-        $ppn->setParametry([
+        $przetwarzanie->setParametry([
             'FolderDlaPlikowPodgladu' => $this->getParameter('sciezka_do_png'),
             'DomyslnePolozeniePliku' => $this->getParameter('sciezka_do_skanow'),
-            'SciezkaLubNazwaPliku' => $nazwa
+            'SciezkaLubNazwaPliku' => $nazwa,
+            'DocelowePolozeniePliku' => $this->getParameter('sciezka_do_zarejestrowanych'),
+            'StopWatch' => $sw,
         ]);
-        $ppn->PrzedFormularzem();
-        $dokument = $ppn->NowyDokument();
-        $pnp = $ppn->getPracaNaPlikach();//do usunięcia (pnp ma być tu niewidoczny)
-        //przechwytywanie powinno być przeniesine do event subscribera i oddzielnie testowane
-        // $przechwytywanie = new PrzechwytywanieZselect2;
-        // $przechwytywanie->przechwycNazweStronyDlaPisma($request);
-        // $przechwytywanie->przechwycRodzajDokumentuDlaPisma($request);
-
+        $przetwarzanie->PrzedFormularzem();
+        $dokument = $przetwarzanie->NowyDokument();
+        
         $form = $this->createForm(PismoType::class, $dokument);
         $form->handleRequest($request);
+        
         $isSubmitted = $form->isSubmitted();
         $isValid = $isSubmitted ? $form->isValid() : false;
-        $przeniesionyPodglad = true;
-        // $przeniesionyPodglad = $isValid ? $pnp->PrzeniesPlikiPdfiPodgladu($this->getParameter('sciezka_do_zarejestrowanych'), $dokument) : false;
-        if ($isSubmitted && $isValid && $przeniesionyPodglad) {
+        $przetwarzanie->RezultatWalidacjiFormularza($isValid);
+        $informacjeOutrwaleniuPlikow = $przetwarzanie->UtrwalPliki();
+        
+        if ($isSubmitted && $isValid && $informacjeOutrwaleniuPlikow->czyUtrwalone()) {
             $entityManager = $this->getDoctrine()->getManager();
-            // $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($dokument, $entityManager);
-            // $przechwytywanie->przechwyconyRodzajDokumentuDlaPismaUtrwal($dokument, $entityManager);
-
+            
             $entityManager->persist($dokument);
             $entityManager->flush();
-
+            
             return $this->redirectToRoute('pismo_show', ['id' => $dokument->getId(), 'numerStrony' => $numerStrony]);
         }
         $sciezkiDoPodgladow = $dokument->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem();
@@ -264,8 +261,10 @@ class PismoController extends AbstractController
         $num = 0;
         foreach ($sciezkiDoPodgladow as $sc) $sciezkiDlaStron[] = $this->generateUrl('pismo_nowe_ze_skanu', ['nazwa' => $nazwa, 'numerStrony' => ++$num]);
         $sciezkiDoPodgladowBezFolderuGlownego = $dokument->SciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego();
+        $pnp = $przetwarzanie->getPracaNaPlikach();//do usunięcia (pnp ma być tu niewidoczny)
         return $this->render('pismo/noweZeSkanu.html.twig', [
             // 'skany' => $pnp->NazwyBezSciezkiZrozszerzeniem('pdf'),
+            //lista pism niezarejestrowanych powinna być dostępna z funkcji która filtruje tylko niezarejestrowane z danego folderu
             'pisma' => $pnp->UtworzPismaZfolderu($this->getParameter('sciezka_do_skanow'), 'pdf'),
             'pismo' => $dokument,
             'form' => $form->createView(),

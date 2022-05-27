@@ -7,6 +7,7 @@ use App\Service\PracaNaPlikach;
 use App\Service\SciezkaKodowanieZnakow;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 abstract class PismoPrzetwarzanie
 {
@@ -20,6 +21,9 @@ abstract class PismoPrzetwarzanie
     protected string $polozenieDomyslne = '';
     protected string $polozenie = '';
     protected string $docelowePolozeniePliku = '';
+    protected bool $rezultatWalidacjiFormularza = false;
+    protected bool $nieZnanyRezultatFormularza = true;
+    protected Stopwatch $stopwatch;
     // protected string $rozszerzenie = '';
 
     protected function __construct(PracaNaPlikach $pnp, UrlGeneratorInterface $router, EntityManagerInterface $em)
@@ -27,6 +31,16 @@ abstract class PismoPrzetwarzanie
         $this->pnp = $pnp;
         $this->router = $router;
         $this->em = $em;
+    }
+    protected function StartPomiar(string $oznaczenie)
+    {
+        if (isset($this->stopwatch))
+        $this->stopwatch->start($oznaczenie);
+    }
+    protected function StopPomiar(string $oznaczenie)
+    {
+        if (isset($this->stopwatch))
+        $this->stopwatch->stop($oznaczenie);
     }
     public function Zainicjowane(): bool
     {
@@ -54,6 +68,10 @@ abstract class PismoPrzetwarzanie
         if (substr($polozenie, -1) != '/') $polozenie .= '/';
         $this->docelowePolozeniePliku = $polozenie;
     }
+    public function setStopWatch(Stopwatch $sw)
+    {
+        $this->stopwatch = $sw;
+    }
     public function setParametry(array $parametry)
     {
         foreach ($parametry as $nazwaParametru => $parametr) {
@@ -64,5 +82,10 @@ abstract class PismoPrzetwarzanie
     public function getPracaNaPlikach()
     {
         return $this->pnp;
+    }
+    public function RezultatWalidacjiFormularza(bool $isValid)
+    {
+        $this->nieZnanyRezultatFormularza = false;
+        $this->rezultatWalidacjiFormularza = $isValid;
     }
 }

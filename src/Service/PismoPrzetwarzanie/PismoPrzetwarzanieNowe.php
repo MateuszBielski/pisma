@@ -28,7 +28,7 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
 
     public function PrzedFormularzem()
     {
-
+        $this->StartPomiar('PismoPrzetwarzanieNowe::PrzedFormularzem');
         $polozenie = (strlen($this->polozenie)) ? $this->polozenie : $this->polozenieDomyslne;
         if (!strlen($polozenie)) throw new Exception('należy ustawić folder z dokumentami');
         $this->nowyDokument = $this->pnp->UtworzPismoNaPodstawie($polozenie, $this->nazwaPliku);
@@ -40,12 +40,18 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
         $rozsz = $this->pnp->RozszerzeniePliku();
         if (!$this->TworzeniePodgladuObslugiwaneDla($rozsz)) throw new Exception('Generowanie podglądu dla plików .' . $rozsz . ' nieobsługiwane');
         $this->GenerujPodgladOdpowiedniDlaTypuPliku($rozsz);
+        $this->StopPomiar('PismoPrzetwarzanieNowe::PrzedFormularzem');
     }
-    public function PrzeniesPliki(): bool
+    public function UtrwalPliki(): UtrwalonePliki
     {
-        if(strlen($this->docelowePolozeniePliku) && !is_dir($this->docelowePolozeniePliku)) return false;
+        $this->StartPomiar('PismoPrzetwarzanieNowe::UtrwalPliki');
+        if ($this->nieZnanyRezultatFormularza) throw new Exception('Nie znany wynik walidacji formularza');
+        if(strlen($this->docelowePolozeniePliku) && !is_dir($this->docelowePolozeniePliku)) return new UtrwalonePliki(false);
+        if(!$this->rezultatWalidacjiFormularza) return new UtrwalonePliki(false);
         $this->pnp->PrzeniesPlikiPdfiPodgladu($this->docelowePolozeniePliku, $this->nowyDokument);
-        return true;
+        $result = new UtrwalonePliki(true);
+        $this->StopPomiar('PismoPrzetwarzanieNowe::UtrwalPliki');
+        return $result;
     }
     public function NowyDokument(): Pismo
     {
