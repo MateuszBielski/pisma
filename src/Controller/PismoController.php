@@ -228,7 +228,7 @@ class PismoController extends AbstractController
     /**
      * @Route("/noweZeSkanu/{nazwa}/{numerStrony}", name="pismo_nowe_ze_skanu", methods={"GET","POST"})
      */
-    public function noweZeSkanuNew(Request $request, string $nazwa, $numerStrony = 1, PismoPrzetwarzanieNowe $przetwarzanie, Stopwatch $sw)
+    public function noweZeSkanuNew(Request $request, string $nazwa, PismoPrzetwarzanieNowe $przetwarzanie, Stopwatch $sw, $numerStrony = 1)
     {
         $przetwarzanie->setParametry([
             'FolderDlaPlikowPodgladu' => $this->getParameter('sciezka_do_png'),
@@ -277,7 +277,7 @@ class PismoController extends AbstractController
     }
 
 
-    public function noweZeSkanuOld(Request $request, string $nazwa, $numerStrony = 1, KontrahentRepository $kr, PismoRepository $pr, PracaNaPlikach $pnp): Response
+    public function noweZeSkanuOld(Request $request, string $nazwa, KontrahentRepository $kr, PismoRepository $pr, PracaNaPlikach $pnp, $numerStrony = 1): Response
     {
         // $pnp = new PracaNaPlikach;
         // $pnp->PobierzWszystkieNazwyPlikowZfolderu($this->getParameter('sciezka_do_skanow'));

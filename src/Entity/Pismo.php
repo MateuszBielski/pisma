@@ -181,7 +181,9 @@ class Pismo
         // $nazwaBezRozszerzenia = $this->NazwaZrodlaBezRozszerzenia();
         $path = $this->folderPodgladu . $nazwa;
         if ($this->nazwyOdczytaneZfolderu === null) {
-            $this->nazwyOdczytaneZfolderu = @array_diff(@scandir($path), array('..', '.'));
+            $zawartoscFolderu = @scandir($path);
+            if($zawartoscFolderu == false)$zawartoscFolderu = [];
+            $this->nazwyOdczytaneZfolderu = @array_diff($zawartoscFolderu, array('..', '.'));
         }
         if (!$this->nazwyOdczytaneZfolderu || !count($this->nazwyOdczytaneZfolderu)) {
             $sciezki[] = "folder $path jest pusty";
