@@ -40,7 +40,13 @@ class PismoPrzetwarzanieTest extends KernelTestCase
 
     public function testNowe_TworzenieSerwisu()
     {
-        $ppn = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em);
+        $parametry = [
+            new PracaNaPlikach(),
+            $this->rou,
+            $this->em,
+        ];
+        $ppn = new PismoPrzetwarzanieNowe(...$parametry);
+        // $ppn = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em);
         $this->assertTrue($ppn->Zainicjowane());
     }
     public function testNowe_NazwaBezSciezki_BrakDomyslnegoPolozenia_wyjatek()
