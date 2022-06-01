@@ -18,12 +18,11 @@ use App\Service\PracaNaPlikachMock;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Exception;
 
-class PismoPrzetwarzanieTest extends KernelTestCase
+class PismoPrzetwarzaniePrzedFormTest extends KernelTestCase
 {
     private $serwisyUstawione = false;
     private $em;
     private $rou;
-    // private PismoPrzetwarzanieArgumentyInterface $argument;
     private array $argument;
     private $ustawieniaPowtarzalne = [
         'FolderDlaPlikowPodgladu' => 'tests/png/',
@@ -34,11 +33,6 @@ class PismoPrzetwarzanieTest extends KernelTestCase
     protected function setUp(): void
     {
         if ($this->serwisyUstawione) return;
-        // $kernel = self::bootKernel();
-        // $doctrine = $this->entityManager = $kernel->getContainer()
-        //     ->get('doctrine');
-
-        // $this->em = $doctrine->getManager();
         $this->rou = static::getContainer()->get('router');
         $this->argument['pracaRouter'] = new PpArgPracaRouter(new PracaNaPlikach(),$this->rou);
         $this->argument['pracaMockRouter'] = new PpArgPracaRouter(new PracaNaPlikachMock(),$this->rou);
@@ -53,12 +47,10 @@ class PismoPrzetwarzanieTest extends KernelTestCase
             $this->em,
         ];
         $ppn = new PismoPrzetwarzanieNowe($this->argument['pracaRouter']);
-        // $ppn = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em);
         $this->assertTrue($ppn->Zainicjowane());
     }
     public function testNowe_NazwaBezSciezki_BrakDomyslnegoPolozenia_wyjatek()
     {
-        // $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em);
         $przetwarzanie = new PismoPrzetwarzanieNowe($this->argument['pracaRouter']);
         $przetwarzanie->setSciezkaLubNazwaPliku('nazwaPliku.odt');
         $this->expectException(Exception::class);
@@ -66,7 +58,6 @@ class PismoPrzetwarzanieTest extends KernelTestCase
     }
     public function testNowe_NazwaBezSciezki_BrakDomyslnegoPolozenia_trescWyjatek()
     {
-        // $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em);
         $przetwarzanie = new PismoPrzetwarzanieNowe($this->argument['pracaRouter']);
         $przetwarzanie->setSciezkaLubNazwaPliku('nazwaPliku.odt');
         $this->expectExceptionMessage('należy ustawić folder z dokumentami');
@@ -74,7 +65,6 @@ class PismoPrzetwarzanieTest extends KernelTestCase
     }
     public function testNowe_NazwaBezSciezki_DomyslnePolozenie()
     {
-        // $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em);
         $przetwarzanie = new PismoPrzetwarzanieNowe($this->argument['pracaRouter']);
         $parametry = $this->ustawieniaPowtarzalne;
         $parametry['SciezkaLubNazwaPliku'] = 'nazwaPliku.odt';
@@ -85,7 +75,6 @@ class PismoPrzetwarzanieTest extends KernelTestCase
 
     public function testNowe_SciezkaWnazwie()
     {
-        // $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em);
         $przetwarzanie = new PismoPrzetwarzanieNowe($this->argument['pracaRouter']);
         $parametry = $this->ustawieniaPowtarzalne;
         $parametry['SciezkaLubNazwaPliku'] = 'jakas/sciezka/nazwaPliku.odt';
@@ -95,7 +84,6 @@ class PismoPrzetwarzanieTest extends KernelTestCase
     }
     public function testNowe_SciezkaZakodowanaWnazwie()
     {
-        // $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em);
         $przetwarzanie = new PismoPrzetwarzanieNowe($this->argument['pracaRouter']);
         $parametry = $this->ustawieniaPowtarzalne;
         $parametry['SciezkaLubNazwaPliku'] = 'jakas+sciezka+nazwaPliku.odt';
@@ -105,7 +93,6 @@ class PismoPrzetwarzanieTest extends KernelTestCase
     }
     public function testNowe_dokumentZnaSwojePolozenie_FolderDomyslny()
     {
-        // $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em);
         $przetwarzanie = new PismoPrzetwarzanieNowe($this->argument['pracaRouter']);
         $parametry = $this->ustawieniaPowtarzalne;
         $parametry['SciezkaLubNazwaPliku'] = 'nazwaPliku.odt';
@@ -116,7 +103,6 @@ class PismoPrzetwarzanieTest extends KernelTestCase
     }
     public function testNowe_dokumentZnaSwojePolozenie_FolderWnazwie()
     {
-        // $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em);
         $przetwarzanie = new PismoPrzetwarzanieNowe($this->argument['pracaRouter']);
         $parametry = $this->ustawieniaPowtarzalne;
         $parametry['SciezkaLubNazwaPliku'] = 'folder245/nazwaPliku.odt';
@@ -126,7 +112,6 @@ class PismoPrzetwarzanieTest extends KernelTestCase
         $this->assertEquals('folder245/nazwaPliku.odt', $przetwarzanie->NowyDokument()->getAdresZrodlaPrzedZarejestrowaniem());
     }
     
-    // getAdresZrodlaPrzedZarejestrowaniem()
     public function testZaproponujeOznaczenie()
     {
         $ostatniePismo = new Pismo();
@@ -140,7 +125,6 @@ class PismoPrzetwarzanieTest extends KernelTestCase
             ->method('OstatniNumerPrzychodzacych')
             ->willReturn($ostatniePismo);
 
-        // $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em, $pismoRepository);
         $argumenty = new PpArgPracaRouterRepo(new PracaNaPlikach(),$this->rou,$pismoRepository);
         $przetwarzanie = new PismoPrzetwarzanieNowe($argumenty);
         $spodziewaneOznaczenie = 'L.dz. 6/' . $aktualnyRok;
@@ -160,7 +144,6 @@ class PismoPrzetwarzanieTest extends KernelTestCase
             ->method('OstatniNumerPrzychodzacych')
             ->willReturn(null);
 
-        // $przetwarzanie = new PismoPrzetwarzanieNowe(new PracaNaPlikach(), $this->rou, $this->em, $pismoRepository);
         $argumenty = new PpArgPracaRouterRepo(new PracaNaPlikach(),$this->rou,$pismoRepository);
         $przetwarzanie = new PismoPrzetwarzanieNowe($argumenty);
         $spodziewaneOznaczenie = 'L.dz. 1/' . $aktualnyRok;
@@ -171,7 +154,6 @@ class PismoPrzetwarzanieTest extends KernelTestCase
     public function testUruchomienieProcesu()
     {
         $pnp = new PracaNaPlikachMock();
-        // $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
         $argumenty = new PpArgPracaRouter($pnp,$this->rou);
         $przetwarzanie = new PismoPrzetwarzanieNowe($argumenty);
         $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
@@ -181,7 +163,6 @@ class PismoPrzetwarzanieTest extends KernelTestCase
     public function testGenerujPodgladDlaDokumentu_WyjateknieobslugiwanyFormat()
     {
         $pnp = new PracaNaPlikachMock();
-        // $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
         $argumenty = new PpArgPracaRouter($pnp,$this->rou);
         $przetwarzanie = new PismoPrzetwarzanieNowe($argumenty);
         $przetwarzanie->setSciezkaLubNazwaPliku('jakas/sciezka/nazwaPliku.jar');
@@ -192,7 +173,6 @@ class PismoPrzetwarzanieTest extends KernelTestCase
     public function testGenerujPodgladDlaDokumentu_pdf()
     {
         $pnp = new PracaNaPlikachMock();
-        // $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
         $argumenty = new PpArgPracaRouter($pnp,$this->rou);
         $przetwarzanie = new PismoPrzetwarzanieNowe($argumenty);
         $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
@@ -204,7 +184,6 @@ class PismoPrzetwarzanieTest extends KernelTestCase
     public function testNieWywolujeGenerujPodglad_Png_dlaOdt()
     {
         $pnp = new PracaNaPlikachMock();
-        // $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
         $argumenty = new PpArgPracaRouter($pnp,$this->rou);
         $przetwarzanie = new PismoPrzetwarzanieNowe($argumenty);
         $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
@@ -217,135 +196,10 @@ class PismoPrzetwarzanieTest extends KernelTestCase
     {
         $pnp = new PracaNaPlikach();
         $argument = new PpArgPracaRouter($pnp,$this->rou);
-        // $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
         $przetwarzanie = new PismoPrzetwarzanieNowe($argument);
         $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
         $przetwarzanie->setSciezkaLubNazwaPliku('maPodglad.pdf');
         $przetwarzanie->PrzedFormularzem();
         $this->assertEquals('tests/png/', $pnp->getFolderDlaPlikowPodgladu());
-    }
-    public function testUtrwalPliki_nieUtrwalaJesliFormularzNieprawidlowy()
-    {
-        // $pnp = new PracaNaPlikach();
-        // $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
-        $przetwarzanie = new PismoPrzetwarzanieNowe($this->argument['pracaRouter']);
-        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
-        $przetwarzanie->PrzedFormularzem();
-        // $przetwarzanie->setDocelowePolozeniePliku('jakis/nieIstniejacy/folder');
-        $przetwarzanie->RezultatWalidacjiFormularza(false);
-        $this->assertFalse($przetwarzanie->UtrwalPliki()->czyUtrwalone());
-    }
-    public function testUtrwalPliki_wyjatekJezeliNieZnanyWynikFormularza()
-    {
-    //     $pnp = new PracaNaPlikach();
-    //     $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
-        $przetwarzanie = new PismoPrzetwarzanieNowe($this->argument['pracaRouter']);
-        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
-        $przetwarzanie->PrzedFormularzem();
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Nie znany wynik walidacji formularza');
-        $przetwarzanie->UtrwalPliki();
-    }
-    public function testUtrwalPliki_niePrzenosiDokumentu()
-    {
-        //pozostawia w pierwotnym miejscu, bo nie ustawiony folder docelowy dla dokumentow
-        //zwraca true
-        // $pnp = new PracaNaPlikach();
-        // $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
-        $przetwarzanie = new PismoPrzetwarzanieNowe($this->argument['pracaRouter']);
-        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
-        $przetwarzanie->PrzedFormularzem();
-
-        $przetwarzanie->RezultatWalidacjiFormularza(true);
-        $this->assertTrue($przetwarzanie->UtrwalPliki()->czyUtrwalone());
-        $this->assertTrue(file_exists('tests/przenoszenie/pierwotnaLokalizacja/plik.pdf'));
-        
-    }
-    public function testUtrwalPliki_niePrzenosiPodgladu()
-    {
-        //pozostawia w pierwotnym miejscu, bo nie ustawiony folder docelowy dla podglądów
-        //zwraca true
-        // $pnp = new PracaNaPlikach();
-        // $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
-        $przetwarzanie = new PismoPrzetwarzanieNowe($this->argument['pracaRouter']);
-        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
-        $przetwarzanie->PrzedFormularzem();
-        $przetwarzanie->RezultatWalidacjiFormularza(true);
-
-        $this->assertTrue($przetwarzanie->UtrwalPliki()->czyUtrwalone());
-        $this->assertTrue(file_exists('tests/przenoszenie/pierwotnaLokalizacja/plik/podglad.png'));
-    }
-    public function testUtrwalPliki_zwracaFalseWniepowodzeniuUtrwalenia()
-    {
-        //ustawić ścieżkę do folderu, który nie istnieje
-        // $pnp = new PracaNaPlikach();
-        // $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
-        $przetwarzanie = new PismoPrzetwarzanieNowe($this->argument['pracaRouter']);
-        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
-        $przetwarzanie->setDocelowePolozeniePliku('jakis/nieIstniejacy/folder');
-        $przetwarzanie->RezultatWalidacjiFormularza(true);
-
-        $this->assertFalse($przetwarzanie->UtrwalPliki()->czyUtrwalone());
-        $this->assertTrue(file_exists('tests/przenoszenie/pierwotnaLokalizacja/plik/podglad.png'));
-    }
-    public function testUtrwalPliki_przenosiDokument()
-    {
-        //przenosi i zwraca true
-        $przen = 'tests/przenoszenie';
-        $pierw = $przen.'/pierwotnaLokalizacja';
-        $docel = $przen.'/docelowaLokalizacja';
-        $pierwPlik = $pierw.'/plik.pdf';
-        $docelPlik = $docel.'/plik.pdf';
-
-        if(!file_exists($pierwPlik)) throw new Exception('brak pliku w pierwotnej lokalizacji');
-        // $pnp = new PracaNaPlikach();
-        // $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
-        $przetwarzanie = new PismoPrzetwarzanieNowe($this->argument['pracaRouter']);
-        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
-        $przetwarzanie->setSciezkaLubNazwaPliku($pierwPlik);
-        $przetwarzanie->setDocelowePolozeniePliku($docel);
-        $przetwarzanie->PrzedFormularzem();
-        $przetwarzanie->RezultatWalidacjiFormularza(true);
-        
-        $this->assertTrue($przetwarzanie->UtrwalPliki()->czyUtrwalone());
-        $this->assertTrue(file_exists($docelPlik));
-        $this->assertFalse(file_exists($pierwPlik));
-        rename($docelPlik,$pierwPlik);
-    }
-
-    public function _testUtrwalPliki_przenosiPodglad()
-    {
-        //przenosi i zwraca true
-        //podgląd musi być dostępny z poziomu folderu public
-        //więc do zastanowienia co i gdzie przenosić, bo obecnie przenoszenie podglądu polega na synchronizacji nazwy folderu z nazwą dokumentu
-        /*
-        $przen = 'tests/przenoszenie';
-        $pierw = $przen.'/pierwotnaLokalizacja/plik';
-        $docel = $przen.'/docelowaLokalizacja/plik';
-        $pierwPodglad = $pierw.'/podglad.png';
-        $docelPodglad = $docel.'/podglad.png';
-
-        if(!file_exists($pierwPodglad)) throw new Exception('brak pliku w pierwotnej lokalizacji');
-        $pnp = new PracaNaPlikach();
-        $przetwarzanie = new PismoPrzetwarzanieNowe($pnp, $this->rou, $this->em);
-        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
-        $przetwarzanie->setSciezkaLubNazwaPliku($pierwPodglad);
-        $przetwarzanie->setDocelowePolozeniePodgladu($docel);
-        $przetwarzanie->PrzedFormularzem();
-        $przetwarzanie->RezultatWalidacjiFormularza(true);
-        
-        $this->assertTrue($przetwarzanie->UtrwalPliki()->czyUtrwalone());
-        $this->assertTrue(file_exists($docelPodglad));
-        $this->assertFalse(file_exists($pierwPodglad));
-        */
-    }
-    public function _testSciezkiDlaStron_liczbaStron()
-    {
-        // $przetwarzanie = new PismoPrzetwarzanieNoweMock();
-        // $dokument = new Pismo('nazwaPliku29.pdf');
-        // $przetwarzanie->setDokument($dokument);
-        // $dokumentWidok = new PismoPrzetwarzanieNoweWidok($przetwarzanie);
-        // $this->assertEquals(3,count($dokumentWidok->getSciezkiDlaStron()));
     }
 }
