@@ -19,16 +19,17 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
 
 
 
-    public function __construct(PracaNaPlikach $pnp, UrlGeneratorInterface $router, EntityManagerInterface $em, PismoRepository $pr = null)
+    public function __construct(PismoPrzetwarzanieArgumentyInterface $argumenty)
     {
-        parent::__construct($pnp, $router, $em);
-        if (isset($pr))
-            $this->pr = $pr;
+        $this->argumenty = $argumenty->Argumenty();
+        if (array_key_exists('stopWatch',$this->argumenty)) $this->stopwatch = $this->argumenty['stopWatch'];
     }
 
     public function PrzedFormularzem()
     {
         $this->StartPomiar('PismoPrzetwarzanieNowe::PrzedFormularzem');
+        $this->pnp = $this->argumenty['pnp'];
+        if (array_key_exists('pismoRepository',$this->argumenty)) $this->pr = $this->argumenty['pismoRepository'];
         $polozenie = (strlen($this->polozenie)) ? $this->polozenie : $this->polozenieDomyslne;
         if (!strlen($polozenie)) throw new Exception('należy ustawić folder z dokumentami');
         $this->nowyDokument = $this->pnp->UtworzPismoNaPodstawie($polozenie, $this->nazwaPliku);

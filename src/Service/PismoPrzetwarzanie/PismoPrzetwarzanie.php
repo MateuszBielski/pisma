@@ -24,24 +24,37 @@ abstract class PismoPrzetwarzanie
     protected bool $rezultatWalidacjiFormularza = false;
     protected bool $nieZnanyRezultatFormularza = true;
     protected Stopwatch $stopwatch;
+    protected array $argumenty;
+    // protected $startPomiar; //chciałem do tej zmiennej przypisać metodę klasy stopwatch, ale nie wiem jak
+    // protected $stopPomiar;
     // protected string $rozszerzenie = '';
 
-    protected function __construct(PracaNaPlikach $pnp, UrlGeneratorInterface $router, EntityManagerInterface $em)
+    private function PustaFunkcja()
+    {
+
+    }
+
+    protected function __construct(PracaNaPlikach $pnp, UrlGeneratorInterface $router, EntityManagerInterface $em = null)
     {
         $this->pnp = $pnp;
         $this->router = $router;
-        $this->em = $em;
+        if (isset($em))
+            $this->em = $em;
+        // $this->startPomiar = $this->PustaFunkcja();
+        // $this->stopPomiar = $this->PustaFunkcja();
     }
+    ##########
     protected function StartPomiar(string $oznaczenie)
     {
         if (isset($this->stopwatch))
-        $this->stopwatch->start($oznaczenie);
+            $this->stopwatch->start($oznaczenie);
     }
     protected function StopPomiar(string $oznaczenie)
     {
         if (isset($this->stopwatch))
-        $this->stopwatch->stop($oznaczenie);
+            $this->stopwatch->stop($oznaczenie);
     }
+    ############
     public function Zainicjowane(): bool
     {
         $this->zainicjowane = true;
@@ -71,6 +84,10 @@ abstract class PismoPrzetwarzanie
     public function setStopWatch(Stopwatch $sw)
     {
         $this->stopwatch = $sw;
+        // $this->startPomiar = array($sw,'start');
+        // $this->stopPomiar = array($sw,'stop');
+        // $this->stopPomiar = $sw->start;
+        // $this->stopPomiar = $sw->stop;
     }
     public function setParametry(array $parametry)
     {

@@ -228,14 +228,13 @@ class PismoController extends AbstractController
     /**
      * @Route("/noweZeSkanu/{nazwa}/{numerStrony}", name="pismo_nowe_ze_skanu", methods={"GET","POST"})
      */
-    public function noweZeSkanuNew(Request $request, string $nazwa, PismoPrzetwarzanieNowe $przetwarzanie, Stopwatch $sw, $numerStrony = 1)
+    public function noweZeSkanuNew(Request $request, string $nazwa, PismoPrzetwarzanieNowe $przetwarzanie,  $numerStrony = 1)//Stopwatch $sw,
     {
         $przetwarzanie->setParametry([
             'FolderDlaPlikowPodgladu' => $this->getParameter('sciezka_do_png'),
             'DomyslnePolozeniePliku' => $this->getParameter('sciezka_do_skanow'),
             'SciezkaLubNazwaPliku' => $nazwa,
             'DocelowePolozeniePliku' => $this->getParameter('sciezka_do_zarejestrowanych'),
-            'StopWatch' => $sw,
         ]);
         $przetwarzanie->PrzedFormularzem();
         $dokument = $przetwarzanie->NowyDokument();
@@ -261,11 +260,9 @@ class PismoController extends AbstractController
         $num = 0;
         foreach ($sciezkiDoPodgladow as $sc) $sciezkiDlaStron[] = $this->generateUrl('pismo_nowe_ze_skanu', ['nazwa' => $nazwa, 'numerStrony' => ++$num]);
         $sciezkiDoPodgladowBezFolderuGlownego = $dokument->SciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego();
-        $pnp = $przetwarzanie->getPracaNaPlikach();//do usunięcia (pnp ma być tu niewidoczny)
         return $this->render('pismo/noweZeSkanu.html.twig', [
             // 'skany' => $pnp->NazwyBezSciezkiZrozszerzeniem('pdf'),
             //lista pism niezarejestrowanych powinna być dostępna z funkcji która filtruje tylko niezarejestrowane z danego folderu
-            'pisma' => $pnp->UtworzPismaZfolderu($this->getParameter('sciezka_do_skanow'), 'pdf'),
             'pismo' => $dokument,
             'form' => $form->createView(),
             'sciezki_dla_stron' => $sciezkiDlaStron,
