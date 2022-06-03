@@ -13,7 +13,7 @@ class PpArgPracaRouter implements PismoPrzetwarzanieArgumentyInterface
     {
         $this->argumenty = [
             'pnp' => $pnp,
-            '$router' => $router,
+            'router' => $router,
         ];
     }
 

@@ -12,6 +12,7 @@ use App\Repository\KontrahentRepository;
 use App\Repository\PismoRepository;
 use App\Repository\SprawaRepository;
 use App\Service\PismoPrzetwarzanie\PismoPrzetwarzanieNowe;
+use App\Service\PismoPrzetwarzanie\PismoPrzetwarzanieNoweWidok;
 use App\Service\PracaNaPlikach;
 use App\Service\PrzechwytywanieZselect2;
 use App\Service\RozpoznawanieTekstu;
@@ -104,6 +105,7 @@ class PismoController extends AbstractController
         }
         return $this->render('pismo/noweIndex.html.twig', [
             // 'skany' => $pnp->NazwyBezSciezkiZrozszerzeniem('pdf'),
+            //lista pism niezarejestrowanych powinna być dostępna z funkcji która filtruje tylko niezarejestrowane z danego folderu
             'pisma' => $pnp->UtworzPismaZfolderu($this->getParameter('sciezka_do_skanow'), 'pdf'),
             'form' => $form->createView(),
         ]);
@@ -228,7 +230,7 @@ class PismoController extends AbstractController
     /**
      * @Route("/noweZeSkanu/{nazwa}/{numerStrony}", name="pismo_nowe_ze_skanu", methods={"GET","POST"})
      */
-    public function noweZeSkanuNew(Request $request, string $nazwa, PismoPrzetwarzanieNowe $przetwarzanie,  $numerStrony = 1)//Stopwatch $sw,
+    public function noweZeSkanuNew(Request $request, string $nazwa, PismoPrzetwarzanieNowe $przetwarzanie,  $numerStrony = 1) //Stopwatch $sw,
     {
         $przetwarzanie->setParametry([
             'FolderDlaPlikowPodgladu' => $this->getParameter('sciezka_do_png'),
@@ -238,39 +240,30 @@ class PismoController extends AbstractController
         ]);
         $przetwarzanie->PrzedFormularzem();
         $dokument = $przetwarzanie->NowyDokument();
-        
+
         $form = $this->createForm(PismoType::class, $dokument);
         $form->handleRequest($request);
-        
+
         $isSubmitted = $form->isSubmitted();
         $isValid = $isSubmitted ? $form->isValid() : false;
         $przetwarzanie->RezultatWalidacjiFormularza($isValid);
         $informacjeOutrwaleniuPlikow = $przetwarzanie->UtrwalPliki();
-        
+
         if ($isSubmitted && $isValid && $informacjeOutrwaleniuPlikow->czyUtrwalone()) {
             $entityManager = $this->getDoctrine()->getManager();
-            
+
             $entityManager->persist($dokument);
             $entityManager->flush();
-            
+
             return $this->redirectToRoute('pismo_show', ['id' => $dokument->getId(), 'numerStrony' => $numerStrony]);
         }
-        $sciezkiDoPodgladow = $dokument->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem();
-        $sciezkiDlaStron = [];
-        $num = 0;
-        foreach ($sciezkiDoPodgladow as $sc) $sciezkiDlaStron[] = $this->generateUrl('pismo_nowe_ze_skanu', ['nazwa' => $nazwa, 'numerStrony' => ++$num]);
-        $sciezkiDoPodgladowBezFolderuGlownego = $dokument->SciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego();
-        return $this->render('pismo/noweZeSkanu.html.twig', [
-            // 'skany' => $pnp->NazwyBezSciezkiZrozszerzeniem('pdf'),
-            //lista pism niezarejestrowanych powinna być dostępna z funkcji która filtruje tylko niezarejestrowane z danego folderu
-            'pismo' => $dokument,
+        $widok = new PismoPrzetwarzanieNoweWidok($przetwarzanie);
+        $parametry = [
             'form' => $form->createView(),
-            'sciezki_dla_stron' => $sciezkiDlaStron,
-            'sciezka_png' => $sciezkiDoPodgladow[$numerStrony - 1],
-            'sciezka_png_bez_fg' => $sciezkiDoPodgladowBezFolderuGlownego[$numerStrony - 1],
             'numerStrony' => $numerStrony,
-            // 'kontrahentForm' => $kontrahentForm->createView(),
-        ]);
+        ];
+        $widok->UzupelnijDaneDlaGenerowaniaSzablonu($parametry);
+        return $this->render($widok->getSzablonNowyWidok(),$parametry);
     }
 
 

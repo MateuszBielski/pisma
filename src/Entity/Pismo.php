@@ -698,4 +698,8 @@ class Pismo
     {
         return $this->numerStrony;
     }
+    public function SzablonNowyWidok(): string
+    {
+        return 'pismo/noweZeSkanu.html.twig';
+    }
 }

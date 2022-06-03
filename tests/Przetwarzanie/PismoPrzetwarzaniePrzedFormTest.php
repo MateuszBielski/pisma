@@ -16,9 +16,11 @@ use App\Service\PismoPrzetwarzanie\PpArgPracaRouterRepo;
 use App\Service\PracaNaPlikach;
 use App\Service\PracaNaPlikachMock;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use PHPUnit\Framework\TestCase;
+
 use Exception;
 
-class PismoPrzetwarzaniePrzedFormTest extends KernelTestCase
+class PismoPrzetwarzaniePrzedFormTest extends KernelTestCase //musi być bo static::getContainer
 {
     private $serwisyUstawione = false;
     private $em;

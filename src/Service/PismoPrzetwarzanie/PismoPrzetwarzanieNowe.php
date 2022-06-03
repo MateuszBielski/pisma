@@ -12,10 +12,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
 {
-    private Pismo $nowyDokument;
+    protected Pismo $nowyDokument;
     private PismoRepository $pr;
     private string $folderPodgladu = '';
-    private static array $podgladDlaTypowPlikow = ['odt', 'pdf'];
+    private static array $podgladDlaTypowPlikow = [ 'pdf','odt'];//'odt' - musi być, chociaż to nieprawda, bo wiele testów pisanych było z założeniem, że jest podgląd
 
 
 
@@ -23,6 +23,7 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
     {
         $this->argumenty = $argumenty->Argumenty();
         if (array_key_exists('stopWatch',$this->argumenty)) $this->stopwatch = $this->argumenty['stopWatch'];
+        if (array_key_exists('router',$this->argumenty)) $this->router = $this->argumenty['router'];
     }
 
     public function PrzedFormularzem()

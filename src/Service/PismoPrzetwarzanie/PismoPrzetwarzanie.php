@@ -105,4 +105,8 @@ abstract class PismoPrzetwarzanie
         $this->nieZnanyRezultatFormularza = false;
         $this->rezultatWalidacjiFormularza = $isValid;
     }
+    public function Router(): UrlGeneratorInterface
+    {
+        return $this->router;
+    }
 }

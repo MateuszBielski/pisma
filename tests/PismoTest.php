@@ -583,10 +583,11 @@ class PismoTest extends TestCase
         $pismo->RozmiarOkreslPoUstaleniuPolozenia('tests/rozmiar/');
         $this->assertEquals('14.7 kiB',$pismo->RozmiarCzytelny());
     }
-    public function _testGenerujSciezkeWidokNiezarejestrowanego(UrlGeneratorInterface $router )
+    
+    public function testSzablonNowyWidok()
     {
-        $sciezka = $router->generate('pismo_nowe_index');
-        $n = 2;
+        $pismo = new Pismo('jakasNazwa.pdf');
+        $this->assertEquals('pismo/noweZeSkanu.html.twig',$pismo->SzablonNowyWidok());
     }
     /*
     public function testBrakPodgladuZarejestrowanego_GenerujePodglad()
