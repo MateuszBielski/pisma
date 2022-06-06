@@ -16,7 +16,7 @@ class RoutingForPismoTest extends KernelTestCase
         $routerService = static::getContainer()->get('router');
         $pismo = new Pismo('sciezka/do/plikNr3.pdf');
         $pismo->setRouter($routerService);
-        $this->assertEquals('/pismo/noweZeSkanu/plikNr3.pdf', $pismo->UrlWidokNowe());
+        $this->assertEquals('/pismo/nowyDokument/plikNr3.pdf', $pismo->UrlWidokNowe());
     }
     public function testUrlWidokNowe_NieUstawionyRouter()
     {
@@ -30,27 +30,27 @@ class RoutingForPismoTest extends KernelTestCase
         $routerService = static::getContainer()->get('router');
         $pismo = new DokumentOdt('sciezka/do/plikNr3.odt');
         $pismo->setRouter($routerService);
-        $this->assertEquals('/pismo/nowyDokumentOdt/plikNr3.odt', $pismo->UrlWidokNowe());
+        $this->assertEquals('/pismo/nowyDokument/plikNr3.odt', $pismo->UrlWidokNowe());
     }
     public function testRouterUstawiaDlaTworzonychPism()
     {
         $pnp = new PracaNaPlikach(static::getContainer()->get('router'));
         // $pnp->setRouter();
         $pisma = $pnp->UtworzPismaZfolderu("tests/skanyDoTestow",'pdf');
-        $this->assertEquals('/pismo/noweZeSkanu/dok1.pdf', $pisma[0]->UrlWidokNowe());
+        $this->assertEquals('/pismo/nowyDokument/dok1.pdf', $pisma[0]->UrlWidokNowe());
     }
     public function testRouterUstawiaDlaTworzonych_dokOdt()
     {
         $pnp = new PracaNaPlikach(static::getContainer()->get('router'));
         $pisma = $pnp->UtworzPismaZfolderu("tests/dokumentyOdt");
-        $this->assertEquals('/pismo/nowyDokumentOdt/zZawartoscia.odt', $pisma[1]->UrlWidokNowe());
+        $this->assertEquals('/pismo/nowyDokument/zZawartoscia.odt', $pisma[1]->UrlWidokNowe());
     }
     public function testUrlWidokNowe_NumerStrony()
     {
         $pismo = new Pismo('sciezka/do/plikNr3.pdf');       
         $pismo->setRouter(static::getContainer()->get('router'));
         $pismo->setNumerStrony(5);
-        $this->assertEquals('/pismo/noweZeSkanu/plikNr3.pdf/5', $pismo->UrlWidokNowe());
+        $this->assertEquals('/pismo/nowyDokument/plikNr3.pdf/5', $pismo->UrlWidokNowe());
     }
     public function testUrlWidokNowe_NumerStrony_DokumentOdt(): void
     {
@@ -58,6 +58,6 @@ class RoutingForPismoTest extends KernelTestCase
         $pismo = new DokumentOdt('sciezka/do/plikNr3.odt');
         $pismo->setRouter($routerService);
         $pismo->setNumerStrony(5);
-        $this->assertEquals('/pismo/nowyDokumentOdt/plikNr3.odt/5', $pismo->UrlWidokNowe());
+        $this->assertEquals('/pismo/nowyDokument/plikNr3.odt/5', $pismo->UrlWidokNowe());
     }
 }

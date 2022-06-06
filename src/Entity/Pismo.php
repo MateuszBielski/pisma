@@ -685,7 +685,8 @@ class Pismo
         if (!isset($this->router)) throw new Exception(
             'należy ustawić router dla pisma'
         );
-        return $this->router->generate('pismo_nowe_ze_skanu', [
+        //zmiana nazwy ścieżki z pismo/noweZeSkanu
+        return $this->router->generate('nowy_dokument', [
             'nazwa' => $this->nazwaPliku,
             'numerStrony' => $this->numerStrony
         ]);

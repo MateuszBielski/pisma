@@ -27,7 +27,7 @@ class PismoPrzetwarzanieNoweWidok
         $nazwa = $dok->getNazwaPliku();
         $num = 0;
         for ($i = 0; $i < $ileStron; $i++) {
-            $this->sciezkiDlaStron[] = $router->generate('pismo_nowe_ze_skanu', ['nazwa' => $nazwa, 'numerStrony' => ++$num]);
+            $this->sciezkiDlaStron[] = $router->generate('nowy_dokument', ['nazwa' => $nazwa, 'numerStrony' => ++$num]);
         }
         $this->dokument = $dok;
     }

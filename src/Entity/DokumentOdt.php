@@ -14,16 +14,17 @@ class DokumentOdt extends Pismo
         $this->OdczytajTresc();
         return $this->tresc;
     }
-    public function UrlWidokNowe()
-    {
-        if (!isset($this->router)) throw new Exception(
-            'należy ustawić router dla pisma'
-        );
-        return $this->router->generate('nowy_dokument_odt', [
-            'nazwa' => $this->nazwaPliku,
-            'numerStrony' => $this->numerStrony
-        ]);
-    }
+    /** będzie używana wspólna ścieżka w kontrolerze, różnicowanie na typy zwiększy ilość route w kontrolerze */
+    // public function UrlWidokNowe()
+    // {
+    //     if (!isset($this->router)) throw new Exception(
+    //         'należy ustawić router dla pisma'
+    //     );
+    //     return $this->router->generate('nowy_dokument_odt', [
+    //         'nazwa' => $this->nazwaPliku,
+    //         'numerStrony' => $this->numerStrony
+    //     ]);
+    // }
     private function OdczytajTresc()
     {
         //na podstawie 

@@ -15,7 +15,7 @@ class PismoControllerTest extends WebTestCase
     public function testNowe_Success()
     {
         $client = static::createClient();
-        $client->request('GET', '/pismo/noweZeSkanu/dok2.pdf');
+        $client->request('GET', '/pismo/nowyDokument/dok2.pdf');
         $this->assertResponseIsSuccessful();
     }
     

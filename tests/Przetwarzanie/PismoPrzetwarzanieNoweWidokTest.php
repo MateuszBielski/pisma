@@ -56,7 +56,7 @@ class PismoPrzetwarzanieNoweWidokTest extends KernelTestCase
         $dokument->setFolderPodgladu('tests/png/');
         $przetwarzanie->setDokument($dokument);
         $dokumentWidok = new PismoPrzetwarzanieNoweWidok($przetwarzanie);
-        $this->assertEquals('/pismo/noweZeSkanu/maPodglad.pdf/2', $dokumentWidok->getSciezkiDlaStron()[1]);
+        $this->assertEquals('/pismo/nowyDokument/maPodglad.pdf/2', $dokumentWidok->getSciezkiDlaStron()[1]);
     }
     public function testSciezkiDoPodgladow_liczbaStron()
     {
@@ -156,7 +156,7 @@ class PismoPrzetwarzanieNoweWidokTest extends KernelTestCase
         $przetwarzanie->setDokument($dokument);
         $widok = new PismoPrzetwarzanieNoweWidok($przetwarzanie);
         $widok->UzupelnijDaneDlaGenerowaniaSzablonu($parametry);
-        $this->assertSame('/pismo/noweZeSkanu/maPodglad.pdf/2',$parametry['sciezki_dla_stron'][1]);
+        $this->assertSame('/pismo/nowyDokument/maPodglad.pdf/2',$parametry['sciezki_dla_stron'][1]);
     }
     public function testUzupelnijDaneDlaGenerowaniaSzablonu_SciezkaDoPodgladu()
     {

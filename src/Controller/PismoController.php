@@ -228,9 +228,9 @@ class PismoController extends AbstractController
     }
 
     /**
-     * @Route("/noweZeSkanu/{nazwa}/{numerStrony}", name="pismo_nowe_ze_skanu", methods={"GET","POST"})
+     * @Route("/nowyDokument/{nazwa}/{numerStrony}", name="nowy_dokument", methods={"GET","POST"})
      */
-    public function noweZeSkanuNew(Request $request, string $nazwa, PismoPrzetwarzanieNowe $przetwarzanie,  $numerStrony = 1) //Stopwatch $sw,
+    public function nowyDokument(Request $request, string $nazwa, PismoPrzetwarzanieNowe $przetwarzanie,  $numerStrony = 1) //Stopwatch $sw,
     {
         $przetwarzanie->setParametry([
             'FolderDlaPlikowPodgladu' => $this->getParameter('sciezka_do_png'),
@@ -267,52 +267,6 @@ class PismoController extends AbstractController
     }
 
 
-    public function noweZeSkanuOld(Request $request, string $nazwa, KontrahentRepository $kr, PismoRepository $pr, PracaNaPlikach $pnp, $numerStrony = 1): Response
-    {
-        // $pnp = new PracaNaPlikach;
-        // $pnp->PobierzWszystkieNazwyPlikowZfolderu($this->getParameter('sciezka_do_skanow'));
-        $pismo = $pnp->UtworzPismoNaPodstawie($this->getParameter('sciezka_do_skanow'), $nazwa);
-        $ostatniePismo = $pr->OstatniNumerPrzychodzacych();
-        if (!$ostatniePismo) $ostatniePismo = new Pismo;
-        $pismo->setOznaczenie($ostatniePismo->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem());
-        $pnp->setUruchomienieProcesu(new UruchomienieProcesu);
-        $pnp->GenerujPodgladJesliNieMaDlaPisma($this->getParameter('sciezka_do_png'), $pismo);
-
-        //przechwytywanie powinno być przeniesine do event subscribera i oddzielnie testowane
-        $przechwytywanie = new PrzechwytywanieZselect2;
-        $przechwytywanie->przechwycNazweStronyDlaPisma($request);
-        $przechwytywanie->przechwycRodzajDokumentuDlaPisma($request);
-
-        $form = $this->createForm(PismoType::class, $pismo);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid() && $pnp->PrzeniesPlikiPdfiPodgladu($this->getParameter('sciezka_do_zarejestrowanych'), $pismo)) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($pismo, $entityManager);
-            $przechwytywanie->przechwyconyRodzajDokumentuDlaPismaUtrwal($pismo, $entityManager);
-
-            $entityManager->persist($pismo);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('pismo_show', ['id' => $pismo->getId(), 'numerStrony' => $numerStrony]);
-        }
-        $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem();
-        $sciezkiDlaStron = [];
-        $num = 0;
-        foreach ($sciezkiDoPodgladow as $sc) $sciezkiDlaStron[] = $this->generateUrl('pismo_nowe_ze_skanu', ['nazwa' => $nazwa, 'numerStrony' => ++$num]);
-        $sciezkiDoPodgladowBezFolderuGlownego = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego();
-        return $this->render('pismo/noweZeSkanu.html.twig', [
-            // 'skany' => $pnp->NazwyBezSciezkiZrozszerzeniem('pdf'),
-            'pisma' => $pnp->UtworzPismaZfolderu($this->getParameter('sciezka_do_skanow'), 'pdf'),
-            'pismo' => $pismo,
-            'form' => $form->createView(),
-            'sciezki_dla_stron' => $sciezkiDlaStron,
-            'sciezka_png' => $sciezkiDoPodgladow[$numerStrony - 1],
-            'sciezka_png_bez_fg' => $sciezkiDoPodgladowBezFolderuGlownego[$numerStrony - 1],
-            'numerStrony' => $numerStrony,
-            // 'kontrahentForm' => $kontrahentForm->createView(),
-        ]);
-    }
     /**
      * @Route("/nowyDokumentOdt/{nazwa}/{numerStrony}", name="nowy_dokument_odt", methods={"GET","POST"})
      */
@@ -430,4 +384,52 @@ class PismoController extends AbstractController
     {
         return $this->generateUrl('pismo_show', ['id' => $id, 'numerStrony' => $nrStrony]);
     }
+    /*zastąpione nową wersją
+    public function noweZeSkanuOld(Request $request, string $nazwa, KontrahentRepository $kr, PismoRepository $pr, PracaNaPlikach $pnp, $numerStrony = 1): Response
+    {
+        // $pnp = new PracaNaPlikach;
+        // $pnp->PobierzWszystkieNazwyPlikowZfolderu($this->getParameter('sciezka_do_skanow'));
+        $pismo = $pnp->UtworzPismoNaPodstawie($this->getParameter('sciezka_do_skanow'), $nazwa);
+        $ostatniePismo = $pr->OstatniNumerPrzychodzacych();
+        if (!$ostatniePismo) $ostatniePismo = new Pismo;
+        $pismo->setOznaczenie($ostatniePismo->NaPodstawieMojegoOznZaproponujOznaczenieZaktualnymRokiem());
+        $pnp->setUruchomienieProcesu(new UruchomienieProcesu);
+        $pnp->GenerujPodgladJesliNieMaDlaPisma($this->getParameter('sciezka_do_png'), $pismo);
+
+        //przechwytywanie powinno być przeniesine do event subscribera i oddzielnie testowane
+        $przechwytywanie = new PrzechwytywanieZselect2;
+        $przechwytywanie->przechwycNazweStronyDlaPisma($request);
+        $przechwytywanie->przechwycRodzajDokumentuDlaPisma($request);
+
+        $form = $this->createForm(PismoType::class, $pismo);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid() && $pnp->PrzeniesPlikiPdfiPodgladu($this->getParameter('sciezka_do_zarejestrowanych'), $pismo)) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $przechwytywanie->przechwyconaNazweStronyDlaPismaUtrwal($pismo, $entityManager);
+            $przechwytywanie->przechwyconyRodzajDokumentuDlaPismaUtrwal($pismo, $entityManager);
+
+            $entityManager->persist($pismo);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('pismo_show', ['id' => $pismo->getId(), 'numerStrony' => $numerStrony]);
+        }
+        $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem();
+        $sciezkiDlaStron = [];
+        $num = 0;
+        foreach ($sciezkiDoPodgladow as $sc) $sciezkiDlaStron[] = $this->generateUrl('pismo_nowe_ze_skanu', ['nazwa' => $nazwa, 'numerStrony' => ++$num]);
+        $sciezkiDoPodgladowBezFolderuGlownego = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego();
+        return $this->render('pismo/noweZeSkanu.html.twig', [
+            // 'skany' => $pnp->NazwyBezSciezkiZrozszerzeniem('pdf'),
+            'pisma' => $pnp->UtworzPismaZfolderu($this->getParameter('sciezka_do_skanow'), 'pdf'),
+            'pismo' => $pismo,
+            'form' => $form->createView(),
+            'sciezki_dla_stron' => $sciezkiDlaStron,
+            'sciezka_png' => $sciezkiDoPodgladow[$numerStrony - 1],
+            'sciezka_png_bez_fg' => $sciezkiDoPodgladowBezFolderuGlownego[$numerStrony - 1],
+            'numerStrony' => $numerStrony,
+            // 'kontrahentForm' => $kontrahentForm->createView(),
+        ]);
+    }
+    */
 }
