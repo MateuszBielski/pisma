@@ -9,6 +9,7 @@ namespace App\Tests\Przetwarzanie;
 
 use App\Entity\Pismo;
 use App\Repository\PismoRepository;
+use App\Service\GeneratorPodgladuOdt\GeneratorPodgladuOdtMock;
 use App\Service\PismoPrzetwarzanie\PismoPrzetwarzanieArgumentyInterface;
 use App\Service\PismoPrzetwarzanie\PismoPrzetwarzanieNowe;
 use App\Service\PismoPrzetwarzanie\PpArgPracaRouter;
@@ -203,5 +204,18 @@ class PismoPrzetwarzaniePrzedFormTest extends KernelTestCase //musi być bo stat
         $przetwarzanie->setSciezkaLubNazwaPliku('maPodglad.pdf');
         $przetwarzanie->PrzedFormularzem();
         $this->assertEquals('tests/png/', $pnp->getFolderDlaPlikowPodgladu());
+    }
+    public function testGenerujPodgladDlaDokumentuOdt_WykonajWywolane()
+    {
+        $pnp = new PracaNaPlikach();
+        $argument = new PpArgPracaRouter($pnp,$this->rou);
+        $przetwarzanie = new PismoPrzetwarzanieNowe($argument);
+        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
+        $przetwarzanie->setSciezkaLubNazwaPliku('plikOdt.odt');
+        $generator = new GeneratorPodgladuOdtMock();
+        $przetwarzanie->setGeneratorPodgladuOdtZamiastDomyslnego($generator);
+
+        $przetwarzanie->PrzedFormularzem();
+        $this->assertTrue($generator->WykonajWywolane());
     }
 }
