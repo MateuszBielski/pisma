@@ -16,6 +16,7 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
     protected Pismo $nowyDokument;
     private PismoRepository $pr;
     private string $folderPodgladu = '';
+    private string $folderPodgladuDlaOdt = '';
     private static array $podgladDlaTypowPlikow = ['pdf', 'odt']; //'odt' - musi być, chociaż to nieprawda, bo wiele testów pisanych było z założeniem, że jest podgląd
     private GeneratorPodgladuOdt $generatorPodgladuOdt;
 
@@ -64,6 +65,10 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
     {
         $this->folderPodgladu = $sciezka;
     }
+    public function setFolderPodgladuDlaOdt(string $sciezka)
+    {
+        $this->folderPodgladuDlaOdt = $sciezka;
+    }
     public function setGeneratorPodgladuOdtZamiastDomyslnego(GeneratorPodgladuOdt $generator)
     {
         $this->generatorPodgladuOdt = $generator;
@@ -89,6 +94,9 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
     {
         if (!isset($this->generatorPodgladuOdt))
             $this->generatorPodgladuOdt = new GeneratorPodgladuOdt();
+        $this->generatorPodgladuOdt->setParametry([
+            'folderPodgladuOdt' => $this->folderPodgladuDlaOdt,
+        ]);
         $this->generatorPodgladuOdt->Wykonaj();
     }
 }

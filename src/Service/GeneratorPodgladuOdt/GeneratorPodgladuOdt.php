@@ -17,12 +17,17 @@ class GeneratorPodgladuOdt
         $nazwaPlBezRoz = $this->dokument->NazwaZrodlaBezRozszerzenia();
         $folderWewnetrzny = $nazwaPlBezRoz;
         $folderPodgladuCalaSciezka = $this->folderPodgladuDlaOdt . $folderWewnetrzny;
-        if (!is_dir($folderPodgladuCalaSciezka))    mkdir($folderPodgladuCalaSciezka, 0777, true);
         if (substr($folderPodgladuCalaSciezka, -1) != "/")
             $folderPodgladuCalaSciezka .= "/";
+            
         $num = 1;
         $nazwaPlikuPodgladu = $nazwaPlBezRoz . "-" . sprintf('%04s', $num) . $this->rozszPodgl;
-        $plikPodgladu = fopen($folderPodgladuCalaSciezka . $nazwaPlikuPodgladu, 'w');
+        $nazwaPlikuZeSciezka = $folderPodgladuCalaSciezka . $nazwaPlikuPodgladu;
+
+        if(file_exists($nazwaPlikuZeSciezka)) return;
+        if (!is_dir($folderPodgladuCalaSciezka))    mkdir($folderPodgladuCalaSciezka, 0777, true);
+
+        $plikPodgladu = fopen($nazwaPlikuZeSciezka, 'w');
         fclose($plikPodgladu);
     }
     public function setParametry(array $par)

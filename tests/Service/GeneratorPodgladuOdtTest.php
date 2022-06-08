@@ -21,11 +21,10 @@ class GeneratorPodgladuOdtTest extends TestCase
         $folderPodgladOdtOgolny = 'tests/podgladDlaOdt/';
         $folderKonkretny = $folderPodgladOdtOgolny . "dlaKonkretnegoPliku/";
         $plikPodgladu = $folderKonkretny . 'dlaKonkretnegoPliku-0001.html';
-        if (!is_dir($folderKonkretny)) mkdir($folderKonkretny, 0777, true);
-        if (!is_file($plikPodgladu)) {
-            $f = fopen($plikPodgladu, 'w');
-            fclose($f);
-        }
+        $this->UtworzJesliNieMaPlikZterscia(
+            $folderKonkretny,
+            'dlaKonkretnegoPliku-0001.html'
+        );
 
         $generator = new GeneratorPodgladuOdt();
         $generator->setParametry([
@@ -39,12 +38,7 @@ class GeneratorPodgladuOdtTest extends TestCase
     {
         $folderPodgladOdtOgolny = 'tests/podgladDlaOdt/';
         $folderKonkretny = $folderPodgladOdtOgolny . "dlaInnegoPliku/";
-        if (is_dir($folderKonkretny)) {
-            // opróżnić jeśli nie pusty
-            $pliki = array_diff(scandir($folderKonkretny),['.','..']);
-            foreach($pliki as $plik)unlink($folderKonkretny.$plik);
-            rmdir($folderKonkretny);
-        }
+        if (is_dir($folderKonkretny)) $this->OproznijIusunFolder($folderKonkretny);
         $generator = new GeneratorPodgladuOdt();
         $generator->setParametry([
             'podgladDla' => new DokumentOdt('jakasSciezkaDoPliku/dlaInnegoPliku.odt'),
@@ -69,10 +63,56 @@ class GeneratorPodgladuOdtTest extends TestCase
     }
     public function testNieTworzyPlikowPodgladuJesliJest_jednostronicowy()
     {
-        #
+        $folderPodgladOdtOgolny = 'tests/podgladDlaOdt/';
+        $folderKonkretny = $folderPodgladOdtOgolny . 'juzZrobiony/';
+        $nazwaPliku = 'juzZrobiony-0001.html';
+        $trescNieDoZmiany = 'trescNieDoZmianyXFgl$88!~//';
+        $this->UtworzLubNadpiszPlikZterscia(
+            $folderKonkretny,
+            $nazwaPliku,
+            $trescNieDoZmiany
+        );
+
+        $generator = new GeneratorPodgladuOdt();
+        $generator->setParametry([
+            'podgladDla' => new DokumentOdt('jakasSciezkaDoPliku/juzZrobiony.odt'),
+            'folderPodgladuOdt' => $folderPodgladOdtOgolny
+        ]);
+        $generator->Wykonaj();
+        $sciezkaDoPliku = $folderKonkretny . $nazwaPliku;
+        $plik = fopen($sciezkaDoPliku, 'r');
+        $zawartosc = fread($plik, filesize($sciezkaDoPliku));
+        fclose($plik);
+        $this->assertSame($trescNieDoZmiany, $zawartosc);
     }
     public function testNieTworzyPlikowPodgladuJesliJest_wiecejNizJednaStrona()
     {
         #
+    }
+    protected function OproznijIusunFolder(string $folder)
+    {
+        $pliki = array_diff(scandir($folder), ['.', '..']);
+        foreach ($pliki as $plik) unlink($folder . $plik);
+        rmdir($folder);
+    }
+    protected function UtworzJesliNieMaPlikZterscia($sciezkaFolder, $nazwaPliku, $tresc = '')
+    {
+        $folderKonkretny = $sciezkaFolder;
+        $plikPodgladu = $sciezkaFolder . $nazwaPliku;
+        if (!is_dir($folderKonkretny)) mkdir($folderKonkretny, 0777, true);
+        if (!is_file($plikPodgladu)) {
+            $f = fopen($plikPodgladu, 'w');
+            if (strlen($tresc)) fwrite($f, $tresc);
+            fclose($f);
+        }
+    }
+    protected function UtworzLubNadpiszPlikZterscia($sciezkaFolder, $nazwaPliku, $tresc = '')
+    {
+        $folderKonkretny = $sciezkaFolder;
+        $plikPodgladu = $sciezkaFolder . $nazwaPliku;
+        if (!is_dir($folderKonkretny)) mkdir($folderKonkretny, 0777, true);
+        $f = fopen($plikPodgladu, 'w');
+        if (strlen($tresc)) fwrite($f, $tresc);
+        fclose($f);
     }
 }

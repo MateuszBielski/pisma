@@ -9,6 +9,7 @@ namespace App\Tests\Przetwarzanie;
 
 use App\Entity\Pismo;
 use App\Repository\PismoRepository;
+use App\Service\GeneratorPodgladuOdt\GeneratorPodgladuOdtMock;
 use App\Service\PismoPrzetwarzanie\PismoPrzetwarzanieArgumentyInterface;
 use App\Service\PismoPrzetwarzanie\PismoPrzetwarzanieNowe;
 use App\Service\PismoPrzetwarzanie\PpArgPracaRouter;
@@ -28,7 +29,8 @@ class PismoPrzetwarzanieNoweUtrwalTest extends KernelTestCase
     private $ustawieniaPowtarzalne = [
         'FolderDlaPlikowPodgladu' => 'tests/png/',
         'DomyslnePolozeniePliku' => 'jakis/folder/',
-        'SciezkaLubNazwaPliku' => 'maPodglad.odt'
+        'SciezkaLubNazwaPliku' => 'maPodglad.odt',
+        // 'FolderPodgladuDlaOdt' => 'jakisFolder/dlaOdt/',
     ];
 
     protected function setUp(): void
@@ -37,6 +39,9 @@ class PismoPrzetwarzanieNoweUtrwalTest extends KernelTestCase
         $this->rou = static::getContainer()->get('router');
         $this->argument['pracaRouter'] = new PpArgPracaRouter(new PracaNaPlikach(),$this->rou);
         $this->argument['pracaMockRouter'] = new PpArgPracaRouter(new PracaNaPlikachMock(),$this->rou);
+        //dzięki poniższemu nie zapisują się żadne niepożądane pliki podglądu odt,
+        //nie trzeba też ustawiać FolderPodgladuDlaOdt
+        $this->ustawieniaPowtarzalne['GeneratorPodgladuOdtZamiastDomyslnego'] = new GeneratorPodgladuOdtMock();
         $this->serwisyUstawione = true;
     }
 
