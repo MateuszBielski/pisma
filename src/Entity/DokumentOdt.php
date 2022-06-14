@@ -8,7 +8,7 @@ use Symfony\Component\VarDumper\Exception\ThrowingCasterException;
 
 class DokumentOdt extends Pismo
 {
-    private string $tresc = '';
+    protected string $tresc = '';
     public function Tresc(): string
     {
         $this->OdczytajTresc();
@@ -29,6 +29,7 @@ class DokumentOdt extends Pismo
     {
         //na podstawie 
         //https://gist.github.com/lovasoa/1918801
+        if(!file_exists($this->adresZrodlaPrzedZarejestrowaniem)) return;
         $xml = new \XMLReader();
         $xml->open('zip://' . $this->adresZrodlaPrzedZarejestrowaniem . '#content.xml');
         while ($xml->read()) {
