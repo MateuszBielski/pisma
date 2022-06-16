@@ -12,7 +12,7 @@ class PismoPrzetwarzanieNoweWidok
     private array $sciezkiDlaStron;
     private array $sciezkiDoPodgladow;
     private array $sciezkiDoPodgladowBezFolderuGlownego;
-    private static array $widokDlaTypowPlikow = ['pdf'];
+    private static array $widokDlaTypowPlikow = ['pdf','odt'];
     private string $rozszerzenie = '';
     // private int $ileStron = 0;
 

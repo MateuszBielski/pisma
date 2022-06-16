@@ -234,6 +234,7 @@ class PismoController extends AbstractController
     {
         $przetwarzanie->setParametry([
             'FolderDlaPlikowPodgladu' => $this->getParameter('sciezka_do_png'),
+            'FolderPodgladuDlaOdt' => $this->getParameter('sciezka_do_podgladuOdt'),
             'DomyslnePolozeniePliku' => $this->getParameter('sciezka_do_skanow'),
             'SciezkaLubNazwaPliku' => $nazwa,
             'DocelowePolozeniePliku' => $this->getParameter('sciezka_do_zarejestrowanych'),
@@ -263,7 +264,7 @@ class PismoController extends AbstractController
             'numerStrony' => $numerStrony,
         ];
         $widok->UzupelnijDaneDlaGenerowaniaSzablonu($parametry);
-        return $this->render($widok->getSzablonNowyWidok(),$parametry);
+        return $this->render($widok->getSzablonNowyWidok(), $parametry);
     }
 
 
