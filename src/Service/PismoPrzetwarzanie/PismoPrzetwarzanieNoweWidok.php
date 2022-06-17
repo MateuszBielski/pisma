@@ -20,9 +20,10 @@ class PismoPrzetwarzanieNoweWidok
     {
         $this->przetwarzanie = $przetwarzanie;
         $dok = $przetwarzanie->NowyDokument();
+        $ileStron = $dok->IleStron();
         $this->sciezkiDoPodgladow = $dok->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem();
         $this->sciezkiDoPodgladowBezFolderuGlownego = $dok->SciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego();
-        $ileStron = count($this->sciezkiDoPodgladow);
+        // $ileStron = count($this->sciezkiDoPodgladow);
         $router = $this->przetwarzanie->Router();
         $nazwa = $dok->getNazwaPliku();
         $num = 0;
@@ -65,10 +66,11 @@ class PismoPrzetwarzanieNoweWidok
     {
         if (!array_key_exists('numerStrony', $parametry))
             throw new Exception('w parametrach do uzupełnienia brak numeru strony');
-        $nrStrony = $parametry['numerStrony'];
+        // $nrStrony = $parametry['numerStrony'];
         $parametry['pismo'] = $this->dokument;
         $parametry['sciezki_dla_stron'] = $this->getSciezkiDlaStron();
-        $parametry['sciezka_png'] = $this->SciezkaDoPodgladu($nrStrony);
-        $parametry['sciezka_png_bez_fg'] = $this->SciezkaDoPodgladowBezFolderuGlownego($nrStrony);
+        $this->dokument->UzupelnijDaneDlaGenerowaniaSzablonu($parametry);// tu potrzebny numer strony
+        // $parametry['sciezka_png'] = $this->SciezkaDoPodgladu($nrStrony);
+        // $parametry['sciezka_png_bez_fg'] = $this->SciezkaDoPodgladowBezFolderuGlownego($nrStrony);
     }
 }

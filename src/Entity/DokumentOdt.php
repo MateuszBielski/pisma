@@ -31,7 +31,7 @@ class DokumentOdt extends Pismo
         //https://gist.github.com/lovasoa/1918801
         if(!file_exists($this->adresZrodlaPrzedZarejestrowaniem)) return;
         $xml = new \XMLReader();
-        $xml->open('zip://' . $this->adresZrodlaPrzedZarejestrowaniem . '#content.xml');
+        $xml->open('zip://'. $this->adresZrodlaPrzedZarejestrowaniem . '#content.xml');
         while ($xml->read()) {
             if ($xml->name == "text:p" && $xml->nodeType == \XMLReader::ELEMENT)
                 $this->tresc .= $xml->readString();

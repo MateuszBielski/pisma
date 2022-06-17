@@ -49,6 +49,8 @@ class Pismo
     private $sciezkaDoFolderuPdf = "";
     private $sciezkaGenerUrl;
     private $nazwyOdczytaneZfolderu = null;
+    private $sciezkiDoPlikuPodgladowPrzedZarejestrowaniem = null;
+    private $sciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego = null;
 
     /**
      * @ORM\ManyToMany(targetEntity=Sprawa::class, inversedBy="dokumenty", cascade={"persist"})
@@ -100,6 +102,7 @@ class Pismo
 
     protected UrlGeneratorInterface $router;
     protected int $numerStrony = 1;
+    protected int $ileStron = 0;
 
     public function __construct(string $adresZrodlaPrzedZarejestrowaniem = "")
     {
@@ -177,7 +180,7 @@ class Pismo
     }
     private function SciezkiPodgladowDlaNazwy(string $nazwa, $slashWiodacy = true, $zFoldermGlownym = true): array
     {
-        $sciezki = [];
+        // $sciezki = [];
         // $nazwaBezRozszerzenia = $this->NazwaZrodlaBezRozszerzenia();
         $path = $this->folderPodgladu . $nazwa;
         if ($this->nazwyOdczytaneZfolderu === null) {
@@ -186,34 +189,55 @@ class Pismo
             $this->nazwyOdczytaneZfolderu = @array_diff($zawartoscFolderu, array('..', '.'));
         }
         if (!$this->nazwyOdczytaneZfolderu || !count($this->nazwyOdczytaneZfolderu)) {
-            $sciezki[] = "folder $path jest pusty";
+            // $sciezki[] = "folder $path jest pusty";
             $this->nazwyOdczytaneZfolderu = [];
-            return $sciezki;
+            $this->ileStron = 1;
+            return ["folder $path jest pusty"];
         }
-        if (!$zFoldermGlownym) $path = $nazwa;
+        // if (!$zFoldermGlownym) $path = $nazwa;
+        $sciezkiZglownym = [];
+        $sciezkiBezGlownego = [];
         foreach ($this->nazwyOdczytaneZfolderu as $n) {
             $arr = explode('.', $n);
             $extension = end($arr);
 
             if ('png' == $extension) {
 
-                $s = $path . "/" . $n;
-                if ($slashWiodacy) $s = "/" . $s;
+                $sG = $path . "/" . $n;
+                $sB = $nazwa . "/". $n;
+                if ($slashWiodacy)
+                {
+                    $sG = "/".$sG;
+                    //nie widać, żeby gdziekolwiek potrzbny był slash, 
+                    //jesli jest bez folderu głównego
+                }
+                $sciezkiZglownym[] = $sG;
+                $sciezkiBezGlownego[] = $sB;
 
-                // $s = $path."/".$n;
-                $sciezki[] = $s;
-                // echo "\n".$s;
+                $this->ileStron++;
             }
         }
-        return $sciezki;
+        $this->sciezkiDoPlikuPodgladowPrzedZarejestrowaniem = $sciezkiZglownym;
+        //bez folderu głównego potrzebne jest dla ajaxu, który rozpoznaje tekst
+        $this->sciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego = $sciezkiBezGlownego;
+        return $zFoldermGlownym ? $sciezkiZglownym : $sciezkiBezGlownego;
+    }
+    public function IleStron()
+    {
+        if($this->ileStron < 1) 
+            $this->SciezkiPodgladowDlaNazwy($this->NazwaZrodlaBezRozszerzenia());
+        return $this->ileStron;
     }
     public function SciezkiDoPlikuPodgladowPrzedZarejestrowaniem($slashWiodacy = true): array
     {
-        return $this->SciezkiPodgladowDlaNazwy($this->NazwaZrodlaBezRozszerzenia(), $slashWiodacy);
+        return $this->sciezkiDoPlikuPodgladowPrzedZarejestrowaniem??
+        $this->SciezkiPodgladowDlaNazwy($this->NazwaZrodlaBezRozszerzenia(), $slashWiodacy);
     }
     public function SciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego()
     {
-        return $this->SciezkiDoPlikuPodgladowZarejestrowanychBezFolderuGlownego();
+        return $this->sciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego??
+            // $this->SciezkiDoPlikuPodgladowZarejestrowanychBezFolderuGlownego();
+            $this->SciezkiPodgladowDlaNazwy($this->NazwaZrodlaBezRozszerzenia(), false, false);
     }
     public function SciezkiDoPlikuPodgladowDlaNazwyPrzedZmiana($slashWiodacy = true): array
     {
@@ -702,5 +726,14 @@ class Pismo
     public function SzablonNowyWidok(): string
     {
         return 'pismo/noweZeSkanu.html.twig';
+    }
+    public function UzupelnijDaneDlaGenerowaniaSzablonu(array &$parametry)
+    {
+        $nrStrony = $parametry['numerStrony'];
+        $sciezkiDoPodgladow = $this->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem();
+        $sciezkiDoPodgladowBezFolderuGlownego = $this->SciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego();
+        
+        $parametry['sciezka_png']=$sciezkiDoPodgladow[$nrStrony - 1];
+        $parametry['sciezka_png_bez_fg'] = $sciezkiDoPodgladowBezFolderuGlownego[$nrStrony - 1];
     }
 }
