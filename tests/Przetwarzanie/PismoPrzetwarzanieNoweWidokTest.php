@@ -2,7 +2,7 @@
 
 namespace App\Tests\Przetwarzanie;
 
-
+use App\Entity\DokumentOdt;
 use App\Entity\Pismo;
 // use App\Repository\PismoRepository;
 // use App\Service\PismoPrzetwarzanie\PismoPrzetwarzanieArgumentyInterface;
@@ -98,11 +98,11 @@ class PismoPrzetwarzanieNoweWidokTest extends KernelTestCase
     {
         // folder->getSzablonSciezkaTuJestem()
         $przetwarzanie = new PismoPrzetwarzanieNoweMock($this->argument['pracaRouter']);
-        $dokument = new Pismo('maPodglad.odt'); //gdy już będzie obsługiwane to zmienić na inne rozszerzenie
+        $dokument = new Pismo('maPodglad.ods'); //gdy już będzie obsługiwane to zmienić na inne rozszerzenie
         $przetwarzanie->setDokument($dokument);
         $dokumentWidok = new PismoPrzetwarzanieNoweWidok($przetwarzanie);
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Generowanie podglądu dla plików .odt nieobsługiwane');
+        $this->expectExceptionMessage('Generowanie podglądu dla plików .ods nieobsługiwane');
         $dokumentWidok->getSzablonNowyWidok();
     }
     public function testKtorySzablonNowyWidok_DlaPdf()
@@ -206,5 +206,14 @@ class PismoPrzetwarzanieNoweWidokTest extends KernelTestCase
         }
         $this->assertTrue($result);
         // $this->assertResponseIsSuccessful();
+    }
+
+    public function testKtorySzablonNowyWidok_DlaOdt()
+    {
+        $przetwarzanie = new PismoPrzetwarzanieNoweMock($this->argument['pracaRouter']);
+        $dokument = new DokumentOdt('maPodglad.odt');
+        $przetwarzanie->setDokument($dokument);
+        $dokumentWidok = new PismoPrzetwarzanieNoweWidok($przetwarzanie);
+        $this->assertEquals('pismo/noweOdt.html.twig', $dokumentWidok->getSzablonNowyWidok());
     }
 }

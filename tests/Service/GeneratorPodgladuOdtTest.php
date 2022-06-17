@@ -159,4 +159,14 @@ class GeneratorPodgladuOdtTest extends TestCase
         unlink($plikHtml);
         $this->assertSame($tresc, $zawartosc);
     }
+    public function testNieUstawionyDokument_Wykonaj_Wyjatek()
+    {
+        $generator = new GeneratorPodgladuOdt();
+        $generator->setParametry([
+            'folderPodgladuOdt' => 'jakis Folder'
+        ]);
+        $this->expectExceptionMessage('nie ustawiony dokument, nie można wykonać podglądu');
+        $generator->Wykonaj();
+
+    }
 }

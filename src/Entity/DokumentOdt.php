@@ -40,4 +40,8 @@ class DokumentOdt extends Pismo
         //stała \XMLReader::ELEMENT -> 1;
         //stała \XMLReader::END_ELEMENT -> 15;
     }
+    public function SzablonNowyWidok():string
+    {
+        return 'pismo/noweOdt.html.twig';
+    }
 }

@@ -96,6 +96,7 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
             $this->generatorPodgladuOdt = new GeneratorPodgladuOdt();
         $this->generatorPodgladuOdt->setParametry([
             'folderPodgladuOdt' => $this->folderPodgladuDlaOdt,
+            'podgladDla' => $this->nowyDokument,
         ]);
         $this->generatorPodgladuOdt->Wykonaj();
     }

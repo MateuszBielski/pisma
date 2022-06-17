@@ -8,12 +8,14 @@ use Exception;
 class GeneratorPodgladuOdt
 {
     private string $folderPodgladuDlaOdt = '';
-    private DokumentOdt $dokument;
+    private ?DokumentOdt $dokument = null;
     private string $rozszPodgl = '.html';
     public function Wykonaj()
     {
         if (!isset($this->folderPodgladuDlaOdt) || !strlen($this->folderPodgladuDlaOdt))
             throw new Exception('Należy ustawić folder dla podglądu Odt');
+        if ($this->dokument == null)
+            throw new Exception('nie ustawiony dokument, nie można wykonać podglądu');
         $nazwaPlBezRoz = $this->dokument->NazwaZrodlaBezRozszerzenia();
 
         $folderWewnetrzny = $nazwaPlBezRoz;
@@ -34,7 +36,7 @@ class GeneratorPodgladuOdt
     public function setParametry(array $par)
     {
         $this->folderPodgladuDlaOdt = $par['folderPodgladuOdt'] ?? '';
-        $this->dokument = $par['podgladDla'] ?? new DokumentOdt();
+        $this->dokument = $par['podgladDla'] ?? null;//new DokumentOdt();
     }
     public function ZapiszDoPlikuTresc(string $nazwaPlikuZeSciezka, string $tresc)
     {
