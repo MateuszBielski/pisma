@@ -43,6 +43,7 @@ class Pismo
     private $oznaczenie = '';
 
     protected $adresZrodlaPrzedZarejestrowaniem;
+    protected $sciezkaZnazwaPlikuPodgladuAktualnejStrony;
     private $dataModyfikacji;
     private $folderPodgladu = 'png/';
     private $nazwaPlikuPrzedZmiana = '';
@@ -51,6 +52,7 @@ class Pismo
     private $nazwyOdczytaneZfolderu = null;
     private $sciezkiDoPlikuPodgladowPrzedZarejestrowaniem = null;
     private $sciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego = null;
+
 
     /**
      * @ORM\ManyToMany(targetEntity=Sprawa::class, inversedBy="dokumenty", cascade={"persist"})

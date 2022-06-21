@@ -1,7 +1,5 @@
 {% extends 'pismo/noweZeSkanu.html.twig' %}
 {% block b_div_2_prawy %}
 
-    {# {% include "pismo/_podglad.html.twig" %} #}
-    pismo.PodgladHtmlAktualnejStrony();
-
+    {{ zawartoscPliku( sciezkaZnazwaPlikuPodgladuAktualnejStrony ) }}
 {% endblock %}

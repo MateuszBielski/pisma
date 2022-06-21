@@ -9,6 +9,7 @@ use Symfony\Component\VarDumper\Exception\ThrowingCasterException;
 class DokumentOdt extends Pismo
 {
     protected string $tresc = '';
+    
     public function Tresc(): string
     {
         $this->OdczytajTresc();
@@ -43,5 +44,17 @@ class DokumentOdt extends Pismo
     public function SzablonNowyWidok():string
     {
         return 'pismo/noweOdt.html.twig';
+    }
+    public function UzupelnijDaneDlaGenerowaniaSzablonu(array &$parametry)
+    {
+        $parametry['sciezkaZnazwaPlikuPodgladuAktualnejStrony'] = $this->getSciezkaZnazwaPlikuPodgladuAktualnejStrony();
+    }
+    public function getSciezkaZnazwaPlikuPodgladuAktualnejStrony()
+    {
+        return $this->sciezkaZnazwaPlikuPodgladuAktualnejStrony;
+    }
+    public function setSciezkaZnazwaPlikuPodgladuAktualnejStrony(string $adr)
+    {
+        $this->sciezkaZnazwaPlikuPodgladuAktualnejStrony = $adr;
     }
 }

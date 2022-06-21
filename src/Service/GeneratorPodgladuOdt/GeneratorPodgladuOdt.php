@@ -26,7 +26,7 @@ class GeneratorPodgladuOdt
         $num = 1;
         $nazwaPlikuPodgladu = $nazwaPlBezRoz . "-" . sprintf('%04s', $num) . $this->rozszPodgl;
         $nazwaPlikuZeSciezka = $folderPodgladuCalaSciezka . $nazwaPlikuPodgladu;
-
+        $this->dokument->setSciezkaZnazwaPlikuPodgladuAktualnejStrony($nazwaPlikuZeSciezka);
         if (file_exists($nazwaPlikuZeSciezka)) return;
         if (!is_dir($folderPodgladuCalaSciezka))    mkdir($folderPodgladuCalaSciezka, 0777, true);
 

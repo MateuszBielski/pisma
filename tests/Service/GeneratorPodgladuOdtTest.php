@@ -169,4 +169,16 @@ class GeneratorPodgladuOdtTest extends TestCase
         $generator->Wykonaj();
 
     }
+    public function testUstawiaSciezkaZnazwaPlikuPodgladuAktualnejStrony()
+    {
+        $dokument = new DokumentOdt('sciezka/doPliku/pl.odt');
+
+        $generator = new GeneratorPodgladuOdt();
+        $generator->setParametry([
+            'podgladDla' => $dokument,
+            'folderPodgladuOdt' => 'sciezka/do/PodgladuOdt/'
+        ]);
+        $generator->Wykonaj();
+        $this->assertSame('sciezka/do/PodgladuOdt/pl/pl-0001.html',$dokument->getSciezkaZnazwaPlikuPodgladuAktualnejStrony());
+    }
 }
