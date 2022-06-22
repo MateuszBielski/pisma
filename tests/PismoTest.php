@@ -589,6 +589,17 @@ class PismoTest extends TestCase
         $pismo = new Pismo('jakasNazwa.pdf');
         $this->assertEquals('pismo/noweZeSkanu.html.twig',$pismo->SzablonNowyWidok());
     }
+    public function testNazwaIJesliTrzbaZakodowanaSciezka_nieTrzeba()
+    {
+        $pismo = new Pismo('sciezka/nazwaPliku.pdf');
+        $this->assertEquals('nazwaPliku.pdf',$pismo->NazwaIJesliTrzbaZakodowanaSciezka());
+    }
+    public function testNazwaIJesliTrzbaZakodowanaSciezka_trzeba()
+    {
+        $pismo = new Pismo('sciezka/do/pliku/nazwaPliku.pdf');
+        $pismo->DodawajDoNazwyZakodowanaSciezke();
+        $this->assertEquals('sciezka+do+pliku+nazwaPliku.pdf',$pismo->NazwaIJesliTrzbaZakodowanaSciezka());
+    }
     /*
     public function testBrakPodgladuZarejestrowanego_GenerujePodglad()
     {

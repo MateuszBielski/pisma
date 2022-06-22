@@ -11,17 +11,19 @@ class PracaNaPlikach
 {
     private $odczytaneWszystkieNazwy;
     private $folderOdczytu;
+    private $domyslnyFolderZplikami;
     protected $uruchomienie;
     private UrlGeneratorInterface $router;
     private string $rozszerzeniePliku = '';
     protected string $folderPodgladu = '';
 
-    public function __construct(UrlGeneratorInterface $router = null)
+    public function __construct(UrlGeneratorInterface $router = null, $domyslnyFolderZplikami = null)
     {
         if (isset($router))
-        $this->router = $router;
+            $this->router = $router;
+        $this->domyslnyFolderZplikami = $domyslnyFolderZplikami;
     }
-    
+
     public function PobierzWszystkieNazwyPlikowZfolderu(string $path): array
     {
 
@@ -71,18 +73,21 @@ class PracaNaPlikach
     public function UtworzPismoNaPodstawie($folder, $nazwaZrodla): Pismo
     {
         if (substr($folder, -1) != '/') $folder .= '/';
-        $arr = explode('/',$nazwaZrodla);
-        $zrodlo = count($arr)? end($arr): $nazwaZrodla;
-        // $path = $folder.$nazwaZrodla;
-        $path = $folder.$zrodlo;
+        $arr = explode('/', $nazwaZrodla);
+        $zrodlo = count($arr) ? end($arr) : $nazwaZrodla;
+        $path = $folder . $zrodlo;
+        //poniższe powoduje wiele błędów we wcześniejszych testach
+        // if(!file_exists($path)) throw new Exception('Plik: '.$path.' nie istnieje');
         $RodzajDokumentu = Pismo::class;
 
         $rozsz = pathinfo($path, PATHINFO_EXTENSION);
         $this->rozszerzeniePliku = $rozsz;
-        if($rozsz == "odt")$RodzajDokumentu = DokumentOdt::class;
+        if ($rozsz == "odt") $RodzajDokumentu = DokumentOdt::class;
 
         $pismo = new $RodzajDokumentu($path);
-        if (isset($this->router))$pismo->setRouter($this->router);
+        if ($this->domyslnyFolderZplikami != null && $this->domyslnyFolderZplikami != $folder)
+            $pismo->DodawajDoNazwyZakodowanaSciezke();
+        if (isset($this->router)) $pismo->setRouter($this->router);
         return $pismo;
     }
     public function RozszerzeniePliku()
@@ -104,7 +109,7 @@ class PracaNaPlikach
     }
     public function GenerujPodgladJesliNieMaDlaPisma(string $folderPng, Pismo $pismo)
     {
-        if($folderPng == '') throw new Exception('należy zapewnić folder dla plików png');
+        if ($folderPng == '') throw new Exception('należy zapewnić folder dla plików png');
         $this->folderPodgladu = $folderPng;
         $pathFolderDlaJednegoDokumentu =  $folderPng . $pismo->NazwaZrodlaBezRozszerzenia();
 
@@ -187,7 +192,7 @@ class PracaNaPlikach
 
         $arr = $this->PobierzWszystkieNazwyFolderowZfolderu($sciezkaDoFolderu);
 
-        return array_map(fn($f) => ltrim($f, "/") . "/", $arr);
+        return array_map(fn ($f) => ltrim($f, "/") . "/", $arr);
     }
     public function ZeSciezkiObetnijPrzedOstatnimUkosnikiem(string $sciezka): string
     {
@@ -196,7 +201,7 @@ class PracaNaPlikach
     }
     public function NajglebszyMozliwyFolderZniepelnejSciezki(string $niepelnaScezka): string
     {
-        $gotowaSciezka = $niepelnaScezka;// . "/";
+        $gotowaSciezka = $niepelnaScezka; // . "/";
         while (strlen($niepelnaScezka)) {
             if (is_dir($niepelnaScezka)) return $gotowaSciezka;
             $niepelnaScezka = $this->ZeSciezkiObetnijPrzedOstatnimUkosnikiem($niepelnaScezka);
@@ -204,18 +209,18 @@ class PracaNaPlikach
         }
         return "/";
     }
-    public function CzescSciezkiZaFolderem($sciezkaNiepelna,$sciezkaOstatniegoFolderu): string
+    public function CzescSciezkiZaFolderem($sciezkaNiepelna, $sciezkaOstatniegoFolderu): string
     {
-        if($sciezkaOstatniegoFolderu === "/")return $sciezkaNiepelna;
-        return substr($sciezkaNiepelna,strlen($sciezkaOstatniegoFolderu));
+        if ($sciezkaOstatniegoFolderu === "/") return $sciezkaNiepelna;
+        return substr($sciezkaNiepelna, strlen($sciezkaOstatniegoFolderu));
     }
     public function FitrujFolderyPasujaceDoFrazy($foldery, $sciezkaPozostaloscDoWyszukania)
     {
-        if(!strlen($sciezkaPozostaloscDoWyszukania))return $foldery;
-        $pattern = "/^\\".$sciezkaPozostaloscDoWyszukania."/i";
+        if (!strlen($sciezkaPozostaloscDoWyszukania)) return $foldery;
+        $pattern = "/^\\" . $sciezkaPozostaloscDoWyszukania . "/i";
         // podwójny lewy ukośnik na początku jest dla zabezpieczenia ukośnika prawego 
         //od którego rozpoczyna się $sciezka....
         //caseInsensitive "/i" case sensitive "/"
-        return array_values(preg_grep($pattern,$foldery))??[];
+        return array_values(preg_grep($pattern, $foldery)) ?? [];
     }
 }

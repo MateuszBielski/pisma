@@ -7,9 +7,10 @@ use App\Service\PracaNaPlikach;
 use App\Service\UruchomienieProcesuMock;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 
-class PismoPracaNaPlikachTest extends TestCase
+class PismoPracaNaPlikachTest extends KernelTestCase
 {
     private $pathSkanyFolder = "tests/skanyDoTestow";
     private $pathDodawanieUsuwanie = "tests/dodawanieUsuwanie/"; //w aplikacji podawana jest ścieżka bezwzględna
@@ -269,6 +270,19 @@ class PismoPracaNaPlikachTest extends TestCase
 
         $this->assertTrue(file_exists($folderZplikiem.$nazwaPliku2));
         unlink($folderZplikiem.$nazwaPliku2);//
+    }
+    public function _testUtworzPismoNaPodstawie_BrakPliku_wyjatek()
+    {
+        $pnp = new PracaNaPlikach();
+
+        $this->expectExceptionMessage('Plik: folder/plikNieMa.pdf nie istnieje');
+        $pnp->UtworzPismoNaPodstawie('folder','plikNieMa.pdf');
+    }
+    public function testUtworzPismo_N()
+    {
+        $pnp = new PracaNaPlikach(static::getContainer()->get('router'),'domyslny/folder');
+        $pismo = $pnp->UtworzPismoNaPodstawie('inny/folder/','nazwa.pdf');
+        $this->assertEquals('inny+folder+nazwa.pdf',$pismo->NazwaIJesliTrzbaZakodowanaSciezka());
     }
     
     //jeśli pusty folder surowychPDF

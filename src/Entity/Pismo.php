@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PismoRepository;
 use App\Service\KonwOpis_Str_Acoll;
+use App\Service\SciezkaKodowanieZnakow;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -52,6 +53,7 @@ class Pismo
     private $nazwyOdczytaneZfolderu = null;
     private $sciezkiDoPlikuPodgladowPrzedZarejestrowaniem = null;
     private $sciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego = null;
+    private bool $dodawajDoNazwyZakodowanaSciezke = false;
 
 
     /**
@@ -713,7 +715,8 @@ class Pismo
         );
         //zmiana nazwy ścieżki z pismo/noweZeSkanu
         return $this->router->generate('nowy_dokument', [
-            'nazwa' => $this->nazwaPliku,
+            // 'nazwa' => $this->nazwaPliku,
+            'nazwa' => $this->NazwaIJesliTrzbaZakodowanaSciezka(),
             'numerStrony' => $this->numerStrony
         ]);
     }
@@ -737,5 +740,18 @@ class Pismo
         
         $parametry['sciezka_png']=$sciezkiDoPodgladow[$nrStrony - 1];
         $parametry['sciezka_png_bez_fg'] = $sciezkiDoPodgladowBezFolderuGlownego[$nrStrony - 1];
+    }
+    public function NazwaIJesliTrzbaZakodowanaSciezka(): string 
+    {
+        if($this->dodawajDoNazwyZakodowanaSciezke)
+        {
+            $kod = new SciezkaKodowanieZnakow;
+            return $kod->Koduj($this->adresZrodlaPrzedZarejestrowaniem);
+        }
+        return $this->nazwaPliku;
+    }
+    public function DodawajDoNazwyZakodowanaSciezke()
+    {
+        $this->dodawajDoNazwyZakodowanaSciezke = true;
     }
 }
