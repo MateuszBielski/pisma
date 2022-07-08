@@ -281,7 +281,8 @@ class PismoController extends AbstractController
      */
     public function Pobieranie(Pismo $pismo): ?BinaryFileResponse
     {
-        $file = $this->getParameter('sciezka_do_zarejestrowanych') . $pismo->getNazwaPliku();
+        $sciezka = $pismo->getPolozeniePoZarejestrowaniu()??$this->getParameter('sciezka_do_zarejestrowanych');
+        $file = $sciezka . $pismo->getNazwaPliku();
         // $file = 'path/to/file.txt';
         $response = new BinaryFileResponse($file);
         //pobieranie pliku , nie wyswietlenia https://geekster.pl/symfony/dynamiczne-tworzenie-i-pobieranie-archiwum-zip/

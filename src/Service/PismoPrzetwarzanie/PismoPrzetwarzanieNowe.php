@@ -58,6 +58,7 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
             $this->pnp->PrzeniesPlikiPdfiPodgladu($this->docelowePolozeniePliku, $this->nowyDokument);
             $polozeniePoZarejestrowaniu = $this->docelowePolozeniePliku;
         }
+        $this->ZapewnijUkosnikKonczacy($polozeniePoZarejestrowaniu);
         $this->nowyDokument->setPolozeniePoZarejestrowaniu($polozeniePoZarejestrowaniu);
         $result = new UtrwalonePliki(true);
         $this->StopPomiar('PismoPrzetwarzanieNowe::UtrwalPliki');

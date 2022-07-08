@@ -180,8 +180,8 @@ class PismoPrzetwarzanieNoweUtrwalTest extends KernelTestCase
     public function testUtrwalPliki_zapisujePolozeniePoZarejestrowaniu_pozostawiony()
     {
         $przen = 'tests/przenoszenie';
-        $pierw = $przen . '/pierwotnaLokalizacja';
-        $pierwPlik = $pierw . '/plik.pdf';
+        $pierw = $przen . '/pierwotnaLokalizacja/';
+        $pierwPlik = $pierw . 'plik.pdf';
 
         $przetwarzanie = new PismoPrzetwarzanieNowe($this->argument['pracaRouter']);
         $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);

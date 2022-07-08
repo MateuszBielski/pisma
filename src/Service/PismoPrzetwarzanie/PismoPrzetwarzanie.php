@@ -55,6 +55,10 @@ abstract class PismoPrzetwarzanie
             $this->stopwatch->stop($oznaczenie);
     }
     ############
+    protected function ZapewnijUkosnikKonczacy(&$lancuch)
+    {
+        if (substr($lancuch, -1) != '/') $lancuch .= '/';
+    }
     public function Zainicjowane(): bool
     {
         $this->zainicjowane = true;
@@ -78,7 +82,7 @@ abstract class PismoPrzetwarzanie
     }
     public function setDocelowePolozeniePliku(string $polozenie)
     {
-        if (substr($polozenie, -1) != '/') $polozenie .= '/';
+        $this->ZapewnijUkosnikKonczacy($polozenie);
         $this->docelowePolozeniePliku = $polozenie;
     }
     public function setStopWatch(Stopwatch $sw)
