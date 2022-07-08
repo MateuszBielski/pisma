@@ -12,7 +12,7 @@ class DokumentOdtTest extends TestCase
     {
         $odt = new DokumentOdt(__DIR__."/dokumentyOdt/zZawartoscia.odt");
         $odczytanaTresc = $odt->Tresc();
-        $this->assertEquals($odczytanaTresc, "testowy tekst.");
+        $this->assertEquals($odczytanaTresc, "testowy tekst.<BR>");
     }
     public function testUzupelnijDaneDlaGenerowaniaSzablonu_sciezkaZnazwaPlikuPodgladuAktualnejStrony()
     {

@@ -1,5 +1,11 @@
 {% extends 'pismo/noweZeSkanu.html.twig' %}
 {% block b_div_2_prawy %}
 
-    {{ zawartoscPliku( sciezkaZnazwaPlikuPodgladuAktualnejStrony ) }}
+	{{ zawartoscPliku( sciezkaZnazwaPlikuPodgladuAktualnejStrony )|raw }}
+	{#
+        <br>
+        Widok XML
+        <br>
+        {{ pismo.WidokXML() }}
+    #}
 {% endblock %}

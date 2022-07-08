@@ -159,6 +159,7 @@ class FolderController extends AbstractController
             'folder' => $folder,
             'pisma' => $pisma,
             'sciezkaTuJestem' => $folder->SciezkaTuJestem(),
+            'dlugoscNazwy' => 60
         ]);
     }
 
