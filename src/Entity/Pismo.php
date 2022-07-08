@@ -24,6 +24,27 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 // * @ORM\DiscriminatorColumn(name="discriminator")
 class Pismo
 {
+    private $dataModyfikacji;
+    private $folderPodgladu = 'png/';
+    private $nazwaPlikuPrzedZmiana = '';
+    private $sciezkaDoFolderuPdf = "";
+    private $sciezkaGenerUrl;
+    private $nazwyOdczytaneZfolderu = null;
+    private $sciezkiDoPlikuPodgladowPrzedZarejestrowaniem = null;
+    private $sciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego = null;
+    private bool $dodawajDoNazwyZakodowanaSciezke = false;
+    private $kierunek = 1;
+    private $strona;
+    // private $nazwaZrodlaPrzedZarejestrowaniem;
+    private $konw;
+    private $niepotrzebneWyrazy = [];
+    private int $rozmiar = 0;
+    protected $adresZrodlaPrzedZarejestrowaniem;
+    protected $sciezkaZnazwaPlikuPodgladuAktualnejStrony;
+    protected UrlGeneratorInterface $router;
+    protected int $numerStrony = 1;
+    protected int $ileStron = 0;
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -42,19 +63,6 @@ class Pismo
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $oznaczenie = '';
-
-    protected $adresZrodlaPrzedZarejestrowaniem;
-    protected $sciezkaZnazwaPlikuPodgladuAktualnejStrony;
-    private $dataModyfikacji;
-    private $folderPodgladu = 'png/';
-    private $nazwaPlikuPrzedZmiana = '';
-    private $sciezkaDoFolderuPdf = "";
-    private $sciezkaGenerUrl;
-    private $nazwyOdczytaneZfolderu = null;
-    private $sciezkiDoPlikuPodgladowPrzedZarejestrowaniem = null;
-    private $sciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego = null;
-    private bool $dodawajDoNazwyZakodowanaSciezke = false;
-
 
     /**
      * @ORM\ManyToMany(targetEntity=Sprawa::class, inversedBy="dokumenty", cascade={"persist"})
@@ -83,30 +91,20 @@ class Pismo
      */
     private $dataDokumentu = null;
 
-
-    private $kierunek = 1;
-
-
-    private $strona;
-
     /**
      * @ORM\OneToMany(targetEntity=WyrazWciagu::class, mappedBy="pismo", cascade={"persist", "remove"})
      */
     private $opis;
-    // private $nazwaZrodlaPrzedZarejestrowaniem;
-    private $konw;
-    private $niepotrzebneWyrazy = [];
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $opisCiag;
 
-    private int $rozmiar = 0;
-
-    protected UrlGeneratorInterface $router;
-    protected int $numerStrony = 1;
-    protected int $ileStron = 0;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $polozeniePoZarejestrowaniu;
 
     public function __construct(string $adresZrodlaPrzedZarejestrowaniem = "")
     {
@@ -753,5 +751,17 @@ class Pismo
     public function DodawajDoNazwyZakodowanaSciezke()
     {
         $this->dodawajDoNazwyZakodowanaSciezke = true;
+    }
+
+    public function getPolozeniePoZarejestrowaniu(): ?string
+    {
+        return $this->polozeniePoZarejestrowaniu;
+    }
+
+    public function setPolozeniePoZarejestrowaniu(?string $polozeniePoZarejestrowaniu): self
+    {
+        $this->polozeniePoZarejestrowaniu = $polozeniePoZarejestrowaniu;
+
+        return $this;
     }
 }

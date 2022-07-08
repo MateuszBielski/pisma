@@ -52,7 +52,13 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
         if ($this->nieZnanyRezultatFormularza) throw new Exception('Nie znany wynik walidacji formularza');
         if (strlen($this->docelowePolozeniePliku) && !is_dir($this->docelowePolozeniePliku)) return new UtrwalonePliki(false);
         if (!$this->rezultatWalidacjiFormularza) return new UtrwalonePliki(false);
-        $this->pnp->PrzeniesPlikiPdfiPodgladu($this->docelowePolozeniePliku, $this->nowyDokument);
+        $polozeniePoZarejestrowaniu = $this->polozenie;
+        if ($this->MoznaPrzenosicPlikDokumentu())
+        {
+            $this->pnp->PrzeniesPlikiPdfiPodgladu($this->docelowePolozeniePliku, $this->nowyDokument);
+            $polozeniePoZarejestrowaniu = $this->docelowePolozeniePliku;
+        }
+        $this->nowyDokument->setPolozeniePoZarejestrowaniu($polozeniePoZarejestrowaniu);
         $result = new UtrwalonePliki(true);
         $this->StopPomiar('PismoPrzetwarzanieNowe::UtrwalPliki');
         return $result;
@@ -99,5 +105,11 @@ class PismoPrzetwarzanieNowe extends PismoPrzetwarzanie
             'podgladDla' => $this->nowyDokument,
         ]);
         $this->generatorPodgladuOdt->Wykonaj();
+    }
+    protected function MoznaPrzenosicPlikDokumentu(): bool
+    {
+        if(!strlen($this->polozenie)) return true;
+        if($this->polozenie == $this->polozenieDomyslne) return true;
+        return false;
     }
 }

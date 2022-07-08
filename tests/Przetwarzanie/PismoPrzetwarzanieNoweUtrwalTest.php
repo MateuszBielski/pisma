@@ -32,13 +32,26 @@ class PismoPrzetwarzanieNoweUtrwalTest extends KernelTestCase
         'SciezkaLubNazwaPliku' => 'maPodglad.odt',
         // 'FolderPodgladuDlaOdt' => 'jakisFolder/dlaOdt/',
     ];
-
+    protected function PrzywrocPoczatkowePolozeniePlikow()
+    {
+        $przen = 'tests/przenoszenie';
+        $pierw = $przen . '/pierwotnaLokalizacja';
+        $docel = $przen . '/docelowaLokalizacja';
+        $pierwPlik = $pierw . '/plik.pdf';
+        $docelPlik = $docel . '/plik.pdf';
+        $docelJest = file_exists($docelPlik);
+        $pierwNiema = !(file_exists($pierwPlik));
+        if ($docelJest && $pierwNiema)
+            rename($docelPlik, $pierwPlik);
+        //do rozszerzenia w miarę potrzeb
+    }
     protected function setUp(): void
     {
+        $this->PrzywrocPoczatkowePolozeniePlikow();
         if ($this->serwisyUstawione) return;
         $this->rou = static::getContainer()->get('router');
-        $this->argument['pracaRouter'] = new PpArgPracaRouter(new PracaNaPlikach(),$this->rou);
-        $this->argument['pracaMockRouter'] = new PpArgPracaRouter(new PracaNaPlikachMock(),$this->rou);
+        $this->argument['pracaRouter'] = new PpArgPracaRouter(new PracaNaPlikach(), $this->rou);
+        $this->argument['pracaMockRouter'] = new PpArgPracaRouter(new PracaNaPlikachMock(), $this->rou);
         //dzięki poniższemu nie zapisują się żadne niepożądane pliki podglądu odt,
         //nie trzeba też ustawiać FolderPodgladuDlaOdt
         $this->ustawieniaPowtarzalne['GeneratorPodgladuOdtZamiastDomyslnego'] = new GeneratorPodgladuOdtMock();
@@ -74,7 +87,6 @@ class PismoPrzetwarzanieNoweUtrwalTest extends KernelTestCase
         $przetwarzanie->RezultatWalidacjiFormularza(true);
         $this->assertTrue($przetwarzanie->UtrwalPliki()->czyUtrwalone());
         $this->assertTrue(file_exists('tests/przenoszenie/pierwotnaLokalizacja/plik.pdf'));
-        
     }
     public function testUtrwalPliki_niePrzenosiPodgladu()
     {
@@ -103,23 +115,84 @@ class PismoPrzetwarzanieNoweUtrwalTest extends KernelTestCase
     {
         //przenosi i zwraca true
         $przen = 'tests/przenoszenie';
-        $pierw = $przen.'/pierwotnaLokalizacja';
-        $docel = $przen.'/docelowaLokalizacja';
-        $pierwPlik = $pierw.'/plik.pdf';
-        $docelPlik = $docel.'/plik.pdf';
+        $pierw = $przen . '/pierwotnaLokalizacja';
+        $docel = $przen . '/docelowaLokalizacja';
+        $pierwPlik = $pierw . '/plik.pdf';
+        $docelPlik = $docel . '/plik.pdf';
 
-        if(!file_exists($pierwPlik)) throw new Exception('brak pliku w pierwotnej lokalizacji');
+        if (!file_exists($pierwPlik)) throw new Exception('brak pliku w pierwotnej lokalizacji');
+        $przetwarzanie = new PismoPrzetwarzanieNowe($this->argument['pracaRouter']);
+        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
+
+        $przetwarzanie->setSciezkaLubNazwaPliku($pierwPlik);
+        $przetwarzanie->setDomyslnePolozeniePliku($pierw);
+        
+        $przetwarzanie->setDocelowePolozeniePliku($docel);
+        $przetwarzanie->PrzedFormularzem();
+        $przetwarzanie->RezultatWalidacjiFormularza(true);
+
+        $this->assertTrue($przetwarzanie->UtrwalPliki()->czyUtrwalone());
+        $this->assertTrue(file_exists($docelPlik));
+        $this->assertFalse(file_exists($pierwPlik));
+        // rename($docelPlik,$pierwPlik); teraz funkcja setUp ma to robić
+    }
+    public function testUtrwalPliki_lokalizacjaPodanaWsciezce_DomyslnieNiePrzenosiPlikowDokumentu()
+    {
+        $przen = 'tests/przenoszenie';
+        $pierw = $przen . '/pierwotnaLokalizacja';
+        $docel = $przen . '/docelowaLokalizacja';
+        $pierwPlik = $pierw . '/plik.pdf';
+
         $przetwarzanie = new PismoPrzetwarzanieNowe($this->argument['pracaRouter']);
         $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
         $przetwarzanie->setSciezkaLubNazwaPliku($pierwPlik);
         $przetwarzanie->setDocelowePolozeniePliku($docel);
         $przetwarzanie->PrzedFormularzem();
         $przetwarzanie->RezultatWalidacjiFormularza(true);
-        
         $this->assertTrue($przetwarzanie->UtrwalPliki()->czyUtrwalone());
-        $this->assertTrue(file_exists($docelPlik));
-        $this->assertFalse(file_exists($pierwPlik));
-        rename($docelPlik,$pierwPlik);
+        $this->assertTrue(file_exists($pierwPlik));
+    }
+
+    public function testUtrwalPliki_zapisujePolozeniePoZarejestrowaniu_przeniesiony()
+    {
+        //przenosi i zwraca true
+        $przen = 'tests/przenoszenie';
+        $pierw = $przen . '/pierwotnaLokalizacja';
+        $docel = $przen . '/docelowaLokalizacja/';
+        $pierwPlik = $pierw . '/plik.pdf';
+        // $docelPlik = $docel . 'plik.pdf';
+
+        if (!file_exists($pierwPlik)) throw new Exception('brak pliku w pierwotnej lokalizacji');
+        $przetwarzanie = new PismoPrzetwarzanieNowe($this->argument['pracaRouter']);
+        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
+
+        $przetwarzanie->setSciezkaLubNazwaPliku($pierwPlik);
+        $przetwarzanie->setDomyslnePolozeniePliku($pierw);        
+        $przetwarzanie->setDocelowePolozeniePliku($docel);
+        $przetwarzanie->PrzedFormularzem();
+        $dokument = $przetwarzanie->NowyDokument();
+        $przetwarzanie->RezultatWalidacjiFormularza(true);
+
+        $przetwarzanie->UtrwalPliki();
+
+        $this->assertEquals($docel,$dokument->getPolozeniePoZarejestrowaniu());
+    }
+    public function testUtrwalPliki_zapisujePolozeniePoZarejestrowaniu_pozostawiony()
+    {
+        $przen = 'tests/przenoszenie';
+        $pierw = $przen . '/pierwotnaLokalizacja';
+        $pierwPlik = $pierw . '/plik.pdf';
+
+        $przetwarzanie = new PismoPrzetwarzanieNowe($this->argument['pracaRouter']);
+        $przetwarzanie->setParametry($this->ustawieniaPowtarzalne);
+        $przetwarzanie->setSciezkaLubNazwaPliku($pierwPlik);
+        $przetwarzanie->PrzedFormularzem();
+        $dokument = $przetwarzanie->NowyDokument();
+        $przetwarzanie->RezultatWalidacjiFormularza(true);
+
+        $przetwarzanie->UtrwalPliki();
+
+        $this->assertEquals($pierw,$dokument->getPolozeniePoZarejestrowaniu());
     }
 
     public function _testUtrwalPliki_przenosiPodglad()
