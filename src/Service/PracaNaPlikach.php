@@ -29,12 +29,17 @@ class PracaNaPlikach
 
 
         $nazwy = @array_diff(@scandir($path), array('..', '.'));
-        if (!$nazwy) $nazwy = [];
+        
         if (!count($nazwy)) {
             $nazwy[] = "folder $path jest pusty";
             return $nazwy;
         }
-        foreach ($nazwy as &$n) $n = $path . "/" . $n;
+        $pathZukos = $path;
+        if (substr($path, -1) != '/') $pathZukos .= '/';
+        foreach ($nazwy as $k => &$n) {
+            $n = $pathZukos . $n;
+            if(is_dir($n))unset($nazwy[$k]);
+        }
         $this->odczytaneWszystkieNazwy = $nazwy;
         $this->folderOdczytu = $path;
         return $nazwy;

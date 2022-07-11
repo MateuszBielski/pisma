@@ -79,7 +79,11 @@ class PismoPracaNaPlikachTest extends KernelTestCase
         $nazwyPlikowOps = $pnp->NazwyZrozszerzeniem('ops');
         $this->assertEquals('folder tests/skanyDoTestow nie zawiera plików .ops',$nazwyPlikowOps[0]);
     }
-   
+    public function testPobierzWszystkieNazwyPlikowZfolderu_folderyPomija()
+    {
+        $pnp = new PracaNaPlikach();
+        $this->assertEquals(1,count($pnp->PobierzWszystkieNazwyPlikowZfolderu("tests/odczytFolderow/")));
+    }
     public function testUtworzPismoNaPodstawie_NazwaZrodlaPrzedZarejestrowaniem()
     {
         $nazwaZrodla = "dok2.pdf";

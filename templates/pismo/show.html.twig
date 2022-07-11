@@ -7,6 +7,9 @@
 	{#<script type="text/javascript" src="/js/jquery.min.js"></script>#}
 {% endblock %}
 {% block b_div_pod_belka %}
+	{% if pismo.polozeniePoZarejestrowaniu|length > 0  %}
+		<h4>{{pismo.polozeniePoZarejestrowaniu}}</h4>
+	{% endif %}
 	<h3>{{ pismo.nazwaPliku }}</h3>
 {% endblock %}
 
