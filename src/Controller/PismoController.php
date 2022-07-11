@@ -327,8 +327,8 @@ class PismoController extends AbstractController
         $pismo->UstalStroneIKierunek();
 
         $przechwytywanie = new PrzechwytywanieZselect2;
-        $przechwytywanie->przechwycNazweStronyDlaPisma($request);
-        $przechwytywanie->przechwycRodzajDokumentuDlaPisma($request);
+        // $przechwytywanie->przechwycNazweStronyDlaPisma($request);
+        // $przechwytywanie->przechwycRodzajDokumentuDlaPisma($request);
 
 
         $form = $this->createForm(PismoType::class, $pismo);

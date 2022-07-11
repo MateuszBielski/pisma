@@ -3,9 +3,13 @@
 namespace App\Entity;
 
 use App\Entity\Pismo;
+use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Symfony\Component\VarDumper\Exception\ThrowingCasterException;
 
+/**
+ * @ORM\Entity
+ */
 class DokumentOdt extends Pismo
 {
     protected string $tresc = '';

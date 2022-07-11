@@ -18,10 +18,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @ORM\Table(name="pismo",uniqueConstraints={@ORM\UniqueConstraint(name="nazwa_pliku_unikalna", columns={"nazwa_pliku"})})
  * @UniqueEntity("nazwaPliku",
  *     message="Dokument o tej nazwie został już zarejestrowany")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({"pdf" = "Pismo", "odt" = "DokumentOdt"})
  * 
  */
-// * @ORM\InheritanceType("JOINED")
-// * @ORM\DiscriminatorColumn(name="discriminator")
 class Pismo
 {
     private $dataModyfikacji;
@@ -50,7 +51,7 @@ class Pismo
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
