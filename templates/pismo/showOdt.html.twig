@@ -1,0 +1,11 @@
+{% extends 'pismo/show.html.twig' %}
+{% block b_div_2_prawy %}
+
+	{{ zawartoscPliku( sciezkaZnazwaPlikuPodgladuAktualnejStrony )|raw }}
+	{#
+        <br>
+        Widok XML
+        <br>
+        {{ pismo.WidokXML() }}
+    #}
+{% endblock %}

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\PismoRepository;
 use App\Service\KonwOpis_Str_Acoll;
 use App\Service\SciezkaKodowanieZnakow;
+use App\Service\SciezkePrzytnijZlewejWzglednieDo;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -27,6 +28,7 @@ class Pismo
 {
     private $dataModyfikacji;
     private $folderPodgladu = 'png/';
+    private $rozszerzeniePlikuPodgladu = 'png';
     private $nazwaPlikuPrzedZmiana = '';
     private $sciezkaDoFolderuPdf = "";
     private $sciezkaGenerUrl;
@@ -45,7 +47,7 @@ class Pismo
     protected UrlGeneratorInterface $router;
     protected int $numerStrony = 1;
     protected int $ileStron = 0;
-    
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -105,7 +107,7 @@ class Pismo
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $polozeniePoZarejestrowaniu;
+    protected $polozeniePoZarejestrowaniu;
 
     public function __construct(string $adresZrodlaPrzedZarejestrowaniem = "")
     {
@@ -188,7 +190,7 @@ class Pismo
         $path = $this->folderPodgladu . $nazwa;
         if ($this->nazwyOdczytaneZfolderu === null) {
             $zawartoscFolderu = @scandir($path);
-            if($zawartoscFolderu == false)$zawartoscFolderu = [];
+            if ($zawartoscFolderu == false) $zawartoscFolderu = [];
             $this->nazwyOdczytaneZfolderu = @array_diff($zawartoscFolderu, array('..', '.'));
         }
         if (!$this->nazwyOdczytaneZfolderu || !count($this->nazwyOdczytaneZfolderu)) {
@@ -200,17 +202,17 @@ class Pismo
         // if (!$zFoldermGlownym) $path = $nazwa;
         $sciezkiZglownym = [];
         $sciezkiBezGlownego = [];
+        $slashWiodacy = $slashWiodacy && (substr($path, 0, 1) != "/");
         foreach ($this->nazwyOdczytaneZfolderu as $n) {
             $arr = explode('.', $n);
             $extension = end($arr);
 
-            if ('png' == $extension) {
+            if ($this->RozszerzeniePlikuPodgladu() == $extension) {
 
                 $sG = $path . "/" . $n;
-                $sB = $nazwa . "/". $n;
-                if ($slashWiodacy)
-                {
-                    $sG = "/".$sG;
+                $sB = $nazwa . "/" . $n;
+                if ($slashWiodacy) {
+                    $sG = "/" . $sG;
                     //nie widać, żeby gdziekolwiek potrzbny był slash, 
                     //jesli jest bez folderu głównego
                 }
@@ -227,18 +229,18 @@ class Pismo
     }
     public function IleStron()
     {
-        if($this->ileStron < 1) 
+        if ($this->ileStron < 1)
             $this->SciezkiPodgladowDlaNazwy($this->NazwaZrodlaBezRozszerzenia());
         return $this->ileStron;
     }
     public function SciezkiDoPlikuPodgladowPrzedZarejestrowaniem($slashWiodacy = true): array
     {
-        return $this->sciezkiDoPlikuPodgladowPrzedZarejestrowaniem??
-        $this->SciezkiPodgladowDlaNazwy($this->NazwaZrodlaBezRozszerzenia(), $slashWiodacy);
+        return $this->sciezkiDoPlikuPodgladowPrzedZarejestrowaniem ??
+            $this->SciezkiPodgladowDlaNazwy($this->NazwaZrodlaBezRozszerzenia(), $slashWiodacy);
     }
     public function SciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego()
     {
-        return $this->sciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego??
+        return $this->sciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego ??
             // $this->SciezkiDoPlikuPodgladowZarejestrowanychBezFolderuGlownego();
             $this->SciezkiPodgladowDlaNazwy($this->NazwaZrodlaBezRozszerzenia(), false, false);
     }
@@ -315,6 +317,7 @@ class Pismo
     public function NazwaZrodlaBezRozszerzenia(): string
     {
         $nazwa = $this->getNazwaZrodlaPrzedZarejestrowaniemObcietaSciezka();
+        if(!strlen($nazwa))$nazwa = $this->nazwaPliku;
         return substr($nazwa, 0, strrpos($nazwa, '.'));
     }
     public function getDataModyfikacji()
@@ -328,6 +331,7 @@ class Pismo
     }
     public function setFolderPodgladu(string $path)
     {
+        new SciezkePrzytnijZlewejWzglednieDo($path,'public');
         $this->folderPodgladu = $path;
     }
 
@@ -455,11 +459,11 @@ class Pismo
     }
     public function UtworzStroneZnazwyIkierunku(string $nazwa, int $kierunek)
     {
-        if(!strlen($nazwa))return;
+        if (!strlen($nazwa)) return;
         $this->strona = new Kontrahent;
         $this->strona->setNazwa($nazwa);
         $this->kierunek = $kierunek;
-        $this->UstalStroneNaPodstawieKierunku($this->strona,$this->kierunek);
+        $this->UstalStroneNaPodstawieKierunku($this->strona, $this->kierunek);
     }
 
     public function getKierunek(): ?int
@@ -585,7 +589,7 @@ class Pismo
     }
     public function UtworzIustawNowyRodzaj(string $nazwaRodzaju)
     {
-        if(!strlen($nazwaRodzaju)) return;
+        if (!strlen($nazwaRodzaju)) return;
         $rodzaj = new RodzajDokumentu();
         $rodzaj->setNazwa($nazwaRodzaju);
         $this->setRodzaj($rodzaj);
@@ -731,19 +735,27 @@ class Pismo
     {
         return 'pismo/noweZeSkanu.html.twig';
     }
-    public function UzupelnijDaneDlaGenerowaniaSzablonu(array &$parametry)
+    public function SzablonWidok(): string
+    {
+        return 'pismo/show.html.twig';
+    }
+    public function UzupelnijDaneDlaGenerowaniaSzablonuNoweWidok(array &$parametry)
     {
         $nrStrony = $parametry['numerStrony'];
         $sciezkiDoPodgladow = $this->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem();
         $sciezkiDoPodgladowBezFolderuGlownego = $this->SciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego();
-        
-        $parametry['sciezka_png']=$sciezkiDoPodgladow[$nrStrony - 1];
+
+        $parametry['sciezka_png'] = $sciezkiDoPodgladow[$nrStrony - 1];
         $parametry['sciezka_png_bez_fg'] = $sciezkiDoPodgladowBezFolderuGlownego[$nrStrony - 1];
     }
-    public function NazwaIJesliTrzbaZakodowanaSciezka(): string 
+    public function UzupelnijDaneDlaGenerowaniaSzablonuWidok(array &$parametry)
     {
-        if($this->dodawajDoNazwyZakodowanaSciezke)
-        {
+
+
+    }
+    public function NazwaIJesliTrzbaZakodowanaSciezka(): string
+    {
+        if ($this->dodawajDoNazwyZakodowanaSciezke) {
             $kod = new SciezkaKodowanieZnakow;
             return $kod->Koduj($this->adresZrodlaPrzedZarejestrowaniem);
         }
@@ -764,5 +776,13 @@ class Pismo
         $this->polozeniePoZarejestrowaniu = $polozeniePoZarejestrowaniu;
 
         return $this;
+    }
+    public function NazwaParametruZfoderemPodgladu(): string
+    {
+        return 'sciezka_do_png';
+    }
+    public function RozszerzeniePlikuPodgladu()
+    {
+        return $this->rozszerzeniePlikuPodgladu;
     }
 }

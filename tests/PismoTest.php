@@ -73,6 +73,14 @@ class PismoTest extends TestCase
         $sciezkiDoPodgladu = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem(false);
         $this->assertEquals('tests/png/maPodglad/maPodglad-000002.png', $sciezkiDoPodgladu[1]);
     }
+    public function testSciezkiDoPlikuPodgladowPrzedZarejestrowaniem_nieDodajeDrugiegoSlasha()
+    {
+        $pismo = new Pismo("/var/jakas/sciezka/skany/maPodglad.pdf");
+        $fold = dirname(__DIR__);
+        $pismo->setFolderPodgladu($fold."/tests/png/");
+        $sciezkiDoPodgladu = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem(true);
+        $this->assertEquals($fold.'/tests/png/maPodglad/maPodglad-000002.png', $sciezkiDoPodgladu[1]);
+    }
     public function testSciezkiDoPlikuPodgladowPrzedZarejestrowaniemBezFolderuGlownego()
     {
         $pismo = new Pismo("/var/jakas/sciezka/skany/maPodglad.pdf");
@@ -599,6 +607,30 @@ class PismoTest extends TestCase
         $pismo = new Pismo('sciezka/do/pliku/nazwaPliku.pdf');
         $pismo->DodawajDoNazwyZakodowanaSciezke();
         $this->assertEquals('sciezka+do+pliku+nazwaPliku.pdf',$pismo->NazwaIJesliTrzbaZakodowanaSciezka());
+    }
+    public function testSzablonWidok()
+    {
+        $pismo = new Pismo('jakasNazwa.pdf');
+        $this->assertEquals('pismo/show.html.twig',$pismo->SzablonWidok());
+    }
+    public function testSetFolderPodgladu_uciecieDoSlowaPublic_nieUcinaJesliBrakWsciezce()
+    {
+        $pismo = new Pismo("/var/jakas/sciezka/skany/maPodglad.pdf");
+        $pismo->setFolderPodgladu("tests/png/");
+        $sciezkiDoPodgladu = $pismo->SciezkiDoPlikuPodgladowPrzedZarejestrowaniem(false);
+        $this->assertEquals('tests/png/maPodglad/maPodglad-000002.png', $sciezkiDoPodgladu[1]);
+    }
+    public function testSetFolderPodgladu_uciecieDoSlowaPublic()
+    {
+        $pismo = new Pismo("/var/jakas/sciezka/skany/maPodglad.pdf");
+        $pismo->setFolderPodgladu("/var/www/public/skany/");
+        $this->assertEquals('skany/maPodglad/', $pismo->FolderZpodlgademPngWzglednieZgodnieZnazwaPliku());
+    }
+    public function testNazwaZrodlaBezRozszerzenia_uzywaNazwyPliku(Type $var = null)
+    {
+        $pismo = new Pismo("");
+        $pismo->setNazwaPliku("ustalonaNazwa.xrtg");
+        $this->assertSame($pismo->NazwaZrodlaBezRozszerzenia(),"ustalonaNazwa");
     }
     /*
     public function testBrakPodgladuZarejestrowanego_GenerujePodglad()

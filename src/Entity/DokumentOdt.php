@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Entity\Pismo;
+use App\Service\GeneratorPodgladuOdt\GeneratorPodgladuOdt;
+use App\Service\SciezkeZakonczSlashem;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Symfony\Component\VarDumper\Exception\ThrowingCasterException;
@@ -12,6 +14,8 @@ use Symfony\Component\VarDumper\Exception\ThrowingCasterException;
  */
 class DokumentOdt extends Pismo
 {
+    
+    private $rozszerzeniePlikuPodgladu = 'html';
     protected string $tresc = '';
 
     public function Tresc(): string
@@ -32,11 +36,16 @@ class DokumentOdt extends Pismo
     // }
     private function OdczytajTresc()
     {
+        $plikDoOdczytu = $this->adresZrodlaPrzedZarejestrowaniem;
+        if(!strlen($plikDoOdczytu) && strlen($this->nazwaPliku)){
+            new SciezkeZakonczSlashem($this->polozeniePoZarejestrowaniu);
+            $plikDoOdczytu = $this->polozeniePoZarejestrowaniu.$this->nazwaPliku;
+        }
         //na podstawie 
         //https://gist.github.com/lovasoa/1918801
-        if (!file_exists($this->adresZrodlaPrzedZarejestrowaniem)) return;
+        if (!file_exists($plikDoOdczytu)) return;
         $xml = new \XMLReader();
-        $xml->open('zip://' . $this->adresZrodlaPrzedZarejestrowaniem . '#content.xml');
+        $xml->open('zip://' . $plikDoOdczytu . '#content.xml');
         while ($xml->read()) {
             if ($xml->name == "text:p" && $xml->nodeType == \XMLReader::ELEMENT)
             {
@@ -53,7 +62,16 @@ class DokumentOdt extends Pismo
     {
         return 'pismo/noweOdt.html.twig';
     }
-    public function UzupelnijDaneDlaGenerowaniaSzablonu(array &$parametry)
+    public function SzablonWidok(): string
+    {
+        return 'pismo/showOdt.html.twig';
+    }
+    public function UzupelnijDaneDlaGenerowaniaSzablonuNoweWidok(array &$parametry)
+    {
+        $parametry['sciezkaZnazwaPlikuPodgladuAktualnejStrony'] = $this->getSciezkaZnazwaPlikuPodgladuAktualnejStrony();
+    }
+    
+    public function UzupelnijDaneDlaGenerowaniaSzablonuWidok(array &$parametry)
     {
         $parametry['sciezkaZnazwaPlikuPodgladuAktualnejStrony'] = $this->getSciezkaZnazwaPlikuPodgladuAktualnejStrony();
     }
@@ -98,5 +116,19 @@ class DokumentOdt extends Pismo
         $xml->localName nazwa doprecyzowanie czyli dla tego co powyżej : use-window-font-color
         $xml->value wartość: np true, #3465a4
         */
+    }
+
+    public function NazwaParametruZfoderemPodgladu(): string
+    {
+        return 'sciezka_do_podgladuOdt';
+    }
+    public function RozszerzeniePlikuPodgladu()
+    {
+        return $this->rozszerzeniePlikuPodgladu;
+    }
+    public function setFolderPodgladu(string $path)
+    {
+        $generator = new GeneratorPodgladuOdt();
+        $this->sciezkaZnazwaPlikuPodgladuAktualnejStrony = $generator->UtworzAdresPodgladuStrony($path,$this->NazwaZrodlaBezRozszerzenia(),1);
     }
 }

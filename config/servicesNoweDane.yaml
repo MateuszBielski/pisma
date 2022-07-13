@@ -5,10 +5,10 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     #sciezka_do_skanow: '/var/www/html/skany/'
-    sciezka_do_skanow: /home/skanyLinux/
-    #sciezka_do_skanow: /home/mateusz/winmnt  /
-    sciezka_do_png: '/var/www/html/pisma/public/png/'
-    sciezka_do_zarejestrowanych: '/var/www/html/skanyZarejestrowane/'
+    sciezka_do_skanow: '%env(sciezka_do_skanow)%'
+    sciezka_do_png: '%env(sciezka_do_png)%' #'/var/www/html/pisma/public/png/'
+    sciezka_do_podgladuOdt: '%env(sciezka_do_podgladuOdt)%' #'/var/www/html/pisma/public/Odt_html/'
+    sciezka_do_zarejestrowanych: '%env(sciezka_do_zarejestrowanych)%' #'/var/www/html/skanyZarejestrowane/'
 
 services:
     # default configuration for services in *this* file
@@ -41,3 +41,11 @@ services:
 
     #konfiguracja zależności
     App\Service\PismoPrzetwarzanie\PismoPrzetwarzanieArgumentyInterface: '@App\Service\PismoPrzetwarzanie\PpArgPracaRouterRepoStopWatch'
+
+    #jawne dopasowanie argumentu
+    App\Service\PracaNaPlikach:
+        arguments:
+            $domyslnyFolderZplikami: '%sciezka_do_skanow%'
+
+#ustawić również w .env.test.local:
+#sciezka_do_podgladuOdt='??/??/pisma/tests/podgladDlaOdt/'

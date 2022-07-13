@@ -69,7 +69,7 @@ class PismoPrzetwarzanieNoweWidok
         // $nrStrony = $parametry['numerStrony'];
         $parametry['pismo'] = $this->dokument;
         $parametry['sciezki_dla_stron'] = $this->getSciezkiDlaStron();
-        $this->dokument->UzupelnijDaneDlaGenerowaniaSzablonu($parametry);// tu potrzebny numer strony
+        $this->dokument->UzupelnijDaneDlaGenerowaniaSzablonuNoweWidok($parametry);// tu potrzebny numer strony
         // $parametry['sciezka_png'] = $this->SciezkaDoPodgladu($nrStrony);
         // $parametry['sciezka_png_bez_fg'] = $this->SciezkaDoPodgladowBezFolderuGlownego($nrStrony);
     }

@@ -281,7 +281,7 @@ class PismoController extends AbstractController
      */
     public function Pobieranie(Pismo $pismo): ?BinaryFileResponse
     {
-        $sciezka = $pismo->getPolozeniePoZarejestrowaniu()??$this->getParameter('sciezka_do_zarejestrowanych');
+        $sciezka = $pismo->getPolozeniePoZarejestrowaniu() ?? $this->getParameter('sciezka_do_zarejestrowanych');
         $file = $sciezka . $pismo->getNazwaPliku();
         // $file = 'path/to/file.txt';
         $response = new BinaryFileResponse($file);
@@ -298,6 +298,8 @@ class PismoController extends AbstractController
         // ;
         $pismo = $pismoRepository->find($id);
         $pismo->UstalStroneIKierunek();
+        $folderPodgladu = $this->getParameter($pismo->NazwaParametruZfoderemPodgladu());
+        $pismo->setFolderPodgladu($folderPodgladu);
         $pismo->setSciezkaGenerUrl($this->generateUrl('pismo_show', ['id' => $id, 'numerStrony' => $numerStrony]));
         $sciezkiDoPodgladow = $pismo->SciezkiDoPlikuPodgladowZarejestrowanych();
         $sciezkiDlaStron = [];
@@ -308,14 +310,15 @@ class PismoController extends AbstractController
             $p->UstalStroneIKierunek();
             $p->setSciezkaGenerUrl($this->generateUrl('pismo_show', ['id' => $p->getId(), 'numerStrony' => 1]));
         }
-
-        return $this->render('pismo/show.html.twig', [
+        $parametry = [
             'pismo' => $pismo,
             'pisma' => $pisma,
             'sciezki_dla_stron' => $sciezkiDlaStron,
             'sciezka_png' => $sciezkiDoPodgladow[$numerStrony - 1],
             'numerStrony' => $numerStrony,
-        ]);
+        ];
+        $pismo->UzupelnijDaneDlaGenerowaniaSzablonuWidok($parametry);
+        return $this->render($pismo->SzablonWidok(), $parametry);
     }
 
     /**

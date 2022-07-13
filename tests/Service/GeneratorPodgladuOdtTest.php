@@ -167,7 +167,6 @@ class GeneratorPodgladuOdtTest extends TestCase
         ]);
         $this->expectExceptionMessage('nie ustawiony dokument, nie można wykonać podglądu');
         $generator->Wykonaj();
-
     }
     public function testUstawiaSciezkaZnazwaPlikuPodgladuAktualnejStrony()
     {
@@ -179,6 +178,18 @@ class GeneratorPodgladuOdtTest extends TestCase
             'folderPodgladuOdt' => 'sciezka/do/PodgladuOdt/'
         ]);
         $generator->Wykonaj();
-        $this->assertSame('sciezka/do/PodgladuOdt/pl/pl-0001.html',$dokument->getSciezkaZnazwaPlikuPodgladuAktualnejStrony());
+        $this->assertSame('sciezka/do/PodgladuOdt/pl/pl-0001.html', $dokument->getSciezkaZnazwaPlikuPodgladuAktualnejStrony());
+    }
+    public function testUtworzAdresPodgladuStrony1()
+    {
+        $generator = new GeneratorPodgladuOdt();
+        $result = $generator->UtworzAdresPodgladuStrony('/fold1/fold2/', 'nazwaPliku', 1);
+        $this->assertSame($result,'/fold1/fold2/nazwaPliku/nazwaPliku-0001.html');
+    }
+    public function testUtworzAdresPodgladuStrony_uzupelniaSlash()
+    {
+        $generator = new GeneratorPodgladuOdt();
+        $result = $generator->UtworzAdresPodgladuStrony('/fold1/fold2', 'nazwaPliku', 1);
+        $this->assertSame($result,'/fold1/fold2/nazwaPliku/nazwaPliku-0001.html');
     }
 }
